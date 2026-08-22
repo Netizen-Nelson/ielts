@@ -1,42 +1,2239 @@
 <!DOCTYPE html>
-<html lang="zh-TW" prefix="og: https://ogp.me/ns#">
+<html lang="zh-TW">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>雅思口說組合語塊｜Nelson IELTS</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/netizen-nelson/web-dev/bp-styles.css">
-    <style>
-        :root {
-            font-size: 18px;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title id="page-title">Nelson IELTS: Reading Test</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+<style>
+:root {
+  --bg:       #0C0D0C;
+  --shell:    #C6C7BD;
+  --lavender: #C3A5E5;
+  --special:  #C8DD5A;
+  --warning:  #F08080;
+  --salmon:   #E5C3B3;
+  --sky:      #08A9D1;
+  --safe:     #40C99A;
+  --vanilla:  #DBEDD8;
+  --yellow:   #DECA4B;
+  --focus:    #A0CF72;
+  --info:     #4285EB;
+  --stone:    #95BDD7;
+  --indigo:   #7B6CF0;
+  --pink:     #FFB3D9;
+  --orange:   #EDA109;
 
-        body {
-            font-family: 'Inter', 'Noto Sans TC', sans-serif;
-            min-height: 100vh;
-        }
-    </style>
+  --pane-bg:    #111210;
+  --border:     #252625;
+  --border-mid: #383938;
+  --font-ui:    'Segoe UI', 'PingFang TC', 'Microsoft JhengHei', system-ui, sans-serif;
+  --font-body:  Georgia, 'Times New Roman', serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+  background: var(--bg);
+  color: var(--shell);
+  font-family: var(--font-ui);
+  font-size: 1rem;
+}
+
+/* ══════════════════════════════════════════
+   TOP BAR
+══════════════════════════════════════════ */
+#top-bar {
+  height: 50px;
+  background: #161714;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  gap: 10px;
+  flex-shrink: 0;
+  z-index: 200;
+}
+
+#test-title {
+  font-size: 0.88rem;
+  color: var(--lavender);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+#passage-tabs {
+  display: flex;
+  gap: 4px;
+  margin-left: auto;
+}
+
+.passage-tab {
+  padding: 4px 14px;
+  border-radius: 4px;
+  border: 1px solid var(--border-mid);
+  background: transparent;
+  color: var(--shell);
+  font-size: 0.82rem;
+  font-family: var(--font-ui);
+  cursor: pointer;
+  transition: all 0.16s;
+  white-space: nowrap;
+}
+.passage-tab:hover { border-color: var(--lavender); color: var(--lavender); }
+.passage-tab.active {
+  background: var(--lavender);
+  color: #0C0D0C;
+  border-color: var(--lavender);
+  font-weight: 700;
+}
+
+#timer-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 14px;
+  border: 1px solid var(--border-mid);
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+#timer-label {
+  font-size: 0.72rem;
+  color: var(--shell);
+  opacity: 0.5;
+  letter-spacing: 0.08em;
+}
+#timer-display {
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--safe);
+  letter-spacing: 0.06em;
+  min-width: 52px;
+}
+#timer-display.warn   { color: var(--yellow); }
+#timer-display.danger { color: var(--warning); animation: pulse 1s ease-in-out infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
+
+/* ══════════════════════════════════════════
+   MAIN SPLIT LAYOUT
+══════════════════════════════════════════ */
+#main-layout {
+  display: flex;
+  height: calc(100vh - 50px);
+  overflow: hidden;
+}
+
+/* ── LEFT PANE ─────────────────────────── */
+#left-pane {
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+  min-width: 260px;
+  flex-shrink: 0;
+  overflow: hidden;
+  background: var(--pane-bg);
+  border-right: 1px solid var(--border);
+}
+
+#passage-title-bar {
+  padding: 10px 22px 9px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+  background: #131412;
+}
+#passage-range {
+  font-size: 0.72rem;
+  color: var(--sky);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 2px;
+}
+#passage-heading {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--vanilla);
+  font-family: var(--font-body);
+}
+
+#passage-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 22px 26px;
+  line-height: 1.95;
+  font-size: 1rem;
+  color: var(--shell);
+  font-family: var(--font-body);
+}
+#passage-body p { margin-bottom: 16px; }
+#passage-body p:last-child { margin-bottom: 0; }
+
+/* ── HIGHLIGHTS ────────────────────────── */
+mark.hl {
+  border-radius: 2px;
+  padding: 1px 0;
+  cursor: pointer;
+  border-bottom: none !important;
+  font-family: inherit;
+  transition: box-shadow 0.15s;
+}
+mark.hl-yellow   { background: rgba(222,202,75, 0.38); color: inherit; }
+mark.hl-sky      { background: rgba(8,169,209,  0.30); color: inherit; }
+mark.hl-safe     { background: rgba(64,201,154, 0.30); color: inherit; }
+mark.hl-warning  { background: rgba(240,128,128,0.36); color: inherit; }
+mark.hl-lavender { background: rgba(195,165,229,0.36); color: inherit; }
+mark.hl.xpop-panel-active {
+  box-shadow: 0 0 0 2px rgba(195,165,229,0.7);
+}
+
+/* ── NOTE PANEL ────────────────────────── */
+#note-panel-wrap {
+  border-top: 1px solid var(--border);
+  background: #0e0f0e;
+  flex-shrink: 0;
+  max-height: 260px;
+  display: flex;
+  flex-direction: column;
+}
+#note-panel-header {
+  display: flex;
+  align-items: center;
+  padding: 7px 16px;
+  cursor: pointer;
+  user-select: none;
+  gap: 7px;
+  flex-shrink: 0;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.18s;
+}
+#note-panel-header:hover { border-bottom-color: var(--border); }
+#note-panel-icon { font-size: 0.9rem; }
+#note-panel-label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--lavender);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+#note-panel-hint {
+  font-size: 0.75rem;
+  color: var(--shell);
+  opacity: 0.38;
+  margin-left: auto;
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+#note-chevron { font-size: 0.7rem; opacity: 0.4; }
+
+#note-panel-body {
+  overflow-y: auto;
+  padding: 8px 16px 12px;
+  flex: 1;
+}
+#note-panel-body.collapsed { display: none; }
+
+/* bp-popnote renders into #note-panel */
+#note-panel { min-height: 20px; }
+
+#note-edit-area { display: none; margin-top: 10px; }
+#note-textarea {
+  width: 100%;
+  rows: 3;
+  background: #1a1c1a;
+  border: 1px solid var(--border-mid);
+  border-radius: 4px;
+  color: var(--shell);
+  font-size: 0.88rem;
+  font-family: var(--font-ui);
+  padding: 8px 10px;
+  resize: vertical;
+  min-height: 64px;
+  outline: none;
+  transition: border-color 0.18s;
+  display: block;
+}
+#note-textarea:focus { border-color: var(--lavender); }
+#note-edit-btns { display: flex; gap: 8px; margin-top: 7px; flex-wrap: wrap; }
+.note-btn {
+  padding: 4px 14px;
+  border-radius: 4px;
+  border: 1px solid;
+  font-size: 0.8rem;
+  font-family: var(--font-ui);
+  cursor: pointer;
+  transition: all 0.16s;
+  background: transparent;
+}
+#note-save-btn  { border-color: var(--safe);    color: var(--safe);    }
+#note-save-btn:hover  { background: var(--safe);    color: #0C0D0C; }
+#note-del-btn   { border-color: var(--warning); color: var(--warning); }
+#note-del-btn:hover   { background: var(--warning); color: #0C0D0C; }
+#note-desel-btn { border-color: var(--border-mid); color: var(--shell); opacity: 0.5; }
+#note-desel-btn:hover { opacity: 1; }
+
+/* ── DIVIDER ───────────────────────────── */
+#divider {
+  width: 6px;
+  background: var(--border);
+  cursor: col-resize;
+  flex-shrink: 0;
+  position: relative;
+  user-select: none;
+  transition: background 0.16s;
+}
+#divider:hover, #divider.dragging { background: var(--lavender); }
+#divider::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 1px;
+  width: 4px;
+  height: 36px;
+  transform: translateY(-50%);
+  border-left:  1px solid rgba(255,255,255,0.12);
+  border-right: 1px solid rgba(255,255,255,0.12);
+}
+
+/* ── RIGHT PANE ────────────────────────── */
+#right-pane {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--bg);
+  min-width: 260px;
+}
+
+#q-nav-wrap {
+  padding: 8px 14px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  flex-shrink: 0;
+  background: #101110;
+}
+.q-nav-btn {
+  width: 30px;
+  height: 30px;
+  border-radius: 4px;
+  border: 1px solid var(--border-mid);
+  background: transparent;
+  color: var(--shell);
+  font-size: 0.76rem;
+  font-family: var(--font-ui);
+  cursor: pointer;
+  transition: all 0.16s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 500;
+  padding: 0;
+}
+.q-nav-btn:hover   { border-color: var(--lavender); color: var(--lavender); }
+.q-nav-btn.answered { background: rgba(195,165,229,0.2); border-color: var(--lavender); color: var(--lavender); }
+.q-nav-btn.flagged  { border-color: var(--yellow); color: var(--yellow); }
+.q-nav-btn.answered.flagged { background: rgba(222,202,75,0.18); border-color: var(--yellow); }
+.q-nav-btn.current  { box-shadow: 0 0 0 2px var(--sky); }
+
+#question-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px 22px;
+}
+
+/* ── QUESTION GROUPS ───────────────────── */
+.q-group { margin-bottom: 34px; }
+.q-group:last-child { margin-bottom: 0; }
+.q-group-divider {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin-bottom: 22px;
+}
+
+.q-instruction {
+  font-size: 0.9rem;
+  color: var(--vanilla);
+  line-height: 1.6;
+  margin-bottom: 6px;
+  font-style: italic;
+}
+.q-sub-instruction {
+  font-size: 0.8rem;
+  color: var(--sky);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  margin-bottom: 16px;
+}
+
+.match-options-box {
+  margin-bottom: 16px;
+  padding: 12px 14px;
+  background: rgba(255,255,255,0.025);
+  border: 1px solid var(--border);
+  border-radius: 5px;
+}
+.match-opt-item {
+  font-size: 0.86rem;
+  color: var(--shell);
+  margin-bottom: 5px;
+  line-height: 1.5;
+  display: flex;
+  gap: 8px;
+}
+.match-opt-item:last-child { margin-bottom: 0; }
+.match-opt-key { color: var(--lavender); font-weight: 700; flex-shrink: 0; min-width: 22px; }
+
+/* ── QUESTION ITEM ─────────────────────── */
+.q-item { margin-bottom: 20px; scroll-margin-top: 16px; }
+.q-item:last-child { margin-bottom: 0; }
+
+.q-num-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 5px;
+}
+.q-number {
+  font-size: 0.78rem;
+  color: var(--lavender);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+.q-flag-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.95rem;
+  opacity: 0.25;
+  padding: 0 2px;
+  line-height: 1;
+  transition: opacity 0.16s, color 0.16s;
+  color: var(--shell);
+}
+.q-flag-btn:hover { opacity: 0.8; }
+.q-flag-btn.flagged { opacity: 1; color: var(--yellow); }
+
+.q-prompt {
+  font-size: 0.95rem;
+  color: var(--shell);
+  line-height: 1.65;
+  margin-bottom: 9px;
+}
+
+/* Multiple choice */
+.mc-list { display: flex; flex-direction: column; gap: 6px; }
+.mc-opt {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 7px 12px;
+  border-radius: 5px;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: all 0.16s;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.mc-opt:hover { border-color: var(--lavender); background: rgba(195,165,229,0.06); }
+.mc-opt.selected { border-color: var(--lavender); background: rgba(195,165,229,0.14); }
+.mc-opt input { display: none; }
+.mc-key { font-weight: 700; color: var(--lavender); flex-shrink: 0; min-width: 18px; }
+.mc-opt.selected .mc-key { color: var(--special); }
+
+/* TFNG / YNNG */
+.tfng-btns { display: flex; gap: 8px; flex-wrap: wrap; }
+.tfng-btn {
+  padding: 6px 16px;
+  border-radius: 4px;
+  border: 1px solid var(--border-mid);
+  background: transparent;
+  color: var(--shell);
+  font-size: 0.84rem;
+  font-family: var(--font-ui);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.16s;
+}
+.tfng-btn:hover { border-color: var(--lavender); color: var(--lavender); }
+.tfng-btn.selected { background: var(--lavender); color: #0C0D0C; border-color: var(--lavender); font-weight: 700; }
+
+/* Matching dropdown */
+.match-select {
+  background: #1a1c1a;
+  border: 1px solid var(--border-mid);
+  border-radius: 4px;
+  color: var(--shell);
+  font-size: 0.88rem;
+  font-family: var(--font-ui);
+  padding: 6px 10px;
+  min-width: 200px;
+  max-width: 100%;
+  outline: none;
+  cursor: pointer;
+  transition: border-color 0.16s;
+}
+.match-select:focus { border-color: var(--lavender); }
+
+/* Text / completion inputs */
+.text-input {
+  width: 100%;
+  background: #1a1c1a;
+  border: 1px solid var(--border-mid);
+  border-radius: 4px;
+  color: var(--shell);
+  font-size: 0.9rem;
+  font-family: var(--font-ui);
+  padding: 7px 12px;
+  outline: none;
+  transition: border-color 0.16s;
+  margin-top: 4px;
+  display: block;
+}
+.text-input:focus { border-color: var(--lavender); }
+
+/* ══════════════════════════════════════════
+   HIGHLIGHT TOOLBAR
+══════════════════════════════════════════ */
+#hl-toolbar {
+  position: fixed;
+  display: none;
+  align-items: center;
+  gap: 5px;
+  background: #1c1e1c;
+  border: 1px solid var(--border-mid);
+  border-radius: 6px;
+  padding: 5px 8px;
+  box-shadow: 0 4px 18px rgba(0,0,0,0.65);
+  z-index: 9998;
+}
+.hl-color-btn {
+  width: 20px;
+  height: 20px;
+  border-radius: 3px;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.14s;
+  flex-shrink: 0;
+}
+.hl-color-btn:hover { transform: scale(1.25); }
+.hl-sep { width: 1px; height: 16px; background: var(--border-mid); flex-shrink: 0; }
+.hl-remove-btn {
+  background: none;
+  border: none;
+  color: var(--warning);
+  cursor: pointer;
+  font-size: 0.78rem;
+  padding: 2px 5px;
+  border-radius: 3px;
+  transition: background 0.14s;
+  font-family: var(--font-ui);
+}
+.hl-remove-btn:hover { background: rgba(240,128,128,0.15); }
+
+/* ══════════════════════════════════════════
+   LOADING SCREEN
+══════════════════════════════════════════ */
+#loading-screen {
+  position: fixed;
+  inset: 0;
+  background: var(--bg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  z-index: 9999;
+}
+#loading-screen.hidden { display: none; }
+.spinner {
+  width: 38px;
+  height: 38px;
+  border: 3px solid var(--border-mid);
+  border-top-color: var(--lavender);
+  border-radius: 50%;
+  animation: spin 0.75s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+#loading-msg { font-size: 0.88rem; color: var(--lavender); letter-spacing: 0.04em; }
+
+/* ══════════════════════════════════════════
+   SCROLLBARS
+══════════════════════════════════════════ */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #353635; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #505250; }
+
+/* Bootstrap override: prevent white bg on selects */
+select.match-select option { background: #1a1c1a; color: var(--shell); }
+</style>
 </head>
-<body class="bp-bg-background">
-<section id="start-0">
-	<div class="card w-80 mx-5 mt-1 px-3 bp-bg-fill">
-		<div class="fw-bold fs-2 bp-text-focus">Nelson IELTS</div>
-	</div>
-</section>
-<section id="sentence-1">
-	<div class="w-75 mx-5 px-3 mt-3">
-		<bp-note>1</bp-note>
-	</div>
-</section>
+<body>
 
+<!-- Loading -->
+<div id="loading-screen">
+  <div class="spinner"></div>
+  <div id="loading-msg">Loading test…</div>
+</div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://cdn.jsdelivr.net/gh/netizen-nelson/web-dev/card-badge.js"></script>
-<script src="https://cdn.jsdelivr.net/gh/netizen-nelson/web-dev/quiz-panel.js"></script>
-<script src="https://cdn.jsdelivr.net/gh/netizen-nelson/web-dev/chunk-demo.js"></script>
-<script src="https://cdn.jsdelivr.net/gh/netizen-nelson/web-dev/bp-popnote.js"></script>
-<script src="https://cdn.jsdelivr.net/gh/netizen-nelson/web-dev/slide-demo.js"></script>
+<!-- Top Bar -->
+<div id="top-bar">
+  <div id="test-title">IELTS Reading</div>
+  <div id="passage-tabs"></div>
+  <div id="timer-wrap">
+    <span id="timer-label">TIME</span>
+    <span id="timer-display">60:00</span>
+  </div>
+</div>
+
+<!-- Main Layout -->
+<div id="main-layout">
+
+  <!-- LEFT: Passage -->
+  <div id="left-pane">
+    <div id="passage-title-bar">
+      <div id="passage-range">Questions —</div>
+      <div id="passage-heading">—</div>
+    </div>
+    <div id="passage-body"></div>
+
+    <!-- Annotation Panel (bp-popnote panel target = #note-panel) -->
+    <div id="note-panel-wrap">
+      <div id="note-panel-header" onclick="IELTSApp.toggleNotePanel()">
+        <span id="note-panel-icon">📝</span>
+        <span id="note-panel-label">Annotation</span>
+        <span id="note-panel-hint">Select a highlight to view or add a note</span>
+        <span id="note-chevron">▲</span>
+      </div>
+      <div id="note-panel-body">
+        <!-- bp-popnote renders here on mark click -->
+        <div id="note-panel"></div>
+        <!-- Edit area (my code, separate from bp-popnote target) -->
+        <div id="note-edit-area">
+          <textarea id="note-textarea" rows="3" placeholder="Add a note to this highlight…"></textarea>
+          <div id="note-edit-btns">
+            <button class="note-btn" id="note-save-btn"  onclick="IELTSApp.saveNote()">Save note</button>
+            <button class="note-btn" id="note-del-btn"   onclick="IELTSApp.deleteHighlight()">Remove highlight</button>
+            <button class="note-btn" id="note-desel-btn" onclick="IELTSApp.deactivateMark()">✕ Deselect</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DIVIDER -->
+  <div id="divider"></div>
+
+  <!-- RIGHT: Questions -->
+  <div id="right-pane">
+    <div id="q-nav-wrap"></div>
+    <div id="question-body"></div>
+  </div>
+
+</div>
+
+<!-- Highlight Toolbar -->
+<div id="hl-toolbar">
+  <button class="hl-color-btn" data-color="yellow"   title="Yellow"
+    style="background:rgba(222,202,75,0.75)"></button>
+  <button class="hl-color-btn" data-color="safe"     title="Green"
+    style="background:rgba(64,201,154,0.75)"></button>
+  <button class="hl-color-btn" data-color="sky"      title="Blue"
+    style="background:rgba(8,169,209,0.75)"></button>
+  <button class="hl-color-btn" data-color="warning"  title="Red"
+    style="background:rgba(240,128,128,0.75)"></button>
+  <button class="hl-color-btn" data-color="lavender" title="Purple"
+    style="background:rgba(195,165,229,0.75)"></button>
+  <div class="hl-sep"></div>
+  <button class="hl-remove-btn" id="hl-remove-btn" title="Remove highlight">✕</button>
+</div>
+
+<!--
+  ══════════════════════════════════════════════════════════════
+  BACKEND DATA INJECTION POINT
+  Option A — inline JSON in this script tag:
+    <script id="ielts-data" type="application/json">{ … }</script>
+  Option B — URL parameter: ?data=https://your-api/endpoint
+  Option C — JavaScript: IELTSApp.init(jsonObject)
+  ══════════════════════════════════════════════════════════════
+-->
+
+<!--
+  JSON SCHEMA (for backend reference)
+  ──────────────────────────────────────────────────
+  {
+    "meta": {
+      "test_id":     string,   // unique test identifier
+      "user_id":     string|null,
+      "invite_code": string|null,
+      "title":       string,
+      "time_limit":  number,   // seconds (3600 = 60 min)
+      "created_at":  string    // ISO date
+    },
+    "passages": [
+      {
+        "id":             string,   // e.g. "p1"
+        "label":          string,   // tab label, e.g. "Passage 1"
+        "title":          string,
+        "question_range": string,   // e.g. "Questions 1–13"
+        "body":           string    // HTML content
+      }
+    ],
+    "question_groups": [
+      {
+        "id":              string,
+        "passage_id":      string,  // links to passages[].id
+        "type":            "multiple_choice" | "tfng" | "ynng"
+                         | "matching" | "matching_headings" | "matching_features"
+                         | "completion" | "short_answer",
+        "instruction":     string (HTML ok),
+        "sub_instruction": string (optional),
+        "choices":         string[] (for tfng/ynng, overrides default labels),
+        "options":         string[] | object (for matching types; for mc, per-question),
+        "questions": [
+          {
+            "no":      number,  // question number (1-based, unique across test)
+            "prompt":  string,
+            "options": object   // for multiple_choice: {A:"…", B:"…", …}
+          }
+        ]
+      }
+    ]
+  }
+  ──────────────────────────────────────────────────
+-->
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- bp-popnote.js — inlined (annotation display engine) -->
+<script>
+(function () {
+  'use strict';
+
+  const CSS = `
+    [data-popover-title],
+    [data-popover-content],
+    [data-popover-target] {
+      cursor: pointer;
+      border-bottom-width: 1px;
+      border-bottom-style: dashed;
+      border-bottom-color: var(--xpop-hint-color, #C3A5E5);
+      transition: border-color 0.2s, color 0.2s;
+    }
+    [data-popover-hint="false"] {
+      border-bottom: none !important;
+    }
+
+    /* ── Floating popup ──────────────────────────────────────── */
+    .xpop-container {
+      position: fixed;
+      z-index: 99999;
+      max-width: var(--xpop-max-width, 560px);
+      min-width: 220px;
+      border-radius: 8px;
+      border-width: 1px;
+      border-style: var(--xpop-border-style, solid);
+      border-color: var(--xpop-border-color, #C3A5E5);
+      background: var(--xpop-bg, #130e1e);
+      font-size: var(--xpop-font-size, 1rem);
+      color: #c6c7bd;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.55), 0 2px 8px rgba(0,0,0,0.35);
+      pointer-events: auto;
+      font-family: 'Segoe UI', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+      line-height: 1.6;
+      opacity: 0;
+      transform: scale(0.88);
+      transform-origin: var(--xpop-origin, center bottom);
+      transition: opacity 0.22s cubic-bezier(.4,0,.2,1),
+                  transform 0.22s cubic-bezier(.4,0,.2,1);
+    }
+    .xpop-container.xpop-visible {
+      opacity: 1;
+      transform: scale(1);
+    }
+    .xpop-arrow {
+      position: absolute;
+      width: 0;
+      height: 0;
+      border: 8px solid transparent;
+    }
+    .xpop-container[data-placement="top"] .xpop-arrow {
+      bottom: -16px; left: 50%;
+      transform: translateX(-50%);
+      border-top-color: var(--xpop-border-color, #C3A5E5);
+    }
+    .xpop-container[data-placement="bottom"] .xpop-arrow {
+      top: -16px; left: 50%;
+      transform: translateX(-50%);
+      border-bottom-color: var(--xpop-border-color, #C3A5E5);
+    }
+    .xpop-container[data-placement="left"] .xpop-arrow {
+      right: -16px; top: 50%;
+      transform: translateY(-50%);
+      border-left-color: var(--xpop-border-color, #C3A5E5);
+    }
+    .xpop-container[data-placement="right"] .xpop-arrow {
+      left: -16px; top: 50%;
+      transform: translateY(-50%);
+      border-right-color: var(--xpop-border-color, #C3A5E5);
+    }
+    .xpop-arrow::after {
+      content: '';
+      position: absolute;
+      width: 0; height: 0;
+      border: 7px solid transparent;
+    }
+    .xpop-container[data-placement="top"] .xpop-arrow::after {
+      bottom: 1px; left: -7px;
+      border-top-color: var(--xpop-bg, #130e1e);
+    }
+    .xpop-container[data-placement="bottom"] .xpop-arrow::after {
+      top: 1px; left: -7px;
+      border-bottom-color: var(--xpop-bg, #130e1e);
+    }
+    .xpop-container[data-placement="left"] .xpop-arrow::after {
+      right: 1px; top: -7px;
+      border-left-color: var(--xpop-bg, #130e1e);
+    }
+    .xpop-container[data-placement="right"] .xpop-arrow::after {
+      left: 1px; top: -7px;
+      border-right-color: var(--xpop-bg, #130e1e);
+    }
+
+    /* ── Shared header / body / carousel ─────────────────────── */
+    .xpop-header {
+      padding: 10px 16px 8px;
+      font-size: calc(var(--xpop-font-size, 1rem) * 1.05);
+      font-weight: 700;
+      color: var(--xpop-title-color, #C3A5E5);
+      border-bottom: 1px solid var(--xpop-border-color, #C3A5E5);
+      letter-spacing: 0.03em;
+    }
+    .xpop-header:empty { display: none; }
+    .xpop-body { padding: 12px 16px 14px; }
+    .xpop-carousel-track { width: 100%; }
+    .xpop-carousel-track section {
+      display: none;
+      width: 100%;
+      box-sizing: border-box;
+      padding: 2px 0;
+    }
+    .xpop-carousel-track section.xpop-active { display: block; }
+    .xpop-carousel-track section.xpop-anim-forward {
+      animation: xpop-slide-forward 0.28s cubic-bezier(.4,0,.2,1) both;
+    }
+    .xpop-carousel-track section.xpop-anim-back {
+      animation: xpop-slide-back 0.28s cubic-bezier(.4,0,.2,1) both;
+    }
+    @keyframes xpop-slide-forward {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes xpop-slide-back {
+      from { opacity: 0; transform: translateY(-14px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .xpop-carousel-track.xpop-crossfade section.xpop-anim-forward,
+    .xpop-carousel-track.xpop-crossfade section.xpop-anim-back {
+      animation: xpop-fadein 0.28s ease both;
+    }
+    @keyframes xpop-fadein {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+    .xpop-carousel-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 16px 12px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+    }
+    .xpop-dots { display: flex; gap: 6px; align-items: center; }
+    .xpop-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.2);
+      cursor: pointer;
+      transition: background 0.2s, transform 0.2s;
+      border: none; padding: 0;
+    }
+    .xpop-dot.xpop-dot-active {
+      background: var(--xpop-title-color, #C3A5E5);
+      transform: scale(1.3);
+    }
+    .xpop-nav { display: flex; align-items: center; gap: 8px; color: #c6c7bd; font-size: 0.88rem; }
+    .xpop-nav-btn {
+      background: none;
+      border: 1px solid rgba(255,255,255,0.18);
+      color: var(--xpop-title-color, #C3A5E5);
+      border-radius: 4px;
+      width: 26px; height: 26px;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem;
+      transition: background 0.18s, border-color 0.18s;
+      padding: 0; line-height: 1;
+    }
+    .xpop-nav-btn:hover {
+      background: rgba(255,255,255,0.08);
+      border-color: var(--xpop-title-color, #C3A5E5);
+    }
+    .xpop-nav-btn:disabled { opacity: 0.3; cursor: default; }
+    .xpop-counter {
+      min-width: 40px; text-align: center;
+      opacity: 0.7; font-variant-numeric: tabular-nums;
+    }
+    .xpop-progress {
+      height: 2px; background: rgba(255,255,255,0.08);
+      position: relative; overflow: hidden;
+    }
+    .xpop-progress-bar {
+      position: absolute; left: 0; top: 0;
+      height: 100%; width: 0%;
+      background: var(--xpop-title-color, #C3A5E5);
+      transition: width linear;
+    }
+
+    .xpop-panel-wrap {
+      border-radius: 8px;
+      border-width: 1px;
+      border-style: solid;
+      border-color: var(--xpop-border-color, #C3A5E5);
+      background: var(--xpop-bg, #130e1e);
+      font-size: var(--xpop-font-size, 1rem);
+      color: #c6c7bd;
+      font-family: 'Segoe UI', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+      line-height: 1.6;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+      animation: xpop-panel-in 0.28s cubic-bezier(.4,0,.2,1) both;
+    }
+    @keyframes xpop-panel-in {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .xpop-panel-source {
+      padding: 9px 16px 4px;
+      font-size: 0.76rem;
+      color: var(--xpop-title-color, #C3A5E5);
+      opacity: 0.62;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .xpop-panel-source::before {
+      content: '';
+      display: inline-block;
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: currentColor;
+      flex-shrink: 0;
+      opacity: 0.9;
+    }
+
+    /* Active trigger highlight in panel mode */
+    [data-popover-title].xpop-panel-active,
+    [data-popover-content].xpop-panel-active,
+    [data-popover-target].xpop-panel-active {
+      border-bottom-style: solid !important;
+      color: var(--xpop-hint-color, #C3A5E5);
+    }
+
+    /* ── Bootstrap Modal theming ─────────────────────────── */
+    #xpop-bs-modal .modal-content {
+      border-width: 1px;
+      border-style: solid;
+    }
+    #xpop-bs-modal .modal-header {
+      border-bottom-width: 1px;
+      border-bottom-style: solid;
+      align-items: center;
+    }
+    #xpop-bs-modal .modal-body {
+      color: #C6C7BD;
+      font-family: 'Segoe UI', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+      line-height: 1.6;
+      overflow-y: auto;
+    }
+
+    /* ── Bootstrap Offcanvas theming ─────────────────────── */
+    #xpop-bs-offcanvas .offcanvas-header {
+      border-bottom-width: 1px;
+      border-bottom-style: solid;
+      align-items: center;
+    }
+    #xpop-bs-offcanvas .offcanvas-body {
+      color: #C6C7BD;
+      font-family: 'Segoe UI', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+      line-height: 1.6;
+      overflow-y: auto;
+    }
+
+    /* ── Shared close button ─────────────────────────────── */
+    #xpop-bs-modal .btn-close,
+    #xpop-bs-offcanvas .btn-close {
+      opacity: 0.65;
+      transition: opacity 0.2s;
+      flex-shrink: 0;
+    }
+    #xpop-bs-modal .btn-close:hover,
+    #xpop-bs-offcanvas .btn-close:hover {
+      opacity: 1;
+    }
+  `;
+
+  const THEMES = {
+    dark:      { bg: '#130e1e', titleColor: '#C3A5E5', borderColor: '#C3A5E5' },
+    lavender:  { bg: '#130e1e', titleColor: '#C3A5E5', borderColor: '#C3A5E5' },
+    sky:       { bg: '#091522', titleColor: '#08a9d1', borderColor: '#08a9d1' },
+    warning:   { bg: '#190d0d', titleColor: '#F08080', borderColor: '#F08080' },
+    success:   { bg: '#0a160f', titleColor: '#40c99a', borderColor: '#40c99a' },
+    safe:      { bg: '#0a160f', titleColor: '#40c99a', borderColor: '#40c99a' },
+    special:   { bg: '#111605', titleColor: '#C8DD5A', borderColor: '#C8DD5A' },
+    highlight: { bg: '#111605', titleColor: '#C8DD5A', borderColor: '#C8DD5A' },
+    note:      { bg: '#161205', titleColor: '#DECA4B', borderColor: '#DECA4B' },
+    yellow:    { bg: '#161205', titleColor: '#DECA4B', borderColor: '#DECA4B' },
+    salmon:    { bg: '#180e0a', titleColor: '#E5C3B3', borderColor: '#E5C3B3' },
+    pink:      { bg: '#180a12', titleColor: '#FFB3D9', borderColor: '#FFB3D9' },
+    stone:     { bg: '#0d1620', titleColor: '#95BDD7', borderColor: '#95BDD7' },
+    orange:    { bg: '#181005', titleColor: '#eda109', borderColor: '#eda109' },
+    vanilla:   { bg: '#181614', titleColor: '#FDF6ED', borderColor: '#FDF6ED' },
+    info:      { bg: '#0a1522', titleColor: '#5fafed', borderColor: '#5fafed' },
+  };
+
+  let config = {
+    theme: 'dark', maxWidth: '560px', offset: 8, fontSize: '1rem',
+    borderStyle: 'solid', placement: 'top',
+    carousel: { animation: 'slide', interval: 3000 },
+    panelTarget: null, _customThemes: {},
+    modal: false, modalSize: '', modalStatic: false,
+  };
+
+  window.PopoverConfig = {
+    set(opts) {
+      if (opts.carousel) { Object.assign(config.carousel, opts.carousel); delete opts.carousel; }
+      Object.assign(config, opts);
+    },
+    addTheme(name, def) { config._customThemes[name] = def; },
+  };
+
+  let currentPop = null, currentTrigger = null, carouselState = null;
+  let panelActiveTrigger = null, panelCarouselState = null;
+
+  function getTheme(n)  { return config._customThemes[n] || THEMES[n] || THEMES.dark; }
+  function ra(el, k, fb){ return el.dataset[k] !== undefined ? el.dataset[k] : fb; }
+
+  function injectCSS() {
+    if (document.getElementById('bp-popnote-style')) return;
+    const s = document.createElement('style');
+    s.id = 'bp-popnote-style';
+    s.textContent = CSS;
+    document.head.appendChild(s);
+  }
+
+  function calcPosition(trigger, pop, placement, offset) {
+    const tr = trigger.getBoundingClientRect();
+    const pw = pop.offsetWidth, ph = pop.offsetHeight;
+    const vw = window.innerWidth,  vh = window.innerHeight;
+    const pos = {
+      top:    { top: tr.top  - ph - offset,         left: tr.left + tr.width/2  - pw/2 },
+      bottom: { top: tr.bottom + offset,             left: tr.left + tr.width/2  - pw/2 },
+      left:   { top: tr.top  + tr.height/2 - ph/2,  left: tr.left - pw - offset        },
+      right:  { top: tr.top  + tr.height/2 - ph/2,  left: tr.right + offset            },
+    };
+    let p = placement;
+    if (p==='top'    && pos.top.top    < 8)         p = 'bottom';
+    if (p==='bottom' && pos.bottom.top + ph > vh-8) p = 'top';
+    if (p==='left'   && pos.left.left  < 8)         p = 'right';
+    if (p==='right'  && pos.right.left + pw > vw-8) p = 'left';
+    let { top, left } = pos[p];
+    left = Math.max(8, Math.min(left, vw-pw-8));
+    top  = Math.max(8, Math.min(top,  vh-ph-8));
+    return { top, left, finalPlacement: p };
+  }
+
+  function originOf(p) {
+    return ({top:'center bottom',bottom:'center top',left:'right center',right:'left center'})[p] || 'center bottom';
+  }
+
+  function extractContent(trigger) {
+    const targetId = trigger.dataset.popoverTarget || '';
+    if (targetId) {
+      const tpl = document.querySelector(targetId);
+      if (tpl && tpl.content) {
+        const d = document.createElement('div');
+        d.appendChild(tpl.content.cloneNode(true));
+        return d.innerHTML;
+      }
+      if (tpl) return tpl.innerHTML;
+    }
+    return trigger.dataset.popoverContent || '';
+  }
+
+  function buildContentDOM(html) {
+    const tmp  = document.createElement('div');
+    tmp.innerHTML = html;
+    const secs = Array.from(tmp.querySelectorAll(':scope > section'));
+    const isCarousel = secs.length > 1;
+    const body = document.createElement('div');
+    body.className = 'xpop-body';
+    let progressEl = null, barEl = null;
+    if (isCarousel) {
+      const track = document.createElement('div');
+      track.className = 'xpop-carousel-track';
+      secs.forEach(sec => {
+        const s = document.createElement('section');
+        s.innerHTML = sec.innerHTML;
+        track.appendChild(s);
+      });
+      body.appendChild(track);
+      progressEl = document.createElement('div');
+      progressEl.className = 'xpop-progress';
+      const pb = document.createElement('div');
+      pb.className = 'xpop-progress-bar';
+      progressEl.appendChild(pb);
+      const bar  = document.createElement('div');
+      bar.className = 'xpop-carousel-bar';
+      const dots = document.createElement('div');
+      dots.className = 'xpop-dots';
+      const nav  = document.createElement('div');
+      nav.className = 'xpop-nav';
+      const bp = document.createElement('button');
+      bp.className = 'xpop-nav-btn'; bp.dataset.dir = '-1'; bp.innerHTML = '&#8593;';
+      const bn = document.createElement('button');
+      bn.className = 'xpop-nav-btn'; bn.dataset.dir = '1';  bn.innerHTML = '&#8595;';
+      const ctr = document.createElement('span');
+      ctr.className = 'xpop-counter';
+      nav.appendChild(bp); nav.appendChild(ctr); nav.appendChild(bn);
+      bar.appendChild(dots); bar.appendChild(nav);
+      barEl = bar;
+    } else {
+      body.innerHTML = html;
+    }
+    return { isCarousel, body, progressEl, barEl };
+  }
+
+  function buildCarousel(sections, wrap, interval, animType) {
+    const track    = wrap.querySelector('.xpop-carousel-track');
+    const dotsWrap = wrap.querySelector('.xpop-dots');
+    const btnPrev  = wrap.querySelector('.xpop-nav-btn[data-dir="-1"]');
+    const btnNext  = wrap.querySelector('.xpop-nav-btn[data-dir="1"]');
+    const counter  = wrap.querySelector('.xpop-counter');
+    const pBar     = wrap.querySelector('.xpop-progress-bar');
+    const total    = sections.length;
+    let cur = 0, timer = null;
+    if (animType === 'crossfade') track.classList.add('xpop-crossfade');
+    sections.forEach((_, i) => {
+      const d = document.createElement('button');
+      d.className = 'xpop-dot' + (i===0 ? ' xpop-dot-active' : '');
+      d.addEventListener('click', () => goTo(i));
+      dotsWrap.appendChild(d);
+    });
+    function syncUI() {
+      const dots = dotsWrap.querySelectorAll('.xpop-dot');
+      dots.forEach((d,i) => d.classList.toggle('xpop-dot-active', i===cur));
+      if (counter) counter.textContent = (cur+1) + ' / ' + total;
+      if (btnPrev) btnPrev.disabled = cur === 0;
+      if (btnNext) btnNext.disabled = cur === total-1;
+    }
+    function goTo(idx) {
+      if (idx < 0 || idx >= total) return;
+      const dir  = idx > cur ? 'forward' : 'back';
+      const prev = cur;
+      cur = idx;
+      sections[prev].classList.remove('xpop-active', 'xpop-anim-forward', 'xpop-anim-back');
+      const nxt = sections[cur];
+      nxt.classList.remove('xpop-anim-forward', 'xpop-anim-back');
+      void nxt.offsetWidth;
+      nxt.classList.add('xpop-active', dir==='forward' ? 'xpop-anim-forward' : 'xpop-anim-back');
+      syncUI();
+      startProgress();
+    }
+    function startProgress() {
+      clearTimeout(timer);
+      if (pBar) { pBar.style.transition = 'none'; pBar.style.width = '0%'; void pBar.offsetWidth; }
+      if (interval > 0) {
+        if (pBar) { pBar.style.transition = `width ${interval}ms linear`; pBar.style.width = '100%'; }
+        timer = setTimeout(() => goTo(cur < total-1 ? cur+1 : 0), interval);
+      }
+    }
+    btnPrev && btnPrev.addEventListener('click', () => goTo(cur-1));
+    btnNext && btnNext.addEventListener('click', () => goTo(cur+1));
+    sections[0].classList.add('xpop-active');
+    syncUI();
+    startProgress();
+    return { stop: () => clearTimeout(timer) };
+  }
+
+  const OC_PLACEMENTS = ['start', 'end', 'top', 'bottom'];
+
+  function getModalMode(trigger) {
+    const attr = trigger.dataset.popoverModal;
+    let val;
+    if (attr !== undefined) {
+      val = (attr === '') ? 'dialog' : attr;
+    } else if (config.modal) {
+      val = config.modal;
+    } else {
+      return null;
+    }
+    if (val === 'false' || val === false)          return null;
+    if (val === true || val === 'true' || val === 'dialog') return 'dialog';
+    if (OC_PLACEMENTS.includes(val))               return val;
+    return 'dialog';
+  }
+
+  function ensureModal() {
+    let el = document.getElementById('xpop-bs-modal');
+    if (el) return el;
+    el = document.createElement('div');
+    el.className = 'modal fade';
+    el.id = 'xpop-bs-modal';
+    el.tabIndex = -1;
+    el.setAttribute('aria-hidden', 'true');
+    el.innerHTML =
+      '<div class="modal-dialog modal-dialog-scrollable">' +
+        '<div class="modal-content">' +
+          '<div class="modal-header">' +
+            '<span class="modal-title fw-bold fs-5"></span>' +
+            '<button type="button" class="btn-close btn-close-white ms-auto"' +
+              ' data-bs-dismiss="modal" aria-label="Close"></button>' +
+          '</div>' +
+          '<div class="modal-body"></div>' +
+        '</div>' +
+      '</div>';
+    document.body.appendChild(el);
+    return el;
+  }
+
+  function ensureOffcanvas() {
+    let el = document.getElementById('xpop-bs-offcanvas');
+    if (el) return el;
+    el = document.createElement('div');
+    el.className = 'offcanvas';
+    el.id = 'xpop-bs-offcanvas';
+    el.tabIndex = -1;
+    el.setAttribute('aria-hidden', 'true');
+    el.innerHTML =
+      '<div class="offcanvas-header">' +
+        '<span class="offcanvas-title fw-bold fs-5"></span>' +
+        '<button type="button" class="btn-close btn-close-white ms-auto"' +
+          ' data-bs-dismiss="offcanvas" aria-label="Close"></button>' +
+      '</div>' +
+      '<div class="offcanvas-body"></div>';
+    document.body.appendChild(el);
+    return el;
+  }
+
+  function applyThemeStyles(rootEl, headerEl, titleEl, theme) {
+    rootEl.style.background   = theme.bg;
+    rootEl.style.borderColor  = theme.borderColor;
+    headerEl.style.background        = theme.bg;
+    headerEl.style.borderBottomColor  = theme.borderColor;
+    titleEl.style.color = theme.titleColor;
+  }
+
+  const NAMED_SIZES = { sm: 'modal-sm', lg: 'modal-lg', xl: 'modal-xl' };
+
+  function showModal(trigger) {
+    const modalEl  = ensureModal();
+    const theme    = getTheme(ra(trigger, 'popoverTheme', config.theme));
+    const title    = trigger.dataset.popoverTitle || '';
+    const html     = extractContent(trigger);
+    const rawSize  = ra(trigger, 'popoverModalSize',   config.modalSize);
+    const isStatic = ra(trigger, 'popoverModalStatic', String(config.modalStatic)) === 'true';
+    const ocEl = document.getElementById('xpop-bs-offcanvas');
+    if (ocEl) { const ocInst = bootstrap.Offcanvas.getInstance(ocEl); if (ocInst) ocInst.hide(); }
+    const content = modalEl.querySelector('.modal-content');
+    const header  = modalEl.querySelector('.modal-header');
+    const titleEl = modalEl.querySelector('.modal-title');
+    const body    = modalEl.querySelector('.modal-body');
+    applyThemeStyles(content, header, titleEl, theme);
+    titleEl.innerHTML = title;
+    body.innerHTML    = html;
+    const dialog = modalEl.querySelector('.modal-dialog');
+    dialog.className = 'modal-dialog modal-dialog-scrollable';
+    dialog.style.maxWidth = '';
+    if (NAMED_SIZES[rawSize]) {
+      dialog.classList.add(NAMED_SIZES[rawSize]);
+    } else if (rawSize) {
+      dialog.style.maxWidth = rawSize;
+    }
+    const prev = bootstrap.Modal.getInstance(modalEl);
+    if (prev) prev.dispose();
+    new bootstrap.Modal(modalEl, { backdrop: isStatic ? 'static' : true, keyboard: !isStatic }).show();
+  }
+
+  function showOffcanvas(trigger, placement) {
+    const ocEl    = ensureOffcanvas();
+    const theme   = getTheme(ra(trigger, 'popoverTheme', config.theme));
+    const title   = trigger.dataset.popoverTitle || '';
+    const html    = extractContent(trigger);
+    const rawSize = ra(trigger, 'popoverModalSize',   config.modalSize);
+    const isStatic = ra(trigger, 'popoverModalStatic', String(config.modalStatic)) === 'true';
+    const mEl = document.getElementById('xpop-bs-modal');
+    if (mEl) { const mInst = bootstrap.Modal.getInstance(mEl); if (mInst) mInst.hide(); }
+    ocEl.className = 'offcanvas offcanvas-' + placement;
+    ocEl.style.width  = '';
+    ocEl.style.height = '';
+    if (rawSize) {
+      if (placement === 'start' || placement === 'end') { ocEl.style.width  = rawSize; }
+      else { ocEl.style.height = rawSize; }
+    }
+    const header  = ocEl.querySelector('.offcanvas-header');
+    const titleEl = ocEl.querySelector('.offcanvas-title');
+    const body    = ocEl.querySelector('.offcanvas-body');
+    applyThemeStyles(ocEl, header, titleEl, theme);
+    titleEl.innerHTML = title;
+    body.innerHTML    = html;
+    const prev = bootstrap.Offcanvas.getInstance(ocEl);
+    if (prev) prev.dispose();
+    new bootstrap.Offcanvas(ocEl, { backdrop: true, keyboard: !isStatic, scroll: false }).show();
+  }
+
+  function getPanelTargetEl(trigger) {
+    const attr = trigger.dataset.popoverPanel;
+    if (attr === 'false') return null;
+    const selector = (attr !== undefined && attr !== '') ? attr : config.panelTarget;
+    if (!selector) return null;
+    try { return document.querySelector(selector) || null; } catch { return null; }
+  }
+
+  function clearPanel() {
+    if (panelActiveTrigger) {
+      panelActiveTrigger.classList.remove('xpop-panel-active');
+      panelActiveTrigger = null;
+    }
+    if (panelCarouselState) { panelCarouselState.stop(); panelCarouselState = null; }
+  }
+
+  function renderToPanel(trigger, panelEl) {
+    const same = panelActiveTrigger === trigger;
+    clearPanel();
+    if (same) { panelEl.innerHTML = ''; return; }
+
+    const themeName = ra(trigger, 'popoverTheme',       config.theme);
+    const fontSize  = ra(trigger, 'popoverFontsize',    config.fontSize);
+    const bStyle    = ra(trigger, 'popoverBorder',      config.borderStyle);
+    const title     = trigger.dataset.popoverTitle      || '';
+    const cInterval = parseInt(ra(trigger, 'popoverInterval',    config.carousel.interval), 10);
+    const cAnim     = ra(trigger, 'popoverCarouselAnim',config.carousel.animation);
+    const label     = trigger.dataset.popoverLabel      || trigger.textContent.trim().slice(0, 60);
+    const theme     = getTheme(themeName);
+    const html      = extractContent(trigger);
+
+    trigger.style.setProperty('--xpop-hint-color', theme.borderColor);
+
+    const { isCarousel, body, progressEl, barEl } = buildContentDOM(html);
+
+    const wrap = document.createElement('div');
+    wrap.className = 'xpop-panel-wrap';
+    wrap.style.setProperty('--xpop-bg',           theme.bg);
+    wrap.style.setProperty('--xpop-title-color',  theme.titleColor);
+    wrap.style.setProperty('--xpop-border-color', theme.borderColor);
+    wrap.style.setProperty('--xpop-font-size',    fontSize);
+    wrap.style.borderStyle = bStyle;
+
+    if (label) {
+      const src = document.createElement('div');
+      src.className = 'xpop-panel-source';
+      src.textContent = label;
+      wrap.appendChild(src);
+    }
+
+    const hdr = document.createElement('div');
+    hdr.className = 'xpop-header';
+    hdr.innerHTML = title;
+    wrap.appendChild(hdr);
+    wrap.appendChild(body);
+
+    if (isCarousel) {
+      wrap.appendChild(progressEl);
+      wrap.appendChild(barEl);
+    }
+
+    panelEl.innerHTML = '';
+    panelEl.appendChild(wrap);
+
+    if (isCarousel) {
+      panelCarouselState = buildCarousel(
+        Array.from(wrap.querySelectorAll('.xpop-carousel-track section')),
+        wrap, cInterval, cAnim
+      );
+    }
+
+    trigger.classList.add('xpop-panel-active');
+    panelActiveTrigger = trigger;
+  }
+
+  function createPopover(trigger) {
+    const themeName = ra(trigger, 'popoverTheme',      config.theme);
+    const placement = ra(trigger, 'popoverPlacement',  config.placement);
+    const bStyle    = ra(trigger, 'popoverBorder',     config.borderStyle);
+    const fontSize  = ra(trigger, 'popoverFontsize',   config.fontSize);
+    const maxWidth  = ra(trigger, 'popoverMaxwidth',   config.maxWidth);
+    const showArrow = ra(trigger, 'popoverArrow', 'true') !== 'false';
+    const title     = trigger.dataset.popoverTitle     || '';
+    const cInterval = parseInt(ra(trigger, 'popoverInterval',   config.carousel.interval), 10);
+    const cAnim     = ra(trigger, 'popoverCarouselAnim', config.carousel.animation);
+    const theme     = getTheme(themeName);
+    const html      = extractContent(trigger);
+
+    const { isCarousel, body, progressEl, barEl } = buildContentDOM(html);
+
+    const pop = document.createElement('div');
+    pop.className = 'xpop-container';
+    pop.dataset.placement = placement;
+    pop.style.setProperty('--xpop-bg',           theme.bg);
+    pop.style.setProperty('--xpop-title-color',  theme.titleColor);
+    pop.style.setProperty('--xpop-border-color', theme.borderColor);
+    pop.style.setProperty('--xpop-font-size',    fontSize);
+    pop.style.setProperty('--xpop-max-width',    maxWidth);
+    pop.style.borderStyle = bStyle;
+    trigger.style.setProperty('--xpop-hint-color', theme.borderColor);
+
+    if (showArrow) {
+      const a = document.createElement('div');
+      a.className = 'xpop-arrow';
+      pop.appendChild(a);
+    }
+
+    const hdr = document.createElement('div');
+    hdr.className = 'xpop-header';
+    hdr.innerHTML = title;
+    pop.appendChild(hdr);
+    pop.appendChild(body);
+    if (isCarousel) {
+      pop.appendChild(progressEl);
+      pop.appendChild(barEl);
+    }
+
+    document.body.appendChild(pop);
+
+    const offset = parseInt(ra(trigger, 'popoverOffset', config.offset), 10);
+    const { top, left, finalPlacement } = calcPosition(trigger, pop, placement, offset);
+    pop.dataset.placement = finalPlacement;
+    pop.style.setProperty('--xpop-origin', originOf(finalPlacement));
+    pop.style.top  = top  + 'px';
+    pop.style.left = left + 'px';
+    if (isCarousel) {
+      carouselState = buildCarousel(
+        Array.from(pop.querySelectorAll('.xpop-carousel-track section')),
+        pop, cInterval, cAnim
+      );
+    }
+    requestAnimationFrame(() => requestAnimationFrame(() => pop.classList.add('xpop-visible')));
+    return pop;
+  }
+
+  function closePop() {
+    if (!currentPop) return;
+    if (carouselState) { carouselState.stop(); carouselState = null; }
+    const pop = currentPop;
+    pop.classList.remove('xpop-visible');
+    setTimeout(() => pop.parentNode && pop.parentNode.removeChild(pop), 230);
+    currentPop = currentTrigger = null;
+  }
+
+  document.addEventListener('click', function (e) {
+    const trigger = e.target.closest(
+      '[data-popover-title],[data-popover-content],[data-popover-target]'
+    );
+
+    if (trigger) {
+      e.stopPropagation();
+
+      const modalMode = getModalMode(trigger);
+      if (modalMode) {
+        closePop();
+        clearPanel();
+        if (modalMode === 'dialog') { showModal(trigger); }
+        else { showOffcanvas(trigger, modalMode); }
+        return;
+      }
+
+      const panelEl = getPanelTargetEl(trigger);
+      if (panelEl) {
+        closePop();
+        renderToPanel(trigger, panelEl);
+        return;
+      }
+
+      if (currentTrigger === trigger) { closePop(); return; }
+      closePop();
+      currentTrigger = trigger;
+      currentPop = createPopover(trigger);
+      return;
+    }
+
+    if (currentPop && currentPop.contains(e.target)) return;
+    closePop();
+  });
+
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closePop(); });
+
+  window.addEventListener('resize', function () {
+    if (!currentPop || !currentTrigger) return;
+    const p = currentTrigger.dataset.popoverPlacement || config.placement;
+    const o = parseInt(ra(currentTrigger, 'popoverOffset', config.offset), 10);
+    const { top, left, finalPlacement } = calcPosition(currentTrigger, currentPop, p, o);
+    currentPop.dataset.placement = finalPlacement;
+    currentPop.style.setProperty('--xpop-origin', originOf(finalPlacement));
+    currentPop.style.top  = top  + 'px';
+    currentPop.style.left = left + 'px';
+  });
+
+  injectCSS();
+})();
+</script>
+
+<script>
+/* ══════════════════════════════════════════════════════════════
+   SESSION  — placeholder for invite-code mechanism
+   ──────────────────────────────────────────────────────────────
+   Future usage:
+     IELTSSession.setInviteCode('XYZ123');
+     IELTSSession.setUserId('u_abc');
+   All localStorage keys are scoped by testId + identity.
+══════════════════════════════════════════════════════════════ */
+window.IELTSSession = {
+  userId:      null,   // will be set by invite-code mechanism
+  inviteCode:  null,   // will be set by invite-code mechanism
+  testId:      null,
+
+  setUserId(id)    { this.userId = id; },
+  setInviteCode(c) { this.inviteCode = c; },
+
+  getKey(suffix) {
+    const uid = this.inviteCode || this.userId || 'guest';
+    return `ielts__${this.testId || 'x'}__${uid}__${suffix}`;
+  },
+};
+
+/* ══════════════════════════════════════════════════════════════
+   MAIN APP
+══════════════════════════════════════════════════════════════ */
+window.IELTSApp = (() => {
+
+  /* ── State ─────────────────────────────────────────────────── */
+  let _data          = null;
+  let _passageId     = null;  // currently displayed passage
+  let _answers       = {};    // { qNo: value }
+  let _flags         = {};    // { qNo: true }
+  let _highlights    = [];    // [{ id, passageId, color, note, label }]
+  let _activeMarkEl  = null;  // currently selected <mark>
+  let _timerIv       = null;
+  let _secsLeft      = 3600;
+  let _notePanelOpen = true;
+  let _allQNos       = [];    // flat ordered list of all question numbers
+
+  const EMPTY_NOTE_HTML =
+    '<div style="font-size:0.82rem;color:var(--shell);opacity:0.32;font-style:italic;padding:2px 0;">' +
+    'Click a highlight to view or add a note.</div>';
+
+  /* ── Public: init ──────────────────────────────────────────── */
+  function init(jsonData) {
+    _data = jsonData;
+    IELTSSession.testId = _data.meta.test_id;
+
+    // Apply user identity from JSON (backend may pre-fill these)
+    if (_data.meta.user_id)    IELTSSession.setUserId(_data.meta.user_id);
+    if (_data.meta.invite_code) IELTSSession.setInviteCode(_data.meta.invite_code);
+
+    document.getElementById('page-title').textContent  = _data.meta.title || 'IELTS Reading';
+    document.getElementById('test-title').textContent  = _data.meta.title || 'IELTS Reading';
+
+    // Collect all question numbers in order
+    _allQNos = [];
+    (_data.question_groups || []).forEach(g =>
+      (g.questions || []).forEach(q => _allQNos.push(q.no))
+    );
+
+    _loadAnswers();
+    _loadFlags();
+    _loadHighlightsData();
+
+    _renderPassageTabs();
+    _startTimer(_data.meta.time_limit || 3600);
+    _renderNavigation();
+
+    // Show first passage
+    if (_data.passages && _data.passages.length > 0) {
+      _switchPassage(_data.passages[0].id);
+    }
+
+    document.getElementById('loading-screen').classList.add('hidden');
+  }
+
+  /* ── Passage Tabs ──────────────────────────────────────────── */
+  function _renderPassageTabs() {
+    const wrap = document.getElementById('passage-tabs');
+    wrap.innerHTML = '';
+    (_data.passages || []).forEach(p => {
+      const btn = document.createElement('button');
+      btn.className = 'passage-tab';
+      btn.textContent = p.label || p.id;
+      btn.dataset.pid = p.id;
+      btn.addEventListener('click', () => _switchPassage(p.id));
+      wrap.appendChild(btn);
+    });
+  }
+
+  function _switchPassage(pid) {
+    _passageId = pid;
+    const p = (_data.passages || []).find(x => x.id === pid);
+    if (!p) return;
+
+    document.querySelectorAll('.passage-tab').forEach(b =>
+      b.classList.toggle('active', b.dataset.pid === pid)
+    );
+    document.getElementById('passage-range').textContent   = p.question_range || '';
+    document.getElementById('passage-heading').textContent = p.title || '';
+    document.getElementById('passage-body').innerHTML      = p.body || '';
+
+    _renderQuestions(pid);
+    _restoreHighlights(pid);
+    deactivateMark();
+  }
+
+  /* ── Timer ─────────────────────────────────────────────────── */
+  function _startTimer(total) {
+    _secsLeft = total;
+    clearInterval(_timerIv);
+    _updateTimer();
+    _timerIv = setInterval(() => {
+      if (_secsLeft <= 0) { clearInterval(_timerIv); return; }
+      _secsLeft--;
+      _updateTimer();
+    }, 1000);
+  }
+
+  function _updateTimer() {
+    const el = document.getElementById('timer-display');
+    const m  = Math.floor(_secsLeft / 60);
+    const s  = _secsLeft % 60;
+    el.textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+    el.className = _secsLeft <= 300 ? 'danger' : _secsLeft <= 600 ? 'warn' : '';
+  }
+
+  /* ── Navigation ────────────────────────────────────────────── */
+  function _renderNavigation() {
+    const wrap = document.getElementById('q-nav-wrap');
+    wrap.innerHTML = '';
+    _allQNos.forEach(no => {
+      const btn = document.createElement('button');
+      btn.className = 'q-nav-btn';
+      btn.id = `qnav-${no}`;
+      btn.textContent = no;
+      if (_answers[no] !== undefined && String(_answers[no]).trim() !== '')
+        btn.classList.add('answered');
+      if (_flags[no]) btn.classList.add('flagged');
+      btn.addEventListener('click', () => _scrollToQ(no));
+      wrap.appendChild(btn);
+    });
+  }
+
+  function _scrollToQ(no) {
+    const el = document.getElementById(`q-item-${no}`);
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    document.querySelectorAll('.q-nav-btn').forEach(b => b.classList.remove('current'));
+    const nb = document.getElementById(`qnav-${no}`);
+    if (nb) nb.classList.add('current');
+  }
+
+  function _navSetAnswered(no, val) {
+    const nb = document.getElementById(`qnav-${no}`);
+    if (nb) nb.classList.toggle('answered', val !== '' && val !== undefined && val !== null);
+  }
+
+  /* ── Question Groups ───────────────────────────────────────── */
+  function _renderQuestions(pid) {
+    const body = document.getElementById('question-body');
+    body.innerHTML = '';
+    const groups = (_data.question_groups || []).filter(g => g.passage_id === pid);
+    groups.forEach((g, idx) => {
+      if (idx > 0) {
+        const hr = document.createElement('hr');
+        hr.className = 'q-group-divider';
+        body.appendChild(hr);
+      }
+      body.appendChild(_buildGroup(g));
+    });
+  }
+
+  function _buildGroup(g) {
+    const sec = document.createElement('div');
+    sec.className = 'q-group';
+
+    if (g.instruction) {
+      const d = document.createElement('div');
+      d.className = 'q-instruction';
+      d.innerHTML = g.instruction;
+      sec.appendChild(d);
+    }
+    if (g.sub_instruction) {
+      const d = document.createElement('div');
+      d.className = 'q-sub-instruction';
+      d.innerHTML = g.sub_instruction;
+      sec.appendChild(d);
+    }
+
+    // Matching types: show options list
+    const matchTypes = ['matching','matching_headings','matching_features'];
+    if (matchTypes.includes(g.type) && g.options) {
+      const box = document.createElement('div');
+      box.className = 'match-options-box';
+      const entries = Array.isArray(g.options)
+        ? g.options.map((v, i) => ({ k: _toRoman(i+1), v }))
+        : Object.entries(g.options).map(([k,v]) => ({ k, v }));
+      entries.forEach(({ k, v }) => {
+        const row = document.createElement('div');
+        row.className = 'match-opt-item';
+        row.innerHTML = `<span class="match-opt-key">${k}.</span><span>${v}</span>`;
+        box.appendChild(row);
+      });
+      sec.appendChild(box);
+    }
+
+    (g.questions || []).forEach(q => sec.appendChild(_buildQuestion(g, q)));
+    return sec;
+  }
+
+  function _buildQuestion(g, q) {
+    const item = document.createElement('div');
+    item.className = 'q-item';
+    item.id = `q-item-${q.no}`;
+
+    // Number row + flag
+    const numRow = document.createElement('div');
+    numRow.className = 'q-num-row';
+    const numEl = document.createElement('div');
+    numEl.className = 'q-number';
+    numEl.textContent = `Question ${q.no}`;
+    const flagBtn = document.createElement('button');
+    flagBtn.className = 'q-flag-btn' + (_flags[q.no] ? ' flagged' : '');
+    flagBtn.title = 'Flag for review';
+    flagBtn.textContent = '⚑';
+    flagBtn.addEventListener('click', () => {
+      _flags[q.no] = !_flags[q.no];
+      flagBtn.classList.toggle('flagged', _flags[q.no]);
+      const nb = document.getElementById(`qnav-${q.no}`);
+      if (nb) nb.classList.toggle('flagged', _flags[q.no]);
+      _saveFlags();
+    });
+    numRow.appendChild(numEl);
+    numRow.appendChild(flagBtn);
+    item.appendChild(numRow);
+
+    // Prompt
+    if (q.prompt) {
+      const pr = document.createElement('div');
+      pr.className = 'q-prompt';
+      pr.innerHTML = q.prompt;
+      item.appendChild(pr);
+    }
+
+    item.appendChild(_buildControl(g, q));
+    return item;
+  }
+
+  function _buildControl(g, q) {
+    const wrap = document.createElement('div');
+    const type = g.type;
+    const saved = _answers[q.no];
+
+    if (type === 'multiple_choice') {
+      wrap.className = 'mc-list';
+      const opts = Array.isArray(q.options)
+        ? q.options.map((v, i) => ({ k: String.fromCharCode(65+i), v }))
+        : Object.entries(q.options || {}).map(([k,v]) => ({ k, v }));
+      opts.forEach(({ k, v }) => {
+        const lbl = document.createElement('label');
+        lbl.className = 'mc-opt' + (saved === k ? ' selected' : '');
+        lbl.innerHTML = `<input type="radio" name="q_${q.no}" value="${k}">` +
+                        `<span class="mc-key">${k}</span><span>${v}</span>`;
+        lbl.addEventListener('click', () => {
+          wrap.querySelectorAll('.mc-opt').forEach(o => o.classList.remove('selected'));
+          lbl.classList.add('selected');
+          _setAnswer(q.no, k);
+        });
+        wrap.appendChild(lbl);
+      });
+
+    } else if (type === 'tfng' || type === 'ynng') {
+      wrap.className = 'tfng-btns';
+      const choices = g.choices || (type === 'tfng'
+        ? ['TRUE', 'FALSE', 'NOT GIVEN']
+        : ['YES', 'NO', 'NOT GIVEN']);
+      choices.forEach(c => {
+        const btn = document.createElement('button');
+        btn.className = 'tfng-btn' + (saved === c ? ' selected' : '');
+        btn.textContent = c;
+        btn.addEventListener('click', () => {
+          wrap.querySelectorAll('.tfng-btn').forEach(b => b.classList.remove('selected'));
+          btn.classList.add('selected');
+          _setAnswer(q.no, c);
+        });
+        wrap.appendChild(btn);
+      });
+
+    } else if (['matching','matching_headings','matching_features'].includes(type)) {
+      const sel = document.createElement('select');
+      sel.className = 'match-select';
+      const def = document.createElement('option');
+      def.value = ''; def.textContent = '— Select —';
+      sel.appendChild(def);
+      const entries = Array.isArray(g.options)
+        ? g.options.map((v, i) => ({ k: _toRoman(i+1), v }))
+        : Object.entries(g.options || {}).map(([k,v]) => ({ k, v }));
+      entries.forEach(({ k, v }) => {
+        const o = document.createElement('option');
+        o.value = k;
+        o.textContent = `${k}. ${String(v).slice(0,55)}${String(v).length>55?'…':''}`;
+        sel.appendChild(o);
+      });
+      if (saved) sel.value = saved;
+      sel.addEventListener('change', () => _setAnswer(q.no, sel.value));
+      wrap.appendChild(sel);
+
+    } else if (type === 'completion' || type === 'short_answer') {
+      const inp = document.createElement('input');
+      inp.type = 'text';
+      inp.className = 'text-input';
+      inp.placeholder = type === 'completion'
+        ? 'Write your answer (observe word limit)'
+        : 'Write your answer here';
+      inp.value = saved || '';
+      inp.addEventListener('input', () => _setAnswer(q.no, inp.value));
+      wrap.appendChild(inp);
+
+    } else {
+      // Fallback
+      const inp = document.createElement('input');
+      inp.type = 'text';
+      inp.className = 'text-input';
+      inp.placeholder = 'Answer…';
+      inp.value = saved || '';
+      inp.addEventListener('input', () => _setAnswer(q.no, inp.value));
+      wrap.appendChild(inp);
+    }
+
+    return wrap;
+  }
+
+  /* ── Answer / Flag persistence ─────────────────────────────── */
+  function _setAnswer(no, val) {
+    _answers[no] = val;
+    _saveAnswers();
+    _navSetAnswered(no, val);
+  }
+
+  function _saveAnswers() {
+    try { localStorage.setItem(IELTSSession.getKey('ans'), JSON.stringify(_answers)); } catch(e) {}
+  }
+  function _loadAnswers() {
+    try { const r = localStorage.getItem(IELTSSession.getKey('ans')); if(r) _answers = JSON.parse(r); } catch(e) {}
+  }
+  function _saveFlags() {
+    try { localStorage.setItem(IELTSSession.getKey('flags'), JSON.stringify(_flags)); } catch(e) {}
+  }
+  function _loadFlags() {
+    try { const r = localStorage.getItem(IELTSSession.getKey('flags')); if(r) _flags = JSON.parse(r); } catch(e) {}
+  }
+
+  /* ── Highlights (bp-popnote integration) ───────────────────── */
+  function addHighlight(color) {
+    const sel = window.getSelection();
+    if (!sel || sel.isCollapsed || !sel.toString().trim()) return;
+    const range = sel.getRangeAt(0);
+    const passageBody = document.getElementById('passage-body');
+    if (!passageBody.contains(range.commonAncestorContainer)) return;
+
+    const markId = 'hl_' + Date.now() + '_' + Math.floor(Math.random() * 9999);
+    const label  = sel.toString().trim().slice(0, 50);
+
+    const _wrapRange = (r) => {
+      const mark = document.createElement('mark');
+      mark.className = `hl hl-${color}`;
+      mark.dataset.markId        = markId;
+      mark.dataset.color         = color;
+      /* bp-popnote attributes — note text stored here, panel mode target */
+      mark.dataset.popoverContent = '';
+      mark.dataset.popoverPanel   = '#note-panel';
+      mark.dataset.popoverHint    = 'false';
+      mark.dataset.popoverLabel   = label;
+      return mark;
+    };
+
+    try {
+      const mark = _wrapRange(range);
+      range.surroundContents(mark);
+      sel.removeAllRanges();
+      _highlights.push({ id: markId, passageId: _passageId, color, note: '', label });
+      _saveHighlights();
+      activateMark(mark);
+    } catch (e) {
+      // Cross-element selection fallback
+      try {
+        const frag = range.extractContents();
+        const mark = _wrapRange(range);
+        mark.appendChild(frag);
+        range.insertNode(mark);
+        sel.removeAllRanges();
+        _highlights.push({ id: markId, passageId: _passageId, color, note: '', label });
+        _saveHighlights();
+        activateMark(mark);
+      } catch (e2) { console.warn('Highlight failed:', e2); }
+    }
+    _hideToolbar();
+  }
+
+  /* Called from capture-phase click handler AND the toolbar */
+  function activateMark(markEl) {
+    _activeMarkEl = markEl;
+    const stored  = _highlights.find(h => h.id === markEl.dataset.markId);
+    const note    = stored?.note || '';
+    document.getElementById('note-textarea').value = note;
+    document.getElementById('note-edit-area').style.display = 'block';
+    document.getElementById('note-panel-hint').textContent =
+      '"' + (markEl.dataset.popoverLabel || markEl.textContent).slice(0, 38) + '…"';
+    if (!_notePanelOpen) toggleNotePanel();
+  }
+
+  function deactivateMark() {
+    _activeMarkEl = null;
+    document.getElementById('note-edit-area').style.display = 'none';
+    document.getElementById('note-panel').innerHTML = EMPTY_NOTE_HTML;
+    document.getElementById('note-panel-hint').textContent = 'Select a highlight to view or add a note';
+  }
+
+  function saveNote() {
+    if (!_activeMarkEl) return;
+    const note = document.getElementById('note-textarea').value.trim();
+    /* Sync note into the bp-popnote data attribute so the panel re-renders it */
+    _activeMarkEl.dataset.popoverContent = note;
+    const stored = _highlights.find(h => h.id === _activeMarkEl.dataset.markId);
+    if (stored) stored.note = note;
+    _saveHighlights();
+    /* Refresh panel display manually (bp-popnote already rendered empty content; update it) */
+    document.getElementById('note-panel').innerHTML = note
+      ? `<div style="font-size:0.88rem;color:var(--shell);padding:4px 0 6px;line-height:1.65;">` +
+        _escHtml(note) + `</div>`
+      : EMPTY_NOTE_HTML;
+  }
+
+  function deleteHighlight() {
+    if (!_activeMarkEl) return;
+    const mid = _activeMarkEl.dataset.markId;
+    const p   = _activeMarkEl.parentNode;
+    while (_activeMarkEl.firstChild) p.insertBefore(_activeMarkEl.firstChild, _activeMarkEl);
+    p.removeChild(_activeMarkEl);
+    _highlights = _highlights.filter(h => h.id !== mid);
+    _saveHighlights();
+    deactivateMark();
+  }
+
+  function _saveHighlights() {
+    try { localStorage.setItem(IELTSSession.getKey('hl'), JSON.stringify(_highlights)); } catch(e) {}
+  }
+  function _loadHighlightsData() {
+    try { const r = localStorage.getItem(IELTSSession.getKey('hl')); if(r) _highlights = JSON.parse(r); } catch(e) {}
+  }
+  function _restoreHighlights(pid) {
+    /* Session-only highlights (full serialization is a follow-up feature).
+       Stored metadata (_highlights) is preserved for server sync. */
+    _loadHighlightsData();
+  }
+
+  /* ── Note Panel ────────────────────────────────────────────── */
+  function toggleNotePanel() {
+    _notePanelOpen = !_notePanelOpen;
+    document.getElementById('note-panel-body').classList.toggle('collapsed', !_notePanelOpen);
+    document.getElementById('note-chevron').textContent = _notePanelOpen ? '▲' : '▼';
+  }
+
+  /* ── Highlight Toolbar ─────────────────────────────────────── */
+  function _showToolbar(rect) {
+    const tb = document.getElementById('hl-toolbar');
+    tb.style.display = 'flex';
+    const w = 200;
+    const x = Math.max(8, Math.min(rect.left + rect.width / 2 - w / 2, window.innerWidth - w - 8));
+    const y = Math.max(8, rect.top - 52);
+    tb.style.left = x + 'px';
+    tb.style.top  = y + 'px';
+  }
+
+  function _hideToolbar() {
+    document.getElementById('hl-toolbar').style.display = 'none';
+  }
+
+  /* ── Utility ───────────────────────────────────────────────── */
+  function _escHtml(s) {
+    return String(s)
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+      .replace(/\n/g,'<br>');
+  }
+
+  function _toRoman(n) {
+    const v=['M','CM','D','CD','C','XC','L','XL','X','IX','V','IV','I'];
+    const d=[1000,900,500,400,100,90,50,40,10,9,5,4,1];
+    let r=''; d.forEach((x,i)=>{ while(n>=x){r+=v[i];n-=x;} });
+    return r.toLowerCase();
+  }
+
+  /* ── Event wiring (internal) ───────────────────────────────── */
+  function _initEvents() {
+    // Capture phase: intercept mark clicks BEFORE bp-popnote bubble handler
+    document.addEventListener('click', e => {
+      const mark = e.target.closest('mark.hl');
+      if (mark) {
+        // Same mark again = bp-popnote will toggle off panel; deactivate ours too
+        if (_activeMarkEl === mark) {
+          _activeMarkEl = null;
+          document.getElementById('note-edit-area').style.display = 'none';
+        } else {
+          activateMark(mark);
+        }
+        return;
+      }
+
+      // Click outside mark & outside note-panel & outside toolbar → deactivate
+      if (!e.target.closest('#note-panel-wrap') &&
+          !e.target.closest('#hl-toolbar')) {
+        if (_activeMarkEl) {
+          _activeMarkEl = null;
+          document.getElementById('note-edit-area').style.display = 'none';
+        }
+      }
+    }, true); // capture
+
+    // Show toolbar on text selection
+    document.addEventListener('mouseup', e => {
+      if (e.target.closest('#hl-toolbar')) return;
+      if (e.target.closest('mark.hl')) return;
+
+      const sel = window.getSelection();
+      if (sel && !sel.isCollapsed && sel.toString().trim().length > 0) {
+        const pb = document.getElementById('passage-body');
+        try {
+          const range = sel.getRangeAt(0);
+          if (pb.contains(range.commonAncestorContainer)) {
+            _showToolbar(range.getBoundingClientRect());
+            return;
+          }
+        } catch(e) {}
+      }
+      _hideToolbar();
+    });
+
+    document.addEventListener('selectionchange', () => {
+      const sel = window.getSelection();
+      if (!sel || sel.isCollapsed) _hideToolbar();
+    });
+
+    // Highlight color buttons
+    document.querySelectorAll('.hl-color-btn').forEach(btn =>
+      btn.addEventListener('click', e => { e.stopPropagation(); addHighlight(btn.dataset.color); })
+    );
+    document.getElementById('hl-remove-btn').addEventListener('click', e => {
+      e.stopPropagation(); deleteHighlight(); _hideToolbar();
+    });
+
+    // Draggable divider
+    (function() {
+      const divider  = document.getElementById('divider');
+      const leftPane = document.getElementById('left-pane');
+      const layout   = document.getElementById('main-layout');
+      let drag=false, sx=0, sw=0;
+      divider.addEventListener('mousedown', e => {
+        drag=true; sx=e.clientX; sw=leftPane.offsetWidth;
+        divider.classList.add('dragging');
+        document.body.style.cursor='col-resize';
+        document.body.style.userSelect='none';
+      });
+      document.addEventListener('mousemove', e => {
+        if (!drag) return;
+        const nw = Math.min(Math.max(sw + e.clientX - sx, 260), layout.offsetWidth - 260);
+        leftPane.style.width=''; leftPane.style.flex='none'; leftPane.style.width=nw+'px';
+      });
+      document.addEventListener('mouseup', () => {
+        if (!drag) return; drag=false;
+        divider.classList.remove('dragging');
+        document.body.style.cursor=''; document.body.style.userSelect='';
+      });
+    })();
+  }
+
+  // Public API surface
+  return {
+    init, addHighlight, deleteHighlight, activateMark, deactivateMark,
+    saveNote, toggleNotePanel,
+    _initEvents,
+    // For external use (invite-code hook, etc.)
+    getAnswers() { return { ..._answers }; },
+    getFlags()   { return { ..._flags   }; },
+    getHighlights() { return [..._highlights]; },
+  };
+})();
+
+/* ══════════════════════════════════════════════════════════════
+   NOTE PANEL CONTROLS (called from onclick in HTML)
+══════════════════════════════════════════════════════════════ */
+function saveNote()      { IELTSApp.saveNote(); }
+function deleteHighlight(){ IELTSApp.deleteHighlight(); }
+
+/* ══════════════════════════════════════════════════════════════
+   JSON DATA LOADER
+   Priority: 1) ?data=<url>  2) #ielts-data script  3) mock data
+══════════════════════════════════════════════════════════════ */
+async function _loadTestData() {
+  IELTSApp._initEvents();
+
+  const params  = new URLSearchParams(location.search);
+  const dataUrl = params.get('data');
+
+  if (dataUrl) {
+    try {
+      const res  = await fetch(dataUrl);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      IELTSApp.init(await res.json());
+      return;
+    } catch (err) {
+      console.error('[IELTS] fetch failed:', err);
+    }
+  }
+
+  const inlineEl = document.getElementById('ielts-data');
+  if (inlineEl) {
+    try { IELTSApp.init(JSON.parse(inlineEl.textContent)); return; }
+    catch (err) { console.error('[IELTS] inline JSON parse error:', err); }
+  }
+
+  // Fallback: development mock
+  IELTSApp.init(_MOCK_DATA);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   MOCK DATA  —  development / preview only
+══════════════════════════════════════════════════════════════ */
+const _MOCK_DATA = {
+  meta: {
+    test_id:     'ielts_demo_001',
+    user_id:     null,
+    invite_code: null,
+    title:       'IELTS Academic Reading – Demo Test',
+    time_limit:  3600,
+    created_at:  '2026-08-22',
+  },
+  passages: [
+    {
+      id:             'p1',
+      label:          'Passage 1',
+      title:          'The Language of Bees',
+      question_range: 'Questions 1–13',
+      body: `
+<p>In 1973, Austrian ethologist Karl von Frisch was awarded the Nobel Prize in Physiology or Medicine, partly for his groundbreaking research into honeybee communication. Von Frisch had discovered that honeybees use a series of elaborate movements — a so-called "waggle dance" — to communicate the precise direction and distance of food sources to their hivemates. This finding revolutionised our understanding of non-human communication.</p>
+<p>The waggle dance consists of two phases. In the straight run, the bee moves in a specific direction while waggling its abdomen rapidly from side to side. This direction corresponds to the bearing of the food source relative to the sun. The duration of the straight run indicates distance: the longer the run, the farther the food. After completing the straight run, the bee circles back to the starting point, alternating left and right circuits to form a figure-eight pattern.</p>
+<p>What is particularly remarkable is that bees can also account for the sun's movement across the sky. Since the waggle dance takes place inside the dark hive on vertical combs, bees transpose the angle of their dance relative to vertical to correspond to the angle of the food source relative to the sun. They even adjust for the time elapsed since the last observation of the sun's position, effectively performing a kind of dead-reckoning navigation.</p>
+<p>More recent research has expanded our understanding of bee communication considerably. Studies using robotic bees — mechanical replicas programmed to perform the waggle dance — demonstrated that recruits could be directed to artificial food sources based on the robot's dance alone, confirming that the dance truly carries meaningful information. Other experiments revealed that bees also produce vibrations and sounds during the dance, which may play a role in transmitting information in noisy environments.</p>
+<p>Linguists and cognitive scientists have long debated whether the waggle dance constitutes a true language. Some argue that, to qualify as language, a communication system must possess productivity (the ability to generate novel messages), displacement (reference to things not immediately present), and arbitrariness (no obligatory link between signal and meaning). The waggle dance exhibits all three properties to some degree.</p>
+<p>Critics, however, maintain that the waggle dance is too rigid and stereotyped to merit the label "language". Unlike human language, it cannot generate a potentially infinite variety of messages, nor does it appear to be learned in the same open-ended way that children acquire speech. Defenders counter that many human languages are also subject to constraints, and that the comparison may reveal more about human biases than about the inherent limitations of bee communication.</p>
+      `
+    },
+    {
+      id:             'p2',
+      label:          'Passage 2',
+      title:          'The Rise of Urban Farming',
+      question_range: 'Questions 14–19',
+      body: `
+<p>Urban farming — the practice of cultivating food within cities and towns — has experienced a remarkable resurgence in recent decades. What was once a necessity during wartime food shortages has evolved into a multifaceted movement driven by concerns about food security, environmental sustainability, and community well-being. From rooftop gardens in New York to vertical farms in Singapore, cities around the world are reimagining their relationship with food production.</p>
+<p>The environmental case for urban farming is compelling. Transporting food long distances consumes significant quantities of fossil fuels and contributes substantially to greenhouse gas emissions. By contrast, locally grown produce can reach consumers with a fraction of the environmental cost. Moreover, urban green spaces help to mitigate the "heat island" effect — the phenomenon whereby built-up areas are significantly warmer than surrounding rural land — by providing shade and evaporative cooling.</p>
+<p>Urban farms also offer significant social benefits. Community gardens, in particular, have been shown to foster social cohesion by bringing together residents of diverse backgrounds around a shared activity. Research in several cities has found that areas with active community gardens exhibit lower rates of crime and vandalism. For vulnerable populations — including the elderly, isolated individuals, and those experiencing mental health difficulties — participation in gardening activities has been linked to improvements in mood, self-esteem, and overall quality of life.</p>
+      `
+    }
+  ],
+  question_groups: [
+    {
+      id: 'g1', passage_id: 'p1', type: 'multiple_choice',
+      instruction: 'Choose the correct letter, <strong>A</strong>, <strong>B</strong>, <strong>C</strong> or <strong>D</strong>.',
+      questions: [
+        { no:1, prompt:'Why was Karl von Frisch awarded the Nobel Prize?',
+          options:{A:'He discovered bees have a complex social structure.',B:'He researched how bees communicate the location of food.',C:'He was the first scientist to study insect behaviour.',D:'He developed a method for training bees to follow humans.'} },
+        { no:2, prompt:'What does the duration of the straight run in the waggle dance indicate?',
+          options:{A:'The quality of the food source.',B:'The direction of the food source.',C:'The distance to the food source.',D:'The number of bees needed.'} },
+        { no:3, prompt:'What do the robotic bee experiments confirm?',
+          options:{A:'Bees cannot distinguish real and artificial signals.',B:'The waggle dance is the sole means of communication.',C:'Bees can be directed to locations through the dance alone.',D:'Mechanical devices can replace bees in pollination.'} }
+      ]
+    },
+    {
+      id: 'g2', passage_id: 'p1', type: 'tfng',
+      instruction: 'Do the following statements agree with the information given in Reading Passage 1?',
+      sub_instruction: 'TRUE &nbsp;if the statement agrees with the information &nbsp;|&nbsp; FALSE &nbsp;if it contradicts the information &nbsp;|&nbsp; NOT GIVEN &nbsp;if there is no information on this',
+      questions: [
+        { no:4,  prompt:'The waggle dance takes place on the outer surface of the honeycomb.' },
+        { no:5,  prompt:'Bees adjust their dance to account for the movement of the sun.' },
+        { no:6,  prompt:'Productivity, displacement, and arbitrariness are considered necessary features of language.' },
+        { no:7,  prompt:'Young bees learn the waggle dance by observing older hive members.' }
+      ]
+    },
+    {
+      id: 'g3', passage_id: 'p1', type: 'matching_headings',
+      instruction: 'Reading Passage 1 has six paragraphs, <strong>A–F</strong>. Choose the correct heading for each paragraph from the list below.',
+      options: [
+        'Evidence from mechanical replicas',
+        'A disputed claim about animal language',
+        'The limitations of the dance as a language',
+        'An award-winning discovery',
+        'Mathematical precision in navigation',
+        'The mechanics of the waggle dance',
+        'Disagreement among researchers'
+      ],
+      questions: [
+        {no:8,  prompt:'Paragraph A'},{no:9,  prompt:'Paragraph B'},
+        {no:10, prompt:'Paragraph C'},{no:11, prompt:'Paragraph D'},
+        {no:12, prompt:'Paragraph E'},{no:13, prompt:'Paragraph F'}
+      ]
+    },
+    {
+      id: 'g4', passage_id: 'p2', type: 'multiple_choice',
+      instruction: 'Choose the correct letter, <strong>A</strong>, <strong>B</strong>, <strong>C</strong> or <strong>D</strong>.',
+      questions: [
+        { no:14, prompt:'What originally drove the practice of urban farming?',
+          options:{A:'Environmental concerns.',B:'A shortage of food during wartime.',C:'Community development programmes.',D:'Commercial interest in local produce.'} }
+      ]
+    },
+    {
+      id: 'g5', passage_id: 'p2', type: 'tfng',
+      instruction: 'Do the following statements agree with the information in Reading Passage 2?',
+      sub_instruction: 'TRUE &nbsp;|&nbsp; FALSE &nbsp;|&nbsp; NOT GIVEN',
+      questions: [
+        {no:15, prompt:'Urban farms produce more food per square metre than rural farms.'},
+        {no:16, prompt:'Rooftop gardens can reduce temperatures in city environments.'},
+        {no:17, prompt:'Community gardens have been linked to reduced crime in some areas.'}
+      ]
+    },
+    {
+      id: 'g6', passage_id: 'p2', type: 'short_answer',
+      instruction: 'Answer the questions below. Choose <strong>NO MORE THAN THREE WORDS</strong> from the passage for each answer.',
+      questions: [
+        {no:18, prompt:'What term describes the warming of built-up areas compared to their surroundings?'},
+        {no:19, prompt:'Which groups are said to benefit most in terms of mood and self-esteem from gardening?'}
+      ]
+    }
+  ]
+};
+
+/* Boot */
+_loadTestData();
 </script>
 </body>
 </html>
