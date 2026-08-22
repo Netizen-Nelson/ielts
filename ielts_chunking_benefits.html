@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nelson IELTS: 語塊拆解技術介紹</title>
+  <style>
+    :root {
+      --bg:      #0C0D0C;
+      --shell:   #C6C7BD;
+      --lavender:#C3A5E5;
+      --special: #C8DD5A;
+      --warning: #F08080;
+      --salmon:  #E5C3B3;
+      --sky:     #08A9D1;
+      --safe:    #40C99A;
+      --vanilla: #DBEDD8;
+      --yellow:  #DECA4B;
+      --focus:   #A0CF72;
+      --info:    #4285EB;
+      --stone:   #95BDD7;
+      --indigo:  #7B6CF0;
+      --pink:    #FFB3D9;
+      --orange:  #EDA109;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--shell);
+      font-family: 'Segoe UI', 'PingFang TC', 'Noto Sans TC', sans-serif;
+      font-size: 1.125rem;
+      line-height: 1.8;
+    }
+
+    /* ── Hero ── */
+    .hero {
+      text-align: center;
+      padding: 72px 24px 56px;
+      background: linear-gradient(160deg, #111312 0%, #0C0D0C 100%);
+      border-bottom: 2px solid var(--indigo);
+    }
+    .hero .badge {
+      display: inline-block;
+      background: var(--indigo);
+      color: #fff;
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 6px 18px;
+      border-radius: 99px;
+      margin-bottom: 20px;
+    }
+    .hero h1 {
+      font-size: 2.6rem;
+      font-weight: 800;
+      color: var(--special);
+      line-height: 1.25;
+      margin-bottom: 16px;
+    }
+    .hero .subtitle {
+      font-size: 1.15rem;
+      color: var(--stone);
+      max-width: 620px;
+      margin: 0 auto 32px;
+    }
+    .hero .context-note {
+      display: inline-block;
+      border: 1px solid var(--warning);
+      color: var(--warning);
+      border-radius: 8px;
+      padding: 10px 22px;
+      font-size: 0.95rem;
+    }
+
+    /* ── Section ── */
+    .section {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 64px 24px;
+    }
+    .section + .section {
+      border-top: 1px solid #1e2020;
+    }
+
+    .section-label {
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--lavender);
+      margin-bottom: 10px;
+    }
+    .section h2 {
+      font-size: 1.7rem;
+      font-weight: 700;
+      color: var(--special);
+      margin-bottom: 20px;
+    }
+    .section p {
+      color: var(--shell);
+      margin-bottom: 16px;
+    }
+
+    /* ── Problem block ── */
+    .problem-box {
+      background: #16181a;
+      border-left: 4px solid var(--warning);
+      border-radius: 0 10px 10px 0;
+      padding: 20px 24px;
+      margin: 24px 0;
+    }
+    .problem-box .label {
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      color: var(--warning);
+      margin-bottom: 8px;
+    }
+    .problem-box p {
+      margin: 0;
+      color: var(--salmon);
+    }
+
+    /* ── Example sentence breakdown ── */
+    .example-section {
+      background: #111312;
+      border-radius: 16px;
+      padding: 40px 36px;
+      margin: 32px 0;
+    }
+    .example-section h3 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--sky);
+      margin-bottom: 20px;
+    }
+    .sentence-display {
+      font-size: 1.05rem;
+      line-height: 2.2;
+      margin-bottom: 28px;
+      background: #0e0f0e;
+      border-radius: 10px;
+      padding: 20px 22px;
+      font-style: italic;
+      color: var(--shell);
+    }
+
+    /* Chunk highlighting */
+    .chunk {
+      display: inline;
+      border-radius: 4px;
+      padding: 2px 5px;
+      font-style: normal;
+      font-weight: 600;
+      cursor: default;
+      transition: opacity 0.2s;
+    }
+    .chunk-compare { background: rgba(195,165,229,0.18); color: var(--lavender); }
+    .chunk-subject { background: rgba(64,201,154,0.18); color: var(--safe); }
+    .chunk-verb    { background: rgba(8,169,209,0.18);  color: var(--sky); }
+    .chunk-object  { background: rgba(200,221,90,0.18); color: var(--special); }
+
+    .chunk-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 0.88rem;
+    }
+    .legend-dot {
+      width: 12px; height: 12px;
+      border-radius: 3px;
+      flex-shrink: 0;
+    }
+
+    /* Chunk steps */
+    .chunk-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .chunk-step {
+      display: grid;
+      grid-template-columns: 40px 1fr;
+      gap: 14px;
+      align-items: start;
+    }
+    .step-num {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800;
+      font-size: 0.9rem;
+      flex-shrink: 0;
+    }
+    .step-num.c  { background: rgba(195,165,229,0.2); color: var(--lavender); }
+    .step-num.s  { background: rgba(64,201,154,0.2);  color: var(--safe); }
+    .step-num.v  { background: rgba(8,169,209,0.2);   color: var(--sky); }
+    .step-num.o  { background: rgba(200,221,90,0.2);  color: var(--special); }
+    .step-body strong {
+      display: block;
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      margin-bottom: 3px;
+    }
+    .step-body.c strong { color: var(--lavender); }
+    .step-body.s strong { color: var(--safe); }
+    .step-body.v strong { color: var(--sky); }
+    .step-body.o strong { color: var(--special); }
+    .step-body p { color: var(--shell); font-size: 0.97rem; margin: 0; }
+
+    /* ── Benefits grid ── */
+    .benefits-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 20px;
+      margin-top: 28px;
+    }
+    .benefit-card {
+      background: #111312;
+      border-radius: 14px;
+      padding: 28px 24px;
+      border-top: 3px solid transparent;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .benefit-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+    }
+    .benefit-card.c1 { border-top-color: var(--safe); }
+    .benefit-card.c2 { border-top-color: var(--sky); }
+    .benefit-card.c3 { border-top-color: var(--lavender); }
+    .benefit-card.c4 { border-top-color: var(--special); }
+    .benefit-card.c5 { border-top-color: var(--focus); }
+    .benefit-card.c6 { border-top-color: var(--orange); }
+
+    .benefit-icon {
+      font-size: 2rem;
+      margin-bottom: 12px;
+    }
+    .benefit-card h3 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+    .benefit-card.c1 h3 { color: var(--safe); }
+    .benefit-card.c2 h3 { color: var(--sky); }
+    .benefit-card.c3 h3 { color: var(--lavender); }
+    .benefit-card.c4 h3 { color: var(--special); }
+    .benefit-card.c5 h3 { color: var(--focus); }
+    .benefit-card.c6 h3 { color: var(--orange); }
+    .benefit-card p { font-size: 0.95rem; color: var(--shell); margin: 0; }
+
+    /* ── Myth buster ── */
+    .myth-box {
+      background: #0f1110;
+      border: 1px solid #2a2d2a;
+      border-radius: 14px;
+      padding: 28px 32px;
+      margin: 28px 0;
+    }
+    .myth-box h3 {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--warning);
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .myth-row {
+      display: grid;
+      grid-template-columns: 1fr 40px 1fr;
+      gap: 16px;
+      align-items: center;
+      margin-top: 16px;
+    }
+    .myth-before, .myth-after {
+      border-radius: 10px;
+      padding: 14px 16px;
+      font-size: 0.93rem;
+    }
+    .myth-before {
+      background: rgba(240,128,128,0.1);
+      border: 1px solid rgba(240,128,128,0.3);
+      color: var(--warning);
+    }
+    .myth-after {
+      background: rgba(64,201,154,0.1);
+      border: 1px solid rgba(64,201,154,0.3);
+      color: var(--safe);
+    }
+    .myth-arrow {
+      text-align: center;
+      font-size: 1.4rem;
+      color: var(--stone);
+    }
+
+    /* ── Summary callout ── */
+    .callout {
+      background: linear-gradient(135deg, #141814, #0e1210);
+      border: 1px solid var(--focus);
+      border-radius: 16px;
+      padding: 36px 36px;
+      margin-top: 32px;
+      text-align: center;
+    }
+    .callout h3 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--focus);
+      margin-bottom: 14px;
+    }
+    .callout p {
+      color: var(--shell);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    /* ── Footer ── */
+    footer {
+      text-align: center;
+      padding: 36px 24px;
+      font-size: 0.85rem;
+      color: #444;
+      border-top: 1px solid #1a1c1a;
+    }
+
+    @media (max-width: 600px) {
+      .hero h1 { font-size: 1.8rem; }
+      .example-section { padding: 24px 18px; }
+      .myth-row { grid-template-columns: 1fr; }
+      .myth-arrow { transform: rotate(90deg); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Hero -->
+<div class="hero">
+  <div class="badge">IELTS Reading 技術解析</div>
+  <h1>語塊拆解（Chunking）<br>充分理解句意的核心技術</h1>
+  <p class="subtitle">
+    從一個長句看清主詞、動詞、修飾語的邊界，讓複雜英文句型不再是閱讀障礙。
+  </p>
+  <div class="context-note">
+    ⚠️ 電腦與紙筆測驗有差異，但閱讀高分的原理沒有改變
+  </div>
+</div>
+
+<!-- 問題根源 -->
+<div class="section">
+  <div class="section-label">核心問題</div>
+  <h2>你卡在「字」，還是卡在「句」？</h2>
+  <p>
+    雅思閱讀題型中，最大的障礙往往不是單字不夠多，而是面對長句時，閱讀者習慣從左到右逐字翻成中文，
+    在遇到插入語、分詞片語、關係子句等修飾結構時就迷失了方向，無法快速掌握句子骨架。
+  </p>
+
+  <div class="problem-box">
+    <div class="label">⛔ 常見的壞習慣</div>
+    <p>
+      逐字翻譯 → 遇到長修飾語就停頓 → 讀完前半段忘記主詞是誰 →
+      重讀整句 → 時間大量流失，題目還沒開始做。
+    </p>
+  </div>
+
+  <p>
+    語塊技術的核心概念是：先辨識句子的骨架（主詞＋動詞＋受詞），再逐一解讀附著其上的修飾語塊，
+    而不是逐字線性翻譯。這個習慣的改變，足以從根本上提升閱讀速度與正確率。
+  </p>
+</div>
+
+<!-- 實例示範 -->
+<div class="section">
+  <div class="section-label">實例示範</div>
+  <h2>一個長句，四個語塊</h2>
+  <p>以投影片課程中使用的例句為示範，逐步拆解各語塊的功能。</p>
+
+  <div class="example-section">
+    <h3>📌 原始句子</h3>
+
+    <div class="sentence-display">
+      <span class="chunk chunk-compare">Like their peers on rigid diets,</span>
+      <span class="chunk chunk-subject">athletes embracing flexible nutrition and regularly tracking macros</span>
+      <span class="chunk chunk-verb">report</span>
+      <span class="chunk chunk-object">that this has had a more positive than negative impact on their overall performance.</span>
+    </div>
+
+    <div class="chunk-legend">
+      <div class="legend-item">
+        <div class="legend-dot" style="background: rgba(195,165,229,0.5);"></div>
+        <span style="color:var(--lavender)">比較修飾語塊</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-dot" style="background: rgba(64,201,154,0.5);"></div>
+        <span style="color:var(--safe)">主詞語塊（S）</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-dot" style="background: rgba(8,169,209,0.5);"></div>
+        <span style="color:var(--sky)">動詞（Vt）</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-dot" style="background: rgba(200,221,90,0.5);"></div>
+        <span style="color:var(--special)">受詞子句（O）</span>
+      </div>
+    </div>
+
+    <div class="chunk-steps">
+
+      <div class="chunk-step">
+        <div class="step-num c">①</div>
+        <div class="step-body c">
+          <strong>比較修飾語塊</strong>
+          <p>
+            「Like their peers on rigid diets」是一個把主角（運動員）和同儕做比較的修飾語塊，
+            說明同儕的特徵是「嚴格控制飲食」（on rigid diets）。
+            這個語塊雖然出現在最前面，但不是主要動作的來源，閱讀時先略過、確認骨架後再回頭理解即可。
+          </p>
+        </div>
+      </div>
+
+      <div class="chunk-step">
+        <div class="step-num s">②</div>
+        <div class="step-body s">
+          <strong>主詞語塊（S）</strong>
+          <p>
+            「athletes embracing flexible nutrition and regularly tracking macros」是主詞語塊，
+            核心名詞是 <em>athletes（運動員）</em>，後接兩個現在分詞片語修飾，描述這些運動員的特徵：
+            採用靈活營養方案（flexible nutrition）並定期追蹤宏量營養素（tracking macros）。
+          </p>
+        </div>
+      </div>
+
+      <div class="chunk-step">
+        <div class="step-num v">③</div>
+        <div class="step-body v">
+          <strong>動詞（Vt）</strong>
+          <p>
+            「report」是及物動詞，代表運動員「表示／指出」了某件事，
+            確認這是 S + Vt + O（名詞子句） 的句型，後面跟著的 that 引導的子句即為受詞。
+          </p>
+        </div>
+      </div>
+
+      <div class="chunk-step">
+        <div class="step-num o">④</div>
+        <div class="step-body o">
+          <strong>受詞子句（O）</strong>
+          <p>
+            「that this has had a more positive than negative impact on their overall performance」
+            是他們所表示的內容：這件事（指採用靈活飲食策略）對整體表現所帶來的正面影響大於負面影響。
+            也就是好處大於壞處。
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <p>
+    整句話的訊息量並不複雜，但如果逐字翻譯，讀者極易在長修飾語中迷失，忘記主詞是 athletes 而非 peers。
+    語塊拆解讓這個結構一目了然。
+  </p>
+</div>
+
+<!-- 好處 -->
+<div class="section">
+  <div class="section-label">核心優勢</div>
+  <h2>語塊技術在雅思閱讀中的六大好處</h2>
+
+  <div class="benefits-grid">
+
+    <div class="benefit-card c1">
+      <div class="benefit-icon">🎯</div>
+      <h3>快速鎖定句子骨架</h3>
+      <p>
+        主詞（S）、動詞（V）、受詞（O）是每個英文句子的核心。語塊技術訓練考生直接跨越修飾語，
+        先辨識骨架，確保不誤讀句子的主要訊息，減少因插入語或分詞片語造成的理解錯誤。
+      </p>
+    </div>
+
+    <div class="benefit-card c2">
+      <div class="benefit-icon">⚡</div>
+      <h3>顯著提升閱讀速度</h3>
+      <p>
+        雅思閱讀 60 分鐘要完成三篇文章共 40 題，時間壓力極大。語塊閱讀讓大腦以意義單位
+        而非單字為單位處理資訊，每次眼睛停留的訊息量更大，整體閱讀效率可以明顯提升。
+      </p>
+    </div>
+
+    <div class="benefit-card c3">
+      <div class="benefit-icon">🧩</div>
+      <h3>正確處理複雜修飾結構</h3>
+      <p>
+        學術文章大量使用分詞片語、關係子句、同位語等修飾結構。將這些結構識別為「語塊」，
+        考生就能清楚判斷哪些成分是骨架、哪些是附加資訊，避免在閱讀中迷失。
+      </p>
+    </div>
+
+    <div class="benefit-card c4">
+      <div class="benefit-icon">🔍</div>
+      <h3>精準定位題目答案</h3>
+      <p>
+        雅思閱讀題目通常是對原文某個語塊的改寫（paraphrase）。熟悉語塊拆解的考生，
+        更容易比對題目語塊與文章語塊之間的對應關係，大幅提升答題精確度。
+      </p>
+    </div>
+
+    <div class="benefit-card c5">
+      <div class="benefit-icon">🔄</div>
+      <h3>同時提升口說與寫作</h3>
+      <p>
+        語塊不只是閱讀技術。備忘稿也指出：「口說看不快、口說說不好，同一套語塊技術解決兩大根本問題。」
+        熟悉語塊讓考生在口說時能組合完整的意義單位，表達更流暢自然。
+      </p>
+    </div>
+
+    <div class="benefit-card c6">
+      <div class="benefit-icon">🧠</div>
+      <h3>降低認知負荷，保持專注</h3>
+      <p>
+        逐字翻譯耗費大量工作記憶，容易讓考生在長句中段就出現認知過載。語塊閱讀以意義為單位，
+        讓認知資源集中在理解整體句意，而非花費在機械式翻譯每個單字上。
+      </p>
+    </div>
+
+  </div>
+</div>
+
+<!-- 誤解破除 -->
+<div class="section">
+  <div class="section-label">迷思破除</div>
+  <h2>關於電腦考試與閱讀焦慮</h2>
+  <p>
+    近年有大量商業機構以「電腦閱讀測驗與紙筆有差異」為由販賣課程，誇大考生的焦慮。
+    課程備忘稿直接點明：這些說法往往來自有商業動機的利益團體，在搜尋引擎上搶排名，
+    實際上的差異並沒有大到無法適應。
+  </p>
+
+  <div class="myth-box">
+    <h3>⚠️ 焦慮 vs 事實</h3>
+
+    <div class="myth-row">
+      <div class="myth-before">
+        「電腦閱讀會影響專注力與表現，
+        需要特別訓練螢幕閱讀習慣才能考高分。」
+        <br><br>
+        <em style="font-size:0.85rem">——利益團體的話術</em>
+      </div>
+      <div class="myth-arrow">→</div>
+      <div class="myth-after">
+        電腦與紙筆有差異，但沒大到無法適應。
+        閱讀考高分的原理沒有改變——
+        根本問題是逐字翻譯的習慣，
+        語塊技術才是核心解法。
+        <br><br>
+        <em style="font-size:0.85rem">——課程的核心立場</em>
+      </div>
+    </div>
+  </div>
+
+  <p>
+    真正需要改掉的習慣，是「從左到右逐字翻成中文」的閱讀模式。語塊技術從根本上改變這個習慣，
+    無論考試在電腦還是紙本上進行，效果同樣適用。
+  </p>
+</div>
+
+<!-- 總結 -->
+<div class="section">
+  <div class="callout">
+    <h3>✅ 語塊拆解的核心價值</h3>
+    <p>
+      語塊技術不是表面的考試技巧，而是改變英文閱讀處理方式的根本訓練。
+      它讓考生在面對複雜學術長句時，能迅速辨識句子的主角與動作，
+      正確理解修飾語的角色，並精準對應題目的改寫。
+      在 60 分鐘、40 題的雅思閱讀壓力下，這項能力的差異直接決定了分數高低。
+    </p>
+  </div>
+</div>
+
+</body>
+</html>

@@ -42,9 +42,6 @@ html, body {
   font-size: 1rem;
 }
 
-/* ══════════════════════════════════════════
-   TOP BAR
-══════════════════════════════════════════ */
 #top-bar {
   height: 50px;
   background: #161714;
@@ -580,7 +577,7 @@ select.match-select option { background: #1a1c1a; color: var(--shell); }
 <!-- Loading -->
 <div id="loading-screen">
   <div class="spinner"></div>
-  <div id="loading-msg">Loading test…</div>
+  <div id="loading-msg">Loading test …</div>
 </div>
 
 <!-- Top Bar -->
@@ -595,10 +592,22 @@ select.match-select option { background: #1a1c1a; color: var(--shell); }
 
 <!-- Main Layout -->
 <div id="main-layout">
-
   <!-- LEFT: Passage -->
   <div id="left-pane">
     <div id="passage-title-bar">
+		<div>
+			<a href="ielts_chunking_benefits.html"
+			   style="display:inline-flex;align-items:center;gap:8px;
+					  padding:8px 20px;border-radius:6px;
+					  background:transparent;border:1px solid #C3A5E5;
+					  color:#C3A5E5;font-size:0.88rem;font-weight:600;
+					  letter-spacing:0.04em;text-decoration:none;
+					  transition:background 0.18s,color 0.18s;"
+			   onmouseover="this.style.background='#C3A5E5';this.style.color='#0C0D0C'"
+			   onmouseout="this.style.background='transparent';this.style.color='#C3A5E5'">
+			  See Chunking Benefits
+			</a>
+		</div>
       <div id="passage-range">Questions —</div>
       <div id="passage-heading">—</div>
     </div>
