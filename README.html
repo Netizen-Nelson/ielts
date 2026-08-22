@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>README — sentence-demo · Nelson IELTS</title>
+  <style>
+    :root {
+      --bg:      #0C0D0C;
+      --surface: #0f1110;
+      --card:    #111312;
+      --card2:   #161918;
+      --border:  #1e2020;
+      --border2: #272a27;
+      --shell:   #C6C7BD;
+      --muted:   #6e7270;
+      --lavender:#C3A5E5;
+      --special: #C8DD5A;
+      --safe:    #40C99A;
+      --sky:     #08A9D1;
+      --focus:   #A0CF72;
+      --indigo:  #7B6CF0;
+      --warning: #F08080;
+      --stone:   #95BDD7;
+      --orange:  #EDA109;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--shell);
+      font-family: -apple-system, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+      font-size: 1rem;
+      line-height: 1.75;
+    }
+
+    /* ── Layout ── */
+    .wrap {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 0 28px 80px;
+    }
+
+    /* ── Hero ── */
+    .hero {
+      padding: 64px 0 40px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 52px;
+    }
+    .hero-eyebrow {
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--indigo);
+      margin-bottom: 14px;
+    }
+    .hero h1 {
+      font-size: 2.4rem;
+      font-weight: 800;
+      color: var(--special);
+      line-height: 1.2;
+      margin-bottom: 14px;
+    }
+    .hero .sub {
+      font-size: 1.1rem;
+      color: var(--muted);
+      max-width: 600px;
+      margin-bottom: 28px;
+    }
+    .badge-row { display: flex; flex-wrap: wrap; gap: 8px; }
+    .badge {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      padding: 4px 12px;
+      border-radius: 99px;
+      border: 1px solid;
+    }
+    .badge.js  { color: #F7DF1E; border-color: rgba(247,223,30,.35); background: rgba(247,223,30,.07); }
+    .badge.ce  { color: var(--sky); border-color: rgba(8,169,209,.35); background: rgba(8,169,209,.07); }
+    .badge.dep { color: var(--safe); border-color: rgba(64,201,154,.35); background: rgba(64,201,154,.07); }
+    .badge.lic { color: var(--muted); border-color: var(--border2); background: var(--card); }
+
+    /* ── Section headings ── */
+    h2 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--special);
+      margin: 52px 0 18px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border);
+    }
+    h3 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--lavender);
+      margin: 28px 0 10px;
+    }
+    h4 {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--stone);
+      margin: 20px 0 8px;
+      letter-spacing: 0.04em;
+    }
+
+    p { margin-bottom: 14px; color: var(--shell); }
+    a { color: var(--sky); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* ── Code ── */
+    code {
+      font-family: 'Consolas', 'Fira Code', 'Courier New', monospace;
+      font-size: 0.85em;
+      color: var(--lavender);
+      background: var(--card);
+      border: 1px solid var(--border2);
+      border-radius: 4px;
+      padding: 1px 6px;
+    }
+    pre {
+      background: var(--card);
+      border: 1px solid var(--border2);
+      border-radius: 10px;
+      padding: 20px 22px;
+      overflow-x: auto;
+      margin: 14px 0 20px;
+      font-family: 'Consolas', 'Fira Code', 'Courier New', monospace;
+      font-size: 0.82rem;
+      line-height: 1.75;
+      color: var(--shell);
+    }
+    pre code {
+      background: none;
+      border: none;
+      padding: 0;
+      font-size: inherit;
+      color: inherit;
+    }
+
+    /* Syntax tokens */
+    .t { color: var(--shell); }
+    .tg { color: var(--sky); }
+    .ta { color: var(--lavender); }
+    .tv { color: var(--safe); }
+    .tc { color: var(--muted); font-style: italic; }
+    .tk { color: var(--special); }
+    .ts { color: var(--warning); }
+
+    /* ── Callout boxes ── */
+    .callout {
+      border-radius: 10px;
+      padding: 16px 20px;
+      margin: 18px 0;
+      font-size: 0.95rem;
+    }
+    .callout.info  { background: rgba(8,169,209,.08); border: 1px solid rgba(8,169,209,.3); border-left: 3px solid var(--sky); }
+    .callout.tip   { background: rgba(160,207,114,.07); border: 1px solid rgba(160,207,114,.28); border-left: 3px solid var(--focus); }
+    .callout.note  { background: rgba(195,165,229,.07); border: 1px solid rgba(195,165,229,.28); border-left: 3px solid var(--lavender); }
+    .callout-label { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 6px; }
+    .callout.info  .callout-label { color: var(--sky); }
+    .callout.tip   .callout-label { color: var(--focus); }
+    .callout.note  .callout-label { color: var(--lavender); }
+    .callout p:last-child { margin-bottom: 0; }
+
+    /* ── Attribute table ── */
+    .attr-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+      margin: 14px 0 24px;
+    }
+    .attr-table th {
+      text-align: left;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--indigo);
+      padding: 8px 14px;
+      border-bottom: 1px solid var(--border2);
+      background: var(--card2);
+    }
+    .attr-table th:first-child { border-radius: 8px 0 0 0; }
+    .attr-table th:last-child  { border-radius: 0 8px 0 0; }
+    .attr-table td {
+      padding: 9px 14px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    .attr-table td:first-child { color: var(--special); font-family: monospace; font-size: 0.82rem; font-weight: 600; }
+    .attr-table td:nth-child(2){ color: var(--safe);    font-family: monospace; font-size: 0.82rem; }
+    .attr-table td:last-child  { color: var(--muted); }
+    .attr-table tr:last-child td { border-bottom: none; }
+
+    /* ── Color swatches ── */
+    .palette {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 8px;
+      margin: 14px 0 24px;
+    }
+    .swatch {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 0.78rem;
+    }
+    .swatch-dot { width: 14px; height: 14px; border-radius: 50%; flex-shrink: 0; }
+    .swatch-name { font-weight: 600; color: var(--shell); }
+    .swatch-hex  { font-family: monospace; color: var(--muted); font-size: 0.7rem; }
+
+    .palette-new .swatch { border-color: rgba(160,207,114,.25); }
+
+    /* ── Config option ── */
+    .cfg-item {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px 16px;
+      margin-bottom: 8px;
+    }
+    .cfg-key   { font-family: monospace; font-size: 0.85rem; color: var(--special); font-weight: 700; }
+    .cfg-type  { font-family: monospace; font-size: 0.78rem; color: var(--sky); margin-left: 10px; }
+    .cfg-default { font-size: 0.78rem; color: var(--muted); margin-top: 4px; }
+    .cfg-desc  { font-size: 0.88rem; color: var(--shell); margin-top: 6px; }
+
+    /* ── File list ── */
+    .file-list { display: flex; flex-direction: column; gap: 8px; margin: 14px 0 22px; }
+    .file-item {
+      display: flex; align-items: center; gap: 14px;
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 8px; padding: 12px 16px;
+    }
+    .file-icon { font-size: 1.1rem; flex-shrink: 0; }
+    .file-name { font-family: monospace; font-size: 0.85rem; color: var(--special); font-weight: 700; flex-shrink: 0; min-width: 200px; }
+    .file-desc { font-size: 0.88rem; color: var(--muted); }
+
+    /* ── Divider ── */
+    hr { border: none; border-top: 1px solid var(--border); margin: 40px 0; }
+
+    /* ── Footer ── */
+    footer {
+      text-align: center;
+      padding: 36px 0 20px;
+      font-size: 0.78rem;
+      color: var(--muted);
+      border-top: 1px solid var(--border);
+    }
+
+    /* ── TOC ── */
+    .toc {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px 22px;
+      margin-bottom: 40px;
+      font-size: 0.9rem;
+    }
+    .toc-label { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; }
+    .toc ol { padding-left: 20px; }
+    .toc li { margin-bottom: 5px; }
+    .toc a  { color: var(--stone); }
+  </style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- ── Hero ─────────────────────────────────────────────────── -->
+<div class="hero">
+  <div class="hero-eyebrow">Nelson IELTS · Open Components</div>
+  <h1>sentence-demo</h1>
+  <p class="sub">
+    A zero-dependency custom element suite for building interactive sentence-chunking exercises.
+    Designed for IELTS Reading instruction — reveal sentence structure layer by layer,
+    with semantic labels and explanations.
+  </p>
+  <div class="badge-row">
+    <span class="badge js">Vanilla JS</span>
+    <span class="badge ce">Web Components</span>
+    <span class="badge dep">No Dependencies</span>
+    <span class="badge lic">MIT License</span>
+  </div>
+</div>
+
+<!-- ── TOC ─────────────────────────────────────────────────── -->
+<div class="toc">
+  <div class="toc-label">Contents</div>
+  <ol>
+    <li><a href="#overview">Overview</a></li>
+    <li><a href="#files">Files</a></li>
+    <li><a href="#quick-start">Quick Start</a></li>
+    <li><a href="#sentence-demo">Element: &lt;sentence-demo&gt;</a></li>
+    <li><a href="#sentence-stage">Element: &lt;sentence-stage&gt;</a></li>
+    <li><a href="#stage-bridge">Element: &lt;stage-bridge&gt;</a></li>
+    <li><a href="#multi-stage">Multi-Layer Analysis</a></li>
+    <li><a href="#config">Global Configuration API</a></li>
+    <li><a href="#palette">Color Palette</a></li>
+    <li><a href="#editor">Visual Editor</a></li>
+    <li><a href="#browser">Browser Support</a></li>
+    <li><a href="#design">Design Notes</a></li>
+  </ol>
+</div>
+
+<!-- ── Overview ─────────────────────────────────────────────── -->
+<h2 id="overview">Overview</h2>
+
+<p>
+  <strong>sentence-demo</strong> is a suite of three custom HTML elements built for language teachers
+  who need to walk students through complex English sentences, chunk by chunk.
+</p>
+<p>
+  The core idea: wrap any portion of a sentence in a <code>&lt;sentence-demo&gt;</code> tag,
+  assign it a color, a semantic label, and an explanation. The parent
+  <code>&lt;sentence-stage&gt;</code> then controls the step-by-step reveal — each click
+  lights up the next chunk and displays its explanation. No JavaScript knowledge required
+  to author content.
+</p>
+<p>
+  For deeper sentences, multiple stages can be chained with <code>&lt;stage-bridge&gt;</code>
+  to guide students from skeleton-level analysis down to phrase-level detail.
+</p>
+
+<div class="callout tip">
+  <div class="callout-label">Design Principle</div>
+  <p>
+    Elements use <strong>no Shadow DOM</strong>, keeping styles globally accessible
+    and markup inspectable. All colors, timing, and labels are configurable through
+    a simple JavaScript API without touching source files.
+  </p>
+</div>
+
+<!-- ── Files ────────────────────────────────────────────────── -->
+<h2 id="files">Files</h2>
+
+<div class="file-list">
+  <div class="file-item">
+    <span class="file-icon">⚙️</span>
+    <span class="file-name">sentence-demo.js</span>
+    <span class="file-desc">Defines <code>&lt;sentence-demo&gt;</code> and <code>&lt;sentence-stage&gt;</code>. Required for all usage.</span>
+  </div>
+  <div class="file-item">
+    <span class="file-icon">⚙️</span>
+    <span class="file-name">stage-bridge.js</span>
+    <span class="file-desc">Defines <code>&lt;stage-bridge&gt;</code>. Only needed when using multi-layer analysis.</span>
+  </div>
+  <div class="file-item">
+    <span class="file-icon">🛠</span>
+    <span class="file-name">sentence-marker.html</span>
+    <span class="file-desc">Visual drag-to-mark editor. Generates ready-to-paste HTML with multi-layer support.</span>
+  </div>
+  <div class="file-item">
+    <span class="file-icon">🛠</span>
+    <span class="file-name">sentence-editor.html</span>
+    <span class="file-desc">Segment-based editor for building sentences from scratch, with live preview.</span>
+  </div>
+  <div class="file-item">
+    <span class="file-icon">📄</span>
+    <span class="file-name">multi-stage-demo.html</span>
+    <span class="file-desc">Full worked example — three-layer analysis of an IELTS art passage sentence.</span>
+  </div>
+</div>
+
+<!-- ── Quick Start ──────────────────────────────────────────── -->
+<h2 id="quick-start">Quick Start</h2>
+
+<h3>1. Load the script</h3>
+
+<pre><code><span class="tc">&lt;!-- Required --&gt;</span>
+<span class="tg">&lt;script</span> <span class="ta">src</span>=<span class="tv">"sentence-demo.js"</span><span class="tg">&gt;&lt;/script&gt;</span>
+
+<span class="tc">&lt;!-- Optional: only needed for multi-layer analysis --&gt;</span>
+<span class="tg">&lt;script</span> <span class="ta">src</span>=<span class="tv">"stage-bridge.js"</span><span class="tg">&gt;&lt;/script&gt;</span></code></pre>
+
+<div class="callout info">
+  <div class="callout-label">Hosting</div>
+  <p>
+    Both files are self-contained. Place them alongside your HTML or serve from any static host.
+    No build step, no package manager, no framework required.
+  </p>
+</div>
+
+<h3>2. Write your first exercise</h3>
+
+<pre><code><span class="tg">&lt;sentence-stage&gt;</span>
+  <span class="tg">&lt;sentence-demo</span>
+    <span class="ta">order</span>=<span class="tv">"1"</span>
+    <span class="ta">color</span>=<span class="tv">"lavender"</span>
+    <span class="ta">label</span>=<span class="tv">"Comparative clause"</span>
+    <span class="ta">note</span>=<span class="tv">"Like + noun phrase. Provides background contrast; not the main subject."</span><span class="tg">&gt;</span>
+    Unlike health-conscious people,
+  <span class="tg">&lt;/sentence-demo&gt;</span>
+  I don't mind having burgers for a meal,
+  <span class="tg">&lt;sentence-demo</span>
+    <span class="ta">order</span>=<span class="tv">"2"</span>
+    <span class="ta">color</span>=<span class="tv">"safe"</span>
+    <span class="ta">label</span>=<span class="tv">"Reason adverbial"</span>
+    <span class="ta">note</span>=<span class="tv">"given + noun = considering / because of. More formal than 'because'."</span><span class="tg">&gt;</span>
+    given the convenience
+  <span class="tg">&lt;/sentence-demo&gt;</span>.
+<span class="tg">&lt;/sentence-stage&gt;</span></code></pre>
+
+<p>
+  Text outside any <code>&lt;sentence-demo&gt;</code> tag renders as plain body text —
+  this is intentional. It represents the sentence skeleton that students see at all times.
+</p>
+
+<!-- ── sentence-demo ─────────────────────────────────────────── -->
+<h2 id="sentence-demo">Element: &lt;sentence-demo&gt;</h2>
+
+<p>
+  An inline element that marks a chunk of text within a sentence.
+  Must be a descendant of <code>&lt;sentence-stage&gt;</code>.
+</p>
+
+<h4>Attributes</h4>
+
+<table class="attr-table">
+  <thead>
+    <tr><th>Attribute</th><th>Default</th><th>Description</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>order</td>
+      <td>"0"</td>
+      <td>Reveal order. Chunks are lit up in ascending order when the user clicks <em>Next</em>. Set to <code>0</code> or omit to always display (use for skeleton elements like the main verb).</td>
+    </tr>
+    <tr>
+      <td>color</td>
+      <td>"lavender"</td>
+      <td>Chunk highlight color. Any name from the <a href="#palette">palette</a>. Controls background tint, text color, and outline simultaneously.</td>
+    </tr>
+    <tr>
+      <td>label</td>
+      <td>""</td>
+      <td>Short semantic label shown in bold on the left side of the explanation panel when the chunk is revealed. E.g. <code>Subject (S)</code>, <code>Relative clause</code>.</td>
+    </tr>
+    <tr>
+      <td>note</td>
+      <td>""</td>
+      <td>Full explanation shown in the panel when the chunk is revealed. Supports plain text; no HTML.</td>
+    </tr>
+    <tr>
+      <td>always-show</td>
+      <td>—</td>
+      <td>Boolean attribute. Chunk is always fully highlighted regardless of the current step. Useful for anchoring the verb in a skeleton-first strategy.</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="callout note">
+  <div class="callout-label">always-show example</div>
+  <p>
+    When teaching "verb first", mark the main verb with <code>always-show</code>
+    so students always see the action, then progressively reveal the surrounding chunks.
+  </p>
+  <pre style="margin:10px 0 0"><code><span class="tg">&lt;sentence-demo</span> <span class="ta">always-show</span> <span class="ta">color</span>=<span class="tv">"sky"</span> <span class="ta">label</span>=<span class="tv">"Main verb (Vt)"</span><span class="tg">&gt;</span>suggest<span class="tg">&lt;/sentence-demo&gt;</span></code></pre>
+</div>
+
+<!-- ── sentence-stage ─────────────────────────────────────────── -->
+<h2 id="sentence-stage">Element: &lt;sentence-stage&gt;</h2>
+
+<p>
+  The interactive wrapper that manages step-by-step chunk reveal.
+  Renders a dark card containing the sentence, an explanation panel, progress dots,
+  and Prev / Reset / Next controls. All UI is generated via inline styles —
+  no external stylesheet required.
+</p>
+
+<h4>How reveal works</h4>
+<p>
+  At step 0, all chunks with <code>order &gt; 0</code> are dimmed to a readable
+  but visually subdued gray (<code>#7a7e78</code>). Each click of <em>Next</em>
+  activates the chunk whose <code>order</code> matches the current step.
+  The explanation panel updates to show the activated chunk's <code>label</code>
+  and <code>note</code>, tinted in the chunk's color.
+  Progress dots are clickable — clicking dot <em>n</em> jumps directly to step <em>n</em>.
+</p>
+
+<h4>No attributes are required</h4>
+<p>
+  <code>&lt;sentence-stage&gt;</code> takes no attributes.
+  Behavior is controlled entirely by the <code>&lt;sentence-demo&gt;</code> children it contains.
+</p>
+
+<!-- ── stage-bridge ──────────────────────────────────────────── -->
+<h2 id="stage-bridge">Element: &lt;stage-bridge&gt;</h2>
+
+<p>
+  A visual separator placed between two <code>&lt;sentence-stage&gt;</code> blocks
+  to signal a layer transition in multi-level analysis.
+  Renders as a centred pill label flanked by gradient lines.
+</p>
+
+<h4>Attributes</h4>
+
+<table class="attr-table">
+  <thead>
+    <tr><th>Attribute</th><th>Default</th><th>Description</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>label</td>
+      <td>"↓ Next layer"</td>
+      <td>Text shown in the bridge pill. Typically describes what the next stage zooms into.</td>
+    </tr>
+    <tr>
+      <td>color</td>
+      <td>—</td>
+      <td>Optional. A color name from the palette to tint the pill border and glow dot.</td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- ── Multi-stage ───────────────────────────────────────────── -->
+<h2 id="multi-stage">Multi-Layer Analysis</h2>
+
+<p>
+  Complex academic sentences often have three or four levels of modification.
+  Rather than nesting elements (which creates visual and logical complexity),
+  the recommended approach is <strong>sequential stages</strong>:
+  one <code>&lt;sentence-stage&gt;</code> per layer of analysis,
+  connected by <code>&lt;stage-bridge&gt;</code> elements.
+</p>
+
+<pre><code><span class="tc">&lt;!-- Layer 1: Sentence skeleton --&gt;</span>
+<span class="tg">&lt;sentence-stage&gt;</span>
+  <span class="tg">&lt;sentence-demo</span> <span class="ta">order</span>=<span class="tv">"1"</span> <span class="ta">color</span>=<span class="tv">"lavender"</span>
+    <span class="ta">label</span>=<span class="tv">"Subject (S)"</span>
+    <span class="ta">note</span>=<span class="tv">"Core noun: proliferation. The of-phrase is a modifier — skip it first."</span><span class="tg">&gt;</span>
+    The proliferation of digital streaming platforms
+  <span class="tg">&lt;/sentence-demo&gt;</span>
+  , while democratising access to artistic works,
+  <span class="tg">&lt;sentence-demo</span> <span class="ta">order</span>=<span class="tv">"2"</span> <span class="ta">color</span>=<span class="tv">"sky"</span> <span class="ta">label</span>=<span class="tv">"Verb (Vt)"</span>
+    <span class="ta">note</span>=<span class="tv">"has raised: present perfect. simultaneously is an inserted adverb."</span><span class="tg">&gt;</span>
+    has simultaneously raised
+  <span class="tg">&lt;/sentence-demo&gt;</span>
+  <span class="tg">&lt;sentence-demo</span> <span class="ta">order</span>=<span class="tv">"3"</span> <span class="ta">color</span>=<span class="tv">"special"</span> <span class="ta">label</span>=<span class="tv">"Object (O)"</span>
+    <span class="ta">note</span>=<span class="tv">"urgent questions is the core noun. The about-phrase specifies what kind."</span><span class="tg">&gt;</span>
+    urgent questions about financial sustainability.
+  <span class="tg">&lt;/sentence-demo&gt;</span>
+<span class="tg">&lt;/sentence-stage&gt;</span>
+
+<span class="tc">&lt;!-- Transition --&gt;</span>
+<span class="tg">&lt;stage-bridge</span> <span class="ta">label</span>=<span class="tv">"↓ Layer 2: zoom into the subject"</span><span class="tg">&gt;&lt;/stage-bridge&gt;</span>
+
+<span class="tc">&lt;!-- Layer 2: Subject phrase internals --&gt;</span>
+<span class="tg">&lt;sentence-stage&gt;</span>
+  <span class="tg">&lt;sentence-demo</span> <span class="ta">order</span>=<span class="tv">"1"</span> <span class="ta">color</span>=<span class="tv">"safe"</span> <span class="ta">label</span>=<span class="tv">"Core noun"</span>
+    <span class="ta">note</span>=<span class="tv">"proliferation = rapid spread. The subject's anchor concept."</span><span class="tg">&gt;</span>
+    The proliferation
+  <span class="tg">&lt;/sentence-demo&gt;</span>
+  <span class="tg">&lt;sentence-demo</span> <span class="ta">order</span>=<span class="tv">"2"</span> <span class="ta">color</span>=<span class="tv">"stone"</span> <span class="ta">label</span>=<span class="tv">"of-phrase"</span>
+    <span class="ta">note</span>=<span class="tv">"of + noun: specifies what is proliferating (digital streaming platforms)."</span><span class="tg">&gt;</span>
+    of digital streaming platforms
+  <span class="tg">&lt;/sentence-demo&gt;</span>
+<span class="tg">&lt;/sentence-stage&gt;</span></code></pre>
+
+<div class="callout tip">
+  <div class="callout-label">Cognitive design rationale</div>
+  <p>
+    Sequential stages match natural reading comprehension: identify the skeleton first,
+    then zoom into each complex phrase. Each stage has its own independent progress bar,
+    so students are never confused about which layer they are in.
+  </p>
+</div>
+
+<!-- ── Config ────────────────────────────────────────────────── -->
+<h2 id="config">Global Configuration API</h2>
+
+<p>
+  Call <code>SentenceDemo.config()</code> or <code>StageBridge.config()</code>
+  <strong>before</strong> any elements connect to the DOM (i.e., before the page renders).
+  Options are merged into the global defaults.
+</p>
+
+<pre><code><span class="tg">&lt;script</span> <span class="ta">src</span>=<span class="tv">"sentence-demo.js"</span><span class="tg">&gt;&lt;/script&gt;</span>
+<span class="tg">&lt;script&gt;</span>
+  <span class="tk">SentenceDemo</span>.config({
+    animMs:       <span class="tv">300</span>,           <span class="tc">// transition duration (ms)</span>
+    defaultColor: <span class="ts">'lavender'</span>,   <span class="tc">// fallback color when none specified</span>
+    bgAlpha:      <span class="tv">0.15</span>,         <span class="tc">// chunk background opacity</span>
+    borderAlpha:  <span class="tv">0.55</span>,         <span class="tc">// chunk outline opacity</span>
+    dimColor:     <span class="ts">'#7a7e78'</span>,    <span class="tc">// text color of unrevealed chunks</span>
+    nextLabel:    <span class="ts">'Show next chunk'</span>,
+    doneLabel:    <span class="ts">'All done ✓'</span>,
+    resetLabel:   <span class="ts">'Reset'</span>,
+    prevLabel:    <span class="ts">'Previous'</span>,
+  });
+<span class="tg">&lt;/script&gt;</span></code></pre>
+
+<h3>SentenceDemo.config() options</h3>
+
+<div class="cfg-item">
+  <span class="cfg-key">animMs</span><span class="cfg-type">number</span>
+  <div class="cfg-default">Default: <code>320</code></div>
+  <div class="cfg-desc">Duration in milliseconds for the chunk reveal transition (background, color, outline).</div>
+</div>
+<div class="cfg-item">
+  <span class="cfg-key">dimColor</span><span class="cfg-type">string</span>
+  <div class="cfg-default">Default: <code>'#7a7e78'</code></div>
+  <div class="cfg-desc">Text color for unrevealed chunks. Uses a fixed color value — not opacity — to ensure legibility on dark backgrounds. WCAG AA contrast (~4.5:1 on the default dark surface).</div>
+</div>
+<div class="cfg-item">
+  <span class="cfg-key">bgAlpha</span><span class="cfg-type">number</span>
+  <div class="cfg-default">Default: <code>0.15</code></div>
+  <div class="cfg-desc">Alpha value (0–1) for the revealed chunk's background fill. Higher values produce stronger tints.</div>
+</div>
+<div class="cfg-item">
+  <span class="cfg-key">nextLabel / prevLabel / resetLabel / doneLabel</span><span class="cfg-type">string</span>
+  <div class="cfg-default">See defaults above</div>
+  <div class="cfg-desc">Button labels. Localize these for non-English deployments.</div>
+</div>
+
+<h3>StageBridge.config() options</h3>
+
+<div class="cfg-item">
+  <span class="cfg-key">marginY</span><span class="cfg-type">string</span>
+  <div class="cfg-default">Default: <code>'22px'</code></div>
+  <div class="cfg-desc">Vertical margin above and below the bridge element. Accepts any CSS length.</div>
+</div>
+<div class="cfg-item">
+  <span class="cfg-key">accentColor</span><span class="cfg-type">string</span>
+  <div class="cfg-default">Default: <code>'#7B6CF0'</code> (indigo)</div>
+  <div class="cfg-desc">Default glow dot and pill border color when no <code>color</code> attribute is set on the element.</div>
+</div>
+<div class="cfg-item">
+  <span class="cfg-key">labelColor</span><span class="cfg-type">string</span>
+  <div class="cfg-default">Default: <code>'#95BDD7'</code> (stone)</div>
+  <div class="cfg-desc">Text color of the bridge label.</div>
+</div>
+
+<!-- ── Palette ───────────────────────────────────────────────── -->
+<h2 id="palette">Color Palette</h2>
+
+<p>
+  All color names are available on both <code>&lt;sentence-demo color="..."&gt;</code>
+  and <code>&lt;stage-bridge color="..."&gt;</code>.
+  The palette is designed for dark backgrounds (base: <code>#0C0D0C</code>).
+  Each color passes WCAG AA contrast at the default <code>bgAlpha</code>.
+</p>
+
+<h4>Core palette</h4>
+<div class="palette">
+  <div class="swatch"><div class="swatch-dot" style="background:#C3A5E5"></div><div><div class="swatch-name">lavender</div><div class="swatch-hex">#C3A5E5</div></div></div>
+  <div class="swatch"><div class="swatch-dot" style="background:#C8DD5A"></div><div><div class="swatch-name">special</div><div class="swatch-hex">#C8DD5A</div></div></div>
+  <div class="swatch"><div class="swatch-dot" style="background:#40C99A"></div><div><div class="swatch-name">safe</div><div class="swatch-hex">#40C99A</div></div></div>
+  <div class="swatch"><div class="swatch-dot" style="background:#08A9D1"></div><div><div class="swatch-name">sky</div><div class="swatch-hex">#08A9D1</div></div></div>
+  <div class="swatch"><div class="swatch-dot" style="background:#F08080"></div><div><div class="swatch-name">warning</div><div class="swatch-hex">#F08080</div></div></div>
+  <div class="swatch"><div class="swatch-dot" style="background:#E5C3B3"></div><div><div class="swatch-name">salmon</div><div class="swatch-hex">#E5C3B3</div></div></div>
+  <div class="swatch"><div class="swatch-dot" style="background:#DECA4B"></div><div><div class="swatch-name">yellow</div><div class="swatch-hex">#DECA4B</div></div></div>
+  <div class="swatch"><div class="swatch-dot" style="background:#A0CF72"></div><div><div class="swatch-name">focus</div><div class="swatch-hex">#A0CF72</div></div></div>
+  <div class="swatch"><div class="swatch-dot" style="background:#4285EB"></div><div><div class="swatch-name">info</div><div class="swatch-hex">#4285EB</div></div></div>
+  <div class="swatch"><div class="swatch-dot" style="background:#95BDD7"></div><div><div class="swatch-name">stone</div><div class="swatch-hex">#95BDD7</div></div></div>
+  <div class="swatch"><div class="swatch-dot" style="background:#7B6CF0"></div><div><div class="swatch-name">indigo</div><div class="swatch-hex">#7B6CF0</div></div></div>
+  <div class="swatch"><div class="swatch-dot" style="background:#FFB3D9"></div><div><div class="swatch-name">pink</div><div class="swatch-hex">#FFB3D9</div></div></div>
+  <div class="swatch"><div class="swatch-dot" style="background:#EDA109"></div><div><div class="swatch-name">orange</div><div class="swatch-hex">#EDA109</div></div></div>
+  <div class="swatch"><div class="swatch-dot" style="background:#DBEDD8"></div><div><div class="swatch-name">vanilla</div><div class="swatch-hex">#DBEDD8</div></div></div>
+</div>
+
+<h4>Extended palette <span style="font-size:.72rem;font-weight:400;color:var(--muted)">— recommended for sentences with 5+ chunks</span></h4>
+<div class="palette palette-new">
+  <div class="swatch"><div class="swatch-dot" style="background:#5EDEC8"></div><div><div class="swatch-name">mint</div><div class="swatch-hex">#5EDEC8</div></div></div>
+  <div class="swatch"><div class="swatch-dot" style="background:#FF7A65"></div><div><div class="swatch-name">coral</div><div class="swatch-hex">#FF7A65</div></div></div>
+  <div class="swatch"><div class="swatch-dot" style="background:#99AAFF"></div><div><div class="swatch-name">periwinkle</div><div class="swatch-hex">#99AAFF</div></div></div>
+  <div class="swatch"><div class="swatch-dot" style="background:#FFD066"></div><div><div class="swatch-name">gold</div><div class="swatch-hex">#FFD066</div></div></div>
+  <div class="swatch"><div class="swatch-dot" style="background:#FF7AAE"></div><div><div class="swatch-name">rose</div><div class="swatch-hex">#FF7AAE</div></div></div>
+</div>
+
+<!-- ── Editor ─────────────────────────────────────────────────── -->
+<h2 id="editor">Visual Editor</h2>
+
+<p>
+  Writing chunk markup by hand is feasible but slow.
+  <strong>sentence-marker.html</strong> is a standalone no-server editor that eliminates
+  the need to type any HTML manually.
+</p>
+
+<h4>Workflow</h4>
+<ol style="padding-left:22px;margin-bottom:16px;color:var(--shell)">
+  <li style="margin-bottom:6px">Paste or type the target sentence into the editor.</li>
+  <li style="margin-bottom:6px">Click <em>Parse sentence</em> to render it as selectable text.</li>
+  <li style="margin-bottom:6px">Drag-select any portion of text — a floating panel appears automatically.</li>
+  <li style="margin-bottom:6px">Choose a color, enter a label and explanation, click <em>Mark chunk</em>.</li>
+  <li style="margin-bottom:6px">Click <em>Add analysis layer</em> to append a second stage.</li>
+  <li style="margin-bottom:6px">Use <em>Select from previous layer's chunks</em> to populate the next stage's input.</li>
+  <li style="margin-bottom:6px">Click <em>Preview result</em> to inspect the output, then <em>Copy HTML</em>.</li>
+</ol>
+
+<div class="callout info">
+  <div class="callout-label">No install required</div>
+  <p>
+    Open <code>sentence-marker.html</code> directly in any modern browser.
+    Both <code>sentence-demo.js</code> and <code>stage-bridge.js</code> must be
+    in the same directory.
+  </p>
+</div>
+
+<!-- ── Browser support ───────────────────────────────────────── -->
+<h2 id="browser">Browser Support</h2>
+
+<table class="attr-table">
+  <thead>
+    <tr><th>Browser</th><th>Version</th><th>Notes</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Chrome / Edge</td><td>67+</td><td>Full support. Recommended for the editor.</td></tr>
+    <tr><td>Firefox</td><td>63+</td><td>Full support.</td></tr>
+    <tr><td>Safari</td><td>10.1+</td><td>Full support. Custom Elements v1 supported since Safari 10.1.</td></tr>
+    <tr><td>iOS Safari</td><td>10.3+</td><td>Full support. Touch selection works for the student-facing view.</td></tr>
+    <tr><td>IE 11</td><td>—</td><td>Not supported. No Custom Elements API.</td></tr>
+  </tbody>
+</table>
+
+<!-- ── Design Notes ──────────────────────────────────────────── -->
+<h2 id="design">Design Notes</h2>
+
+<h3>Why no Shadow DOM</h3>
+<p>
+  Shadow DOM would prevent external CSS from reaching chunk styles,
+  making theming and overrides unnecessarily difficult for educators
+  who are not developers. All styles are applied as inline
+  <code>style</code> attributes, keeping the elements inspectable and
+  the markup fully portable.
+</p>
+
+<h3>Why fixed color values instead of opacity for dimming</h3>
+<p>
+  Using <code>opacity</code> to dim unrevealed chunks compounds over dark backgrounds —
+  at <code>opacity: 0.22</code>, text becomes nearly invisible on <code>#0f1110</code>.
+  Instead, a fixed <code>dimColor</code> hex value is applied directly to
+  <code>color</code>, giving reliable contrast (~4.5:1 WCAG AA) regardless of
+  the background behind the element.
+</p>
+
+<h3>Chunking as a reading strategy</h3>
+<p>
+  The IELTS Reading section tests the ability to locate paraphrased information
+  under time pressure. Students who read word-by-word exhaust working memory
+  on mechanical translation and frequently lose track of the sentence subject.
+  Chunking trains the eye to process meaning units rather than individual words,
+  which reduces cognitive load and improves both speed and accuracy.
+  These elements operationalize that training in a web page.
+</p>
+
+<hr>
+
+<footer>
+  Built for <strong>Nelson IELTS</strong> · MIT License ·
+  Vanilla JS, no dependencies, no build step
+</footer>
+
+</div>
+</body>
+</html>
