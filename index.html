@@ -609,13 +609,11 @@ select.match-select option { background: #1a1c1a; color: var(--shell); }
       <div id="note-panel-header" onclick="IELTSApp.toggleNotePanel()">
         <span id="note-panel-icon">📝</span>
         <span id="note-panel-label">Annotation</span>
-        <span id="note-panel-hint">Select a highlight to view or add a note</span>
+        <span id="note-panel-hint">Click a highlight to edit its note</span>
         <span id="note-chevron">▲</span>
       </div>
       <div id="note-panel-body">
-        <!-- bp-popnote renders here on mark click -->
-        <div id="note-panel"></div>
-        <!-- Edit area (my code, separate from bp-popnote target) -->
+        <!-- Edit area: textarea for adding/editing notes on highlights -->
         <div id="note-edit-area">
           <textarea id="note-textarea" rows="3" placeholder="Add a note to this highlight…"></textarea>
           <div id="note-edit-btns">
@@ -655,64 +653,8 @@ select.match-select option { background: #1a1c1a; color: var(--shell); }
   <button class="hl-remove-btn" id="hl-remove-btn" title="Remove highlight">✕</button>
 </div>
 
-<!--
-  ══════════════════════════════════════════════════════════════
-  BACKEND DATA INJECTION POINT
-  Option A — inline JSON in this script tag:
-    <script id="ielts-data" type="application/json">{ … }</script>
-  Option B — URL parameter: ?data=https://your-api/endpoint
-  Option C — JavaScript: IELTSApp.init(jsonObject)
-  ══════════════════════════════════════════════════════════════
--->
-
-<!--
-  JSON SCHEMA (for backend reference)
-  ──────────────────────────────────────────────────
-  {
-    "meta": {
-      "test_id":     string,   // unique test identifier
-      "user_id":     string|null,
-      "invite_code": string|null,
-      "title":       string,
-      "time_limit":  number,   // seconds (3600 = 60 min)
-      "created_at":  string    // ISO date
-    },
-    "passages": [
-      {
-        "id":             string,   // e.g. "p1"
-        "label":          string,   // tab label, e.g. "Passage 1"
-        "title":          string,
-        "question_range": string,   // e.g. "Questions 1–13"
-        "body":           string    // HTML content
-      }
-    ],
-    "question_groups": [
-      {
-        "id":              string,
-        "passage_id":      string,  // links to passages[].id
-        "type":            "multiple_choice" | "tfng" | "ynng"
-                         | "matching" | "matching_headings" | "matching_features"
-                         | "completion" | "short_answer",
-        "instruction":     string (HTML ok),
-        "sub_instruction": string (optional),
-        "choices":         string[] (for tfng/ynng, overrides default labels),
-        "options":         string[] | object (for matching types; for mc, per-question),
-        "questions": [
-          {
-            "no":      number,  // question number (1-based, unique across test)
-            "prompt":  string,
-            "options": object   // for multiple_choice: {A:"…", B:"…", …}
-          }
-        ]
-      }
-    ]
-  }
-  ──────────────────────────────────────────────────
--->
-
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-<!-- bp-popnote.js — inlined (annotation display engine) -->
 <script>
 (function () {
   'use strict';
@@ -1536,9 +1478,15 @@ window.IELTSApp = (() => {
   let _notePanelOpen = true;
   let _allQNos       = [];    // flat ordered list of all question numbers
 
-  const EMPTY_NOTE_HTML =
-    '<div style="font-size:0.82rem;color:var(--shell);opacity:0.32;font-style:italic;padding:2px 0;">' +
-    'Click a highlight to view or add a note.</div>';
+  // Color → bp-popnote theme mapping
+  const COLOR_THEME = {
+    yellow: 'yellow', safe: 'safe', sky: 'sky', warning: 'warning', lavender: 'lavender'
+  };
+
+  // Placeholder HTML shown in floating popover when no note written yet
+  const PLACEHOLDER_CONTENT =
+    '<span style="opacity:0.45;font-style:italic;font-size:0.9em;">' +
+    'No note yet — expand the Annotation panel below to add one.</span>';
 
   /* ── Public: init ──────────────────────────────────────────── */
   function init(jsonData) {
@@ -1713,7 +1661,6 @@ window.IELTSApp = (() => {
     item.className = 'q-item';
     item.id = `q-item-${q.no}`;
 
-    // Number row + flag
     const numRow = document.createElement('div');
     numRow.className = 'q-num-row';
     const numEl = document.createElement('div');
@@ -1734,7 +1681,6 @@ window.IELTSApp = (() => {
     numRow.appendChild(flagBtn);
     item.appendChild(numRow);
 
-    // Prompt
     if (q.prompt) {
       const pr = document.createElement('div');
       pr.className = 'q-prompt';
@@ -1817,7 +1763,7 @@ window.IELTSApp = (() => {
       wrap.appendChild(inp);
 
     } else {
-      // Fallback
+
       const inp = document.createElement('input');
       inp.type = 'text';
       inp.className = 'text-input';
@@ -1830,7 +1776,6 @@ window.IELTSApp = (() => {
     return wrap;
   }
 
-  /* ── Answer / Flag persistence ─────────────────────────────── */
   function _setAnswer(no, val) {
     _answers[no] = val;
     _saveAnswers();
@@ -1850,7 +1795,6 @@ window.IELTSApp = (() => {
     try { const r = localStorage.getItem(IELTSSession.getKey('flags')); if(r) _flags = JSON.parse(r); } catch(e) {}
   }
 
-  /* ── Highlights (bp-popnote integration) ───────────────────── */
   function addHighlight(color) {
     const sel = window.getSelection();
     if (!sel || sel.isCollapsed || !sel.toString().trim()) return;
@@ -1866,11 +1810,11 @@ window.IELTSApp = (() => {
       mark.className = `hl hl-${color}`;
       mark.dataset.markId        = markId;
       mark.dataset.color         = color;
-      /* bp-popnote attributes — note text stored here, panel mode target */
-      mark.dataset.popoverContent = '';
-      mark.dataset.popoverPanel   = '#note-panel';
-      mark.dataset.popoverHint    = 'false';
-      mark.dataset.popoverLabel   = label;
+      mark.dataset.popoverContent  = PLACEHOLDER_CONTENT;
+      mark.dataset.popoverTheme    = COLOR_THEME[color] || 'lavender';
+      mark.dataset.popoverHint     = 'false';
+      mark.dataset.popoverLabel    = label;
+      mark.dataset.popoverMaxwidth = '360px';
       return mark;
     };
 
@@ -1882,7 +1826,6 @@ window.IELTSApp = (() => {
       _saveHighlights();
       activateMark(mark);
     } catch (e) {
-      // Cross-element selection fallback
       try {
         const frag = range.extractContents();
         const mark = _wrapRange(range);
@@ -1897,38 +1840,36 @@ window.IELTSApp = (() => {
     _hideToolbar();
   }
 
-  /* Called from capture-phase click handler AND the toolbar */
   function activateMark(markEl) {
+    if (_activeMarkEl && _activeMarkEl !== markEl) {
+      _activeMarkEl.classList.remove('xpop-panel-active');
+    }
     _activeMarkEl = markEl;
-    const stored  = _highlights.find(h => h.id === markEl.dataset.markId);
-    const note    = stored?.note || '';
+    markEl.classList.add('xpop-panel-active');
+
+    const stored = _highlights.find(h => h.id === markEl.dataset.markId);
+    const note   = stored?.note || '';
+
     document.getElementById('note-textarea').value = note;
     document.getElementById('note-edit-area').style.display = 'block';
     document.getElementById('note-panel-hint').textContent =
       '"' + (markEl.dataset.popoverLabel || markEl.textContent).slice(0, 38) + '…"';
-    if (!_notePanelOpen) toggleNotePanel();
   }
 
   function deactivateMark() {
+    if (_activeMarkEl) _activeMarkEl.classList.remove('xpop-panel-active');
     _activeMarkEl = null;
     document.getElementById('note-edit-area').style.display = 'none';
-    document.getElementById('note-panel').innerHTML = EMPTY_NOTE_HTML;
-    document.getElementById('note-panel-hint').textContent = 'Select a highlight to view or add a note';
+    document.getElementById('note-panel-hint').textContent = 'Click a highlight to edit its note';
   }
 
   function saveNote() {
     if (!_activeMarkEl) return;
     const note = document.getElementById('note-textarea').value.trim();
-    /* Sync note into the bp-popnote data attribute so the panel re-renders it */
-    _activeMarkEl.dataset.popoverContent = note;
+    _activeMarkEl.dataset.popoverContent = note || PLACEHOLDER_CONTENT;
     const stored = _highlights.find(h => h.id === _activeMarkEl.dataset.markId);
     if (stored) stored.note = note;
     _saveHighlights();
-    /* Refresh panel display manually (bp-popnote already rendered empty content; update it) */
-    document.getElementById('note-panel').innerHTML = note
-      ? `<div style="font-size:0.88rem;color:var(--shell);padding:4px 0 6px;line-height:1.65;">` +
-        _escHtml(note) + `</div>`
-      : EMPTY_NOTE_HTML;
   }
 
   function deleteHighlight() {
@@ -1949,19 +1890,15 @@ window.IELTSApp = (() => {
     try { const r = localStorage.getItem(IELTSSession.getKey('hl')); if(r) _highlights = JSON.parse(r); } catch(e) {}
   }
   function _restoreHighlights(pid) {
-    /* Session-only highlights (full serialization is a follow-up feature).
-       Stored metadata (_highlights) is preserved for server sync. */
     _loadHighlightsData();
   }
 
-  /* ── Note Panel ────────────────────────────────────────────── */
   function toggleNotePanel() {
     _notePanelOpen = !_notePanelOpen;
     document.getElementById('note-panel-body').classList.toggle('collapsed', !_notePanelOpen);
     document.getElementById('note-chevron').textContent = _notePanelOpen ? '▲' : '▼';
   }
 
-  /* ── Highlight Toolbar ─────────────────────────────────────── */
   function _showToolbar(rect) {
     const tb = document.getElementById('hl-toolbar');
     tb.style.display = 'flex';
@@ -1976,7 +1913,6 @@ window.IELTSApp = (() => {
     document.getElementById('hl-toolbar').style.display = 'none';
   }
 
-  /* ── Utility ───────────────────────────────────────────────── */
   function _escHtml(s) {
     return String(s)
       .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
@@ -1990,33 +1926,19 @@ window.IELTSApp = (() => {
     return r.toLowerCase();
   }
 
-  /* ── Event wiring (internal) ───────────────────────────────── */
   function _initEvents() {
-    // Capture phase: intercept mark clicks BEFORE bp-popnote bubble handler
     document.addEventListener('click', e => {
       const mark = e.target.closest('mark.hl');
       if (mark) {
-        // Same mark again = bp-popnote will toggle off panel; deactivate ours too
-        if (_activeMarkEl === mark) {
-          _activeMarkEl = null;
-          document.getElementById('note-edit-area').style.display = 'none';
-        } else {
-          activateMark(mark);
-        }
+
+        activateMark(mark);
         return;
       }
 
-      // Click outside mark & outside note-panel & outside toolbar → deactivate
-      if (!e.target.closest('#note-panel-wrap') &&
-          !e.target.closest('#hl-toolbar')) {
-        if (_activeMarkEl) {
-          _activeMarkEl = null;
-          document.getElementById('note-edit-area').style.display = 'none';
-        }
+      if (!e.target.closest('#note-panel-wrap') && !e.target.closest('#hl-toolbar')) {
+        deactivateMark();
       }
-    }, true); // capture
-
-    // Show toolbar on text selection
+    }, true);
     document.addEventListener('mouseup', e => {
       if (e.target.closest('#hl-toolbar')) return;
       if (e.target.closest('mark.hl')) return;
@@ -2040,7 +1962,6 @@ window.IELTSApp = (() => {
       if (!sel || sel.isCollapsed) _hideToolbar();
     });
 
-    // Highlight color buttons
     document.querySelectorAll('.hl-color-btn').forEach(btn =>
       btn.addEventListener('click', e => { e.stopPropagation(); addHighlight(btn.dataset.color); })
     );
@@ -2048,7 +1969,6 @@ window.IELTSApp = (() => {
       e.stopPropagation(); deleteHighlight(); _hideToolbar();
     });
 
-    // Draggable divider
     (function() {
       const divider  = document.getElementById('divider');
       const leftPane = document.getElementById('left-pane');
@@ -2073,28 +1993,20 @@ window.IELTSApp = (() => {
     })();
   }
 
-  // Public API surface
   return {
     init, addHighlight, deleteHighlight, activateMark, deactivateMark,
     saveNote, toggleNotePanel,
     _initEvents,
-    // For external use (invite-code hook, etc.)
+
     getAnswers() { return { ..._answers }; },
     getFlags()   { return { ..._flags   }; },
     getHighlights() { return [..._highlights]; },
   };
 })();
 
-/* ══════════════════════════════════════════════════════════════
-   NOTE PANEL CONTROLS (called from onclick in HTML)
-══════════════════════════════════════════════════════════════ */
 function saveNote()      { IELTSApp.saveNote(); }
 function deleteHighlight(){ IELTSApp.deleteHighlight(); }
 
-/* ══════════════════════════════════════════════════════════════
-   JSON DATA LOADER
-   Priority: 1) ?data=<url>  2) #ielts-data script  3) mock data
-══════════════════════════════════════════════════════════════ */
 async function _loadTestData() {
   IELTSApp._initEvents();
 
@@ -2118,13 +2030,9 @@ async function _loadTestData() {
     catch (err) { console.error('[IELTS] inline JSON parse error:', err); }
   }
 
-  // Fallback: development mock
   IELTSApp.init(_MOCK_DATA);
 }
 
-/* ══════════════════════════════════════════════════════════════
-   MOCK DATA  —  development / preview only
-══════════════════════════════════════════════════════════════ */
 const _MOCK_DATA = {
   meta: {
     test_id:     'ielts_demo_001',
@@ -2232,7 +2140,6 @@ const _MOCK_DATA = {
   ]
 };
 
-/* Boot */
 _loadTestData();
 </script>
 </body>
