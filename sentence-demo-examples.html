@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>sentence-demo 元件示範 — Nelson IELTS</title>
+  <style>
+    :root { font-size: 16px; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #0C0D0C;
+      color: #C6C7BD;
+      font-family: 'Segoe UI', 'PingFang TC', 'Noto Sans TC', sans-serif;
+      font-size: 1.125rem;
+      line-height: 1.8;
+    }
+
+    /* ── Page ── */
+    .page-header {
+      padding: 48px 32px 32px;
+      border-bottom: 1px solid #1e2020;
+      max-width: 860px;
+      margin: 0 auto;
+    }
+    .page-header .brand {
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      color: #7B6CF0;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    .page-header h1 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: #C8DD5A;
+      line-height: 1.3;
+      margin-bottom: 10px;
+    }
+    .page-header p {
+      color: #95BDD7;
+      font-size: 1rem;
+    }
+
+    .content {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 40px 32px 80px;
+    }
+
+    /* ── Section titles ── */
+    .section-title {
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #7B6CF0;
+      margin-bottom: 8px;
+    }
+    .section-h2 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #C8DD5A;
+      margin-bottom: 16px;
+    }
+    .section-desc {
+      font-size: 0.97rem;
+      color: #95BDD7;
+      margin-bottom: 24px;
+      line-height: 1.7;
+    }
+
+    /* ── Divider ── */
+    .divider {
+      border: none;
+      border-top: 1px solid #1e2020;
+      margin: 48px 0;
+    }
+
+    /* ── Usage block ── */
+    .usage-block {
+      background: #0f1110;
+      border: 1px solid #1e2020;
+      border-radius: 12px;
+      padding: 20px 22px;
+      margin: 24px 0;
+    }
+    .usage-block .usage-title {
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #40C99A;
+      margin-bottom: 12px;
+    }
+    .usage-block pre {
+      font-family: 'Consolas', 'Courier New', monospace;
+      font-size: 0.82rem;
+      color: #C6C7BD;
+      line-height: 1.7;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    .usage-block .attr   { color: #C3A5E5; }
+    .usage-block .val    { color: #40C99A; }
+    .usage-block .tag    { color: #08A9D1; }
+    .usage-block .cm     { color: #444; }
+
+    /* ── Config table ── */
+    .config-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+      margin-top: 18px;
+    }
+    .config-table th {
+      text-align: left;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #7B6CF0;
+      padding: 8px 12px;
+      border-bottom: 1px solid #1e2020;
+    }
+    .config-table td {
+      padding: 8px 12px;
+      border-bottom: 1px solid #141614;
+      vertical-align: top;
+    }
+    .config-table td:first-child { color: #C8DD5A; font-weight: 600; font-family: monospace; font-size: 0.85rem; }
+    .config-table td:nth-child(2) { color: #40C99A; font-family: monospace; font-size: 0.85rem; }
+    .config-table td:last-child { color: #95BDD7; }
+
+    /* ── Color swatches ── */
+    .swatches {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 16px;
+    }
+    .swatch {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: #111312;
+      border: 1px solid #1e2020;
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-size: 0.82rem;
+    }
+    .swatch-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+  </style>
+</head>
+<body>
+
+<div class="page-header">
+  <div class="brand">Nelson IELTS — 元件示範</div>
+  <h1>sentence-demo 語塊漸顯元件</h1>
+  <p>讓雅思閱讀例句以語意語塊的方式，按節奏逐步呈現給考生。</p>
+</div>
+
+<div class="content">
+
+  <!-- ══ 示範一 ══ -->
+  <div class="section-title">示範 01</div>
+  <div class="section-h2">修飾語塊 + 簡單句</div>
+  <p class="section-desc">
+    主角是 <em>I</em>，前後各有一個修飾性語塊。適合入門級練習。
+  </p>
+
+  <sentence-stage>
+    <sentence-demo
+      order="1"
+      color="lavender"
+      label="比較修飾語塊"
+      note="Like + 名詞片語，把主角和另一組人做比較，提供背景脈絡，不是主要動作的來源。">Unlike health-conscious people,</sentence-demo>
+    I don't mind having burgers for a meal,
+    <sentence-demo
+      order="2"
+      color="safe"
+      label="原因狀語語塊"
+      note="given + 名詞片語 = 考量到某個原因。等同 because of 的效果，但語氣更書面。">given the convenience</sentence-demo>.
+  </sentence-stage>
+
+  <hr class="divider">
+
+  <!-- ══ 示範二 ══ -->
+  <div class="section-title">示範 02</div>
+  <div class="section-h2">S + Vt + that 子句（雅思學術長句）</div>
+  <p class="section-desc">
+    這是課程核心例句，主詞有長分詞片語修飾，受詞是 that 子句。共四個語塊。
+  </p>
+
+  <sentence-stage>
+    <sentence-demo
+      order="1"
+      color="lavender"
+      label="比較修飾語塊"
+      note="Like their peers on rigid diets：把主角（運動員）和嚴格控制飲食的同儕做對比，是修飾性的背景資訊，先暫時略過。">Like their peers on rigid diets,</sentence-demo>
+    <sentence-demo
+      order="2"
+      color="safe"
+      label="主詞語塊（S）"
+      note="athletes 是核心名詞，後面兩個分詞片語（embracing… / tracking…）是描述這些運動員特徵的修飾語，不是獨立的動詞。">athletes embracing flexible nutrition and regularly tracking macros</sentence-demo>
+    <sentence-demo
+      order="3"
+      color="sky"
+      label="及物動詞（Vt）"
+      note="report = 表示、指出。確認句型是 S + Vt + O（that 子句），後面的 that 引導的就是受詞。">report</sentence-demo>
+    <sentence-demo
+      order="4"
+      color="special"
+      label="受詞子句（O）"
+      note="這是運動員「說了什麼」的內容：這件事（採用靈活飲食）對他們整體表現的正面影響大於負面影響，也就是好處大於壞處。">that this has had a more positive than negative impact on their overall performance.</sentence-demo>
+  </sentence-stage>
+
+  <hr class="divider">
+
+  <!-- ══ 示範三 ══ -->
+  <div class="section-title">示範 03</div>
+  <div class="section-h2">always-show 用法：骨架先顯，修飾語後揭示</div>
+  <p class="section-desc">
+    用 <code>always-show</code> 讓句子骨架（S+V+O）一開始就亮著，
+    再逐步點亮修飾語塊，方向和示範二相反。
+  </p>
+
+  <sentence-stage>
+    Recent studies
+    <sentence-demo
+      order="1"
+      color="lavender"
+      label="插入性同位語"
+      note="published in peer-reviewed journals 是說明 studies 是哪類研究的插入語，可以先跳過它，不影響理解主句。">published in peer-reviewed journals</sentence-demo>
+    <sentence-demo
+      always-show
+      color="sky"
+      label="及物動詞（Vt）"
+      note="suggest = 指出、顯示。">suggest</sentence-demo>
+    that the adoption of sedentary lifestyles
+    <sentence-demo
+      order="2"
+      color="special"
+      label="主要成因語塊"
+      note="in developed countries 是地點狀語，限定「採用久坐生活方式」發生的範圍，是 that 子句主詞的修飾語。">in developed countries</sentence-demo>
+    has contributed significantly to rising rates of chronic disease
+    <sentence-demo
+      order="3"
+      color="salmon"
+      label="受影響族群語塊"
+      note="particularly among young adults… 是說明慢性病增加主要在哪個族群，particularly 是強調某個子群的訊號詞。">particularly among young adults.</sentence-demo>
+  </sentence-stage>
+
+  <hr class="divider">
+
+  <!-- ══ 使用說明 ══ -->
+  <div class="section-title">使用說明</div>
+  <div class="section-h2">HTML 語法</div>
+
+  <div class="usage-block">
+    <div class="usage-title">基本結構</div>
+    <pre><span class="tag">&lt;sentence-stage&gt;</span>
+  <span class="cm">&lt;!-- 非語塊文字：直接放，一直顯示 --&gt;</span>
+  I don't mind having burgers,
+
+  <span class="tag">&lt;sentence-demo</span>
+    <span class="attr">order</span>=<span class="val">"1"</span>
+    <span class="attr">color</span>=<span class="val">"lavender"</span>
+    <span class="attr">label</span>=<span class="val">"比較修飾語塊"</span>
+    <span class="attr">note</span>=<span class="val">"Like + 名詞，提供對比背景。"</span><span class="tag">&gt;</span>
+    unlike most people
+  <span class="tag">&lt;/sentence-demo&gt;</span>.
+<span class="tag">&lt;/sentence-stage&gt;</span></pre>
+  </div>
+
+  <div class="usage-block">
+    <div class="usage-title">always-show（骨架一直亮）</div>
+    <pre><span class="tag">&lt;sentence-demo</span> <span class="attr">always-show</span> <span class="attr">color</span>=<span class="val">"sky"</span><span class="tag">&gt;</span>suggest<span class="tag">&lt;/sentence-demo&gt;</span></pre>
+  </div>
+
+  <div class="usage-block">
+    <div class="usage-title">全域設定（在載入 JS 後呼叫）</div>
+    <pre><span class="tag">SentenceDemo</span>.config({
+  animMs:       320,          <span class="cm">// 動畫毫秒</span>
+  defaultColor: <span class="val">'lavender'</span>,  <span class="cm">// 未指定 color 時的預設</span>
+  bgAlpha:      0.15,         <span class="cm">// 語塊背景透明度</span>
+  dimOpacity:   <span class="val">'0.22'</span>,      <span class="cm">// 未點亮時的透明度</span>
+  nextLabel:    <span class="val">'顯示下一個語塊'</span>,
+  doneLabel:    <span class="val">'全部完成 ✓'</span>,
+  resetLabel:   <span class="val">'重置'</span>,
+});</pre>
+  </div>
+
+  <!-- ── 屬性表 ── -->
+  <div class="section-h2" style="margin-top:32px">&lt;sentence-demo&gt; 屬性</div>
+  <table class="config-table">
+    <thead>
+      <tr>
+        <th>屬性</th>
+        <th>預設值</th>
+        <th>說明</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>order</td>
+        <td>0</td>
+        <td>顯示順序，從 1 開始。0 或省略表示一直顯示。</td>
+      </tr>
+      <tr>
+        <td>color</td>
+        <td>lavender</td>
+        <td>顏色名稱，見下方色票。</td>
+      </tr>
+      <tr>
+        <td>label</td>
+        <td>（空）</td>
+        <td>語塊的語意標籤，點亮後顯示在說明面板左側。</td>
+      </tr>
+      <tr>
+        <td>note</td>
+        <td>（空）</td>
+        <td>點亮後顯示在說明面板的解析文字。</td>
+      </tr>
+      <tr>
+        <td>always-show</td>
+        <td>—</td>
+        <td>Boolean 屬性。讓這個語塊一直保持高亮，不參與逐步揭示。</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- ── 色票 ── -->
+  <div class="section-h2" style="margin-top:36px">可用顏色</div>
+
+  <div style="font-size:0.8rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#7B6CF0;margin-bottom:10px;">原有色票</div>
+  <div class="swatches" style="margin-bottom:24px;">
+    <div class="swatch"><div class="swatch-dot" style="background:#C3A5E5"></div>lavender</div>
+    <div class="swatch"><div class="swatch-dot" style="background:#C8DD5A"></div>special</div>
+    <div class="swatch"><div class="swatch-dot" style="background:#40C99A"></div>safe</div>
+    <div class="swatch"><div class="swatch-dot" style="background:#08A9D1"></div>sky</div>
+    <div class="swatch"><div class="swatch-dot" style="background:#F08080"></div>warning</div>
+    <div class="swatch"><div class="swatch-dot" style="background:#E5C3B3"></div>salmon</div>
+    <div class="swatch"><div class="swatch-dot" style="background:#DECA4B"></div>yellow</div>
+    <div class="swatch"><div class="swatch-dot" style="background:#A0CF72"></div>focus</div>
+    <div class="swatch"><div class="swatch-dot" style="background:#4285EB"></div>info</div>
+    <div class="swatch"><div class="swatch-dot" style="background:#95BDD7"></div>stone</div>
+    <div class="swatch"><div class="swatch-dot" style="background:#7B6CF0"></div>indigo</div>
+    <div class="swatch"><div class="swatch-dot" style="background:#FFB3D9"></div>pink</div>
+    <div class="swatch"><div class="swatch-dot" style="background:#EDA109"></div>orange</div>
+    <div class="swatch"><div class="swatch-dot" style="background:#DBEDD8"></div>vanilla</div>
+  </div>
+
+  <div style="font-size:0.8rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#40C99A;margin-bottom:10px;">擴充色票（語塊多時選用）</div>
+  <div class="swatches" style="margin-bottom:20px;">
+    <div class="swatch"><div class="swatch-dot" style="background:#5EDEC8"></div>mint</div>
+    <div class="swatch"><div class="swatch-dot" style="background:#FF7A65"></div>coral</div>
+    <div class="swatch"><div class="swatch-dot" style="background:#99AAFF"></div>periwinkle</div>
+    <div class="swatch"><div class="swatch-dot" style="background:#FFD066"></div>gold</div>
+    <div class="swatch"><div class="swatch-dot" style="background:#FF7AAE"></div>rose</div>
+  </div>
+  <div style="font-size:0.88rem;color:#7a7e78;line-height:1.7;margin-bottom:8px;">
+    擴充色票補足色相空缺：mint（冷藍綠）、coral（暖珊瑚橘）、periwinkle（藍紫過渡）、gold（暖金黃）、rose（飽和玫瑰粉）。
+    全部在深色背景下對比度 ≥ 4.5:1，WCAG AA 合格。
+  </div>
+
+  <!-- ── dim color 說明 ── -->
+  <div class="usage-block" style="margin-top:24px;">
+    <div class="usage-title">dim 文字色設定</div>
+    <pre><span class="tag">SentenceDemo</span>.config({
+  dimColor: <span class="val">'#7a7e78'</span>,  <span class="cm">// 未點亮語塊的文字色（預設）</span>
+                        <span class="cm">// 對比度約 4.5:1，可讀但明顯低於點亮狀態</span>
+                        <span class="cm">// 可調亮（如 '#9a9e98'）或調暗（如 '#585c56'）</span>
+});</pre>
+  </div>
+
+</div>
+
+<script src="sentence-demo.js"></script>
+</body>
+</html>
