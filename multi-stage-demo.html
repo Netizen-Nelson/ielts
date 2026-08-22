@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>多層語塊分析示範 — Nelson IELTS</title>
+  <style>
+    :root { font-size: 16px; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #0C0D0C;
+      color: #C6C7BD;
+      font-family: 'Segoe UI', 'PingFang TC', 'Noto Sans TC', sans-serif;
+      font-size: 1.125rem;
+      line-height: 1.8;
+    }
+
+    /* ── Page header ── */
+    .page-hdr {
+      padding: 52px 32px 36px;
+      max-width: 820px;
+      margin: 0 auto;
+      border-bottom: 1px solid #1e2020;
+    }
+    .page-hdr .badge {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #7B6CF0;
+      border: 1px solid rgba(123,108,240,.3);
+      border-radius: 99px;
+      padding: 3px 12px;
+      margin-bottom: 14px;
+    }
+    .page-hdr h1 {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: #C8DD5A;
+      line-height: 1.25;
+      margin-bottom: 12px;
+    }
+    .page-hdr .sub {
+      font-size: 1rem;
+      color: #6e7270;
+      max-width: 540px;
+    }
+
+    /* ── Content ── */
+    .content {
+      max-width: 820px;
+      margin: 0 auto;
+      padding: 40px 32px 80px;
+    }
+
+    /* ── Eyebrow labels ── */
+    .eyebrow {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #7B6CF0;
+      margin-bottom: 8px;
+    }
+
+    /* ── Source sentence block ── */
+    .source-block {
+      background: #0f1110;
+      border: 1px solid #1e2020;
+      border-left: 3px solid #7B6CF0;
+      border-radius: 0 10px 10px 0;
+      padding: 18px 22px;
+      margin-bottom: 40px;
+      font-size: 1.05rem;
+      font-style: italic;
+      color: #C6C7BD;
+      line-height: 1.8;
+    }
+
+    /* ── Layer section ── */
+    .layer-block {
+      margin-bottom: 0;
+    }
+    .layer-title {
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #6e7270;
+      margin-bottom: 14px;
+    }
+
+    /* ── Divider ── */
+    hr.div {
+      border: none;
+      border-top: 1px solid #1a1c1a;
+      margin: 44px 0;
+    }
+
+    /* ── Footer ── */
+    footer {
+      text-align: center;
+      font-size: 0.78rem;
+      color: #333;
+      padding: 28px;
+      border-top: 1px solid #141614;
+    }
+  </style>
+</head>
+<body>
+
+<div class="page-hdr">
+  <div class="badge">Nelson IELTS — 多層語塊分析</div>
+  <h1>由大到小，層層拆解</h1>
+  <p class="sub">
+    同一個句子用三個獨立的語塊分析層次，從骨架到細節，逐層深入。
+  </p>
+</div>
+
+<div class="content">
+
+  <!-- 原句 -->
+  <div class="eyebrow" style="margin-bottom:10px">原始例句</div>
+  <div class="source-block">
+    The proliferation of digital streaming platforms, while democratising
+    access to artistic works that were once confined to elite cultural
+    institutions, has simultaneously raised urgent questions about the
+    financial sustainability of independent creators who rely on
+    royalty-based income.
+  </div>
+
+  <!-- ════ 第一層 ════ -->
+  <div class="layer-block">
+    <div class="layer-title">第一層：句子骨架（S + V + O）</div>
+
+    <sentence-stage>
+      <sentence-demo
+        order="1"
+        color="lavender"
+        label="主詞語塊（S）"
+        note="核心名詞是 proliferation（快速增長）。of 以下的介系詞片語是修飾語，先略過不影響理解骨架。">
+        The proliferation of digital streaming platforms
+      </sentence-demo>
+      , while democratising access to artistic works that were once
+      confined to elite cultural institutions,
+      <sentence-demo
+        order="2"
+        color="sky"
+        label="及物動詞（Vt）"
+        note="has raised 是現在完成式，表示影響從過去延續至今。simultaneously 是插入副詞，強調「同時」。">
+        has simultaneously raised
+      </sentence-demo>
+      <sentence-demo
+        order="3"
+        color="special"
+        label="受詞語塊（O）"
+        note="urgent questions 是核心名詞。about 以下是說明問題性質的介系詞片語，範圍很長，先辨識核心名詞即可。">
+        urgent questions about the financial sustainability of
+        independent creators who rely on royalty-based income.
+      </sentence-demo>
+    </sentence-stage>
+  </div>
+
+  <!-- 銜接 -->
+  <stage-bridge label="↓ 第二層：拆解主詞語塊"></stage-bridge>
+
+  <!-- ════ 第二層 ════ -->
+  <div class="layer-block">
+    <div class="layer-title">第二層：主詞語塊內部結構</div>
+
+    <sentence-stage>
+      <sentence-demo
+        order="1"
+        color="safe"
+        label="核心名詞"
+        note="proliferation = 快速增長、大量擴散。這是整個主詞的核心概念，是動作的發起者。">
+        The proliferation
+      </sentence-demo>
+      <sentence-demo
+        order="2"
+        color="stone"
+        label="of 介系詞片語"
+        note="of + 名詞，說明是什麼東西在擴散（digital streaming platforms = 數位串流平台）。修飾核心名詞。">
+        of digital streaming platforms
+      </sentence-demo>
+    </sentence-stage>
+  </div>
+
+  <!-- 銜接 -->
+  <stage-bridge label="↓ 第三層：拆解受詞語塊"></stage-bridge>
+
+  <!-- ════ 第三層 ════ -->
+  <div class="layer-block">
+    <div class="layer-title">第三層：受詞語塊內部結構</div>
+
+    <sentence-stage>
+      <sentence-demo
+        order="1"
+        color="special"
+        label="核心名詞"
+        note="urgent questions：受詞的核心，這才是被「提出」的東西。urgent 強調問題的迫切性。">
+        urgent questions
+      </sentence-demo>
+      <sentence-demo
+        order="2"
+        color="salmon"
+        label="about 介系詞片語"
+        note="about + 名詞，說明問題的內容是關於什麼——財務永續性（financial sustainability）。">
+        about the financial sustainability
+      </sentence-demo>
+      <sentence-demo
+        order="3"
+        color="gold"
+        label="of 介系詞片語"
+        note="of + 名詞，說明是誰的財務永續性——獨立創作者（independent creators）。">
+        of independent creators
+      </sentence-demo>
+      <sentence-demo
+        order="4"
+        color="coral"
+        label="關係子句（修飾 creators）"
+        note="who rely on royalty-based income：關係子句，進一步說明這些創作者的特徵——靠版稅收入維生。rely on = 依賴。">
+        who rely on royalty-based income
+      </sentence-demo>
+    </sentence-stage>
+  </div>
+
+  <hr class="div">
+
+  <!-- 說明 -->
+  <div class="eyebrow" style="margin-bottom:14px">設計說明</div>
+  <p style="color:#6e7270;font-size:0.95rem;line-height:1.8;max-width:640px">
+    每一個 <code style="color:#C3A5E5;font-size:0.88rem">sentence-stage</code>
+    是獨立的互動單元，各自的進度條互不干擾。
+    <code style="color:#08A9D1;font-size:0.88rem">stage-bridge</code>
+    提供視覺上的層次過渡，告訴學生「現在要把上一層的某個語塊放大來看」。
+    由大到小的分析順序符合語塊教學的認知順序：先掌握骨架，再理解細節。
+  </p>
+
+</div>
+
+<footer>
+  Nelson IELTS — sentence-demo + stage-bridge 元件示範
+</footer>
+
+<script src="sentence-demo.js"></script>
+<script src="stage-bridge.js"></script>
+</body>
+</html>
