@@ -391,11 +391,32 @@ body {
 <section id="hfeature2">
 <dual-hr class="my-3" color-left="indigo" color-right="focus" ratio="1:4" thickness="1px"
            line-style="dashed" gap="9px"></dual-hr>
-	<div>
-		
+	<div class="m-3 fs-2 bp-text-ocean">
+		<i class="bi bi-camera-reels"></i> 一魚兩吃的核心技術
 	</div>
-	<div>
-		
+	<div class="m-3 bp-text-shell">
+		<bp-stepper id="chunking_speaking" data-compact-header data-show-ending="chunking-results" data-theme="shell" data-color-active="ocean" data-color-done="shell" data-gap="56px" data-mode="progress-show" data-card-padding="16px" data-card-width="400px">
+			<bp-step>
+				<bp-step-title>雅思口說Part 3如何說出"這麼長"的一句話，不卡頓？</bp-step-title>
+				<bp-step-content>
+					<span class="fs-8">句中「感到不堪負荷」很符合現代人使用網路查詢病症和營養資訊的真實痛點</span><br>
+					<span class="fs-6">Users of social media and AI chatbots for health information are more likely to say that they feel overwhelmed by conflicting medical advice online. (24)</span>
+				</bp-step-content>
+			</bp-step>
+			<bp-step>
+				<bp-step-title>語塊組合取代腦內逐字中翻英</bp-step-title>
+				<bp-step-content>
+					<span class="fs-5 fw-bold">Users</span> <span class="bp-text-yellow">of social media and AI chatbots for health information</span> <span class="fs-5 fw-bold">are</span> <span class="fw-bold">more likely to say</span><br>
+					+<br>
+					that they <u>feel overwhelmed by</u> conflicting medical advice online.
+				</bp-step-content>
+			</bp-step>
+		</bp-stepper>
+	</div>
+	<div id="chunking-results" class="mt-3 mb-7 p-2 bp-bg-fill bp-border-sky w-80 text-center">
+		<h5 class="bp-text-ocean">先拆解、後組合</h5>
+		<card-badge text="拆解長難句" icon="bi-exclamation-octagon" theme="sky" size="md"
+				href="#chunking_reading" clickable="true"></card-badge>
 	</div>
 </section>
 
@@ -403,7 +424,7 @@ body {
 <dual-hr class="my-3" color-left="indigo" color-right="focus" ratio="1:4" thickness="1px"
            line-style="dashed" gap="9px"></dual-hr>
 	<div class="m-3 bp-text-shell">
-		<div class="fs-2 bp-text-safe">
+		<div class="fs-2 bp-text-safe bp-lnh-9">
 			<i class="bi bi-camera-reels"></i> 直擊痛點的解析影片：別再盲目錄音、自我安慰<br>
 			<span class="fs-6 opacity-50">18年資歷Nelson親製影片，點出你口說中的「隱形扣分地雷」</span>
 		</div>
@@ -413,19 +434,18 @@ body {
 				他們對於<b>Grammatical Range與Coherence & Cohesion</b>更是束手無策<br>
 				<b>Part 1 Do you live in a house or in a flat?</b>
 				<div class="mt-2 p-3 w-80">
-					<card-toggle toggle color="pink" color-after="sky" bar-width="6" bar-width-hover="12" source="back-ans-1">
+					<card-toggle toggle color="pink" color-after="safe" bar-width="6" bar-width-hover="12" source="back-ans-1">
 						<p class="p-3">
-							Actually, I currently live in a small apartment with my parents. It's in a quiet community. But the downside is inconvenience. For example, the convenience store is a bit far away.<br>
+							Actually, I currently live in a small apartment with my parents. It's in a quiet community. But the downside is its inconvenience. For example, the convenience store is a bit far away.<br>
 							對於沒有明顯文法錯誤的回答，同儕不是無能為力就是給錯誤的方向：『可以用更難的字和更複雜的句型』(但卻說不出哪些字和句型)
 						</p>
-						<p class="px-3 bp-text-sky">
-							這是平實但稍顯單調的回答<br>
-							點擊看Nelson進行質感大升級
+						<p class="px-3 bp-text-pink">
+							這是平實但稍顯單調的回答，點擊看Nelson進行質感大升級
 						</p>
 					</card-toggle>
 				</div>
 				<div class="mb-2 p-3">
-					<card-badge text="練習、上傳、看片、跳分" icon="bi-lightning-charge" theme="sky" size="md"
+					<card-badge text="練習、上傳、看片、跳分" icon="bi-lightning-charge" theme="safe" size="md"
 							href="https://coolteam.online/" clickable="true"></card-badge>
 				</div>
 			</div>
@@ -455,7 +475,7 @@ body {
 	<div class="m-3 fs-2 bp-text-yellow">
 		<i class="bi bi-graph-up-arrow"></i> 口說保證跳分的絕招
 	</div>
-	<ui-cluster theme="sky" label="自然敘事的萬用內容及瞄準連貫性"
+	<ui-cluster theme="yellow" label="自然敘事的萬用內容及瞄準連貫性"
 		label-gap="12px" label-width="188px" reset>
 		<cluster-item>時態自動切換，文法多樣性不費力</cluster-item>
 		<cluster-item>彌補心智圖發散思考在連貫性費力的缺</cluster-item>
@@ -512,21 +532,44 @@ body {
 						<li>只練開場一句話：亂數抽十道 Part 2 題目，每題只做一件事——用物品、地點、機會、時間其中兩種，說出一個自然的開場句。不計時、不往下說，就盯著這一句，直到不假思索</li>
 						<li>說滿一分鐘：同樣這十個開場句，接上萬用劇情思維，每題設法講滿一分鐘，留下二十秒收尾</li>
 					</ol>
-					<span class="fs-6 bp-text-sky">——換題不換骨架，重複到不費力就能說出來，這才是橫向練習的真正面目</span>
+					<span class="fs-7">——換題不換骨架，重複到不費力就能說出來，這才是橫向練習的真正面目</span>
+					<p class="p-2 fs-6">
+						<h5 class="bp-text-sky">你不必自己摸索 <i class="bi bi-heart-arrow"></i></h5>
+						<card-badge text="永久免費 雙向視訊 雅思課程" icon="bi-webcam-fill" theme="vanilla" size="lg"
+						  data-popover-theme="vanilla"
+						  data-popover-modal="end" 
+						  data-popover-modal-size="688px"
+						  data-popover-title="永久免費 雙向視訊 雅思課程" 
+						  data-popover-target="#my-offcanvas-content_freecourse" clickable="true">
+						</card-badge>
+					</p>
 				</div>
-				<h5>你不必自己摸索</h5>
-				<card-badge text="永久免費 雙向視訊 雅思課程" icon="bi-webcam-fill" theme="vanilla" size="lg"
-				  data-popover-theme="vanilla"
-				  data-popover-modal="end" 
-				  data-popover-modal-size="688px"
-				  data-popover-title="永久免費 雙向視訊 雅思課程" 
-				  data-popover-target="#my-offcanvas-content_freecourse" clickable="true">
-				</card-badge>
 			</div>
 			<div class="col">
 				<h2 class="fw-bold">Part 3</h2>
-				<div class="px-5">
+				<div class="px-3">
 					<h5>分類法取代流水帳</h5>
+					<div class="fs-6 bp-text-yellow"><i class="bi bi-capslock-fill"></i> 思考的起點——遇到任何題目，先問自己「這件事有哪幾個面向」</div>
+				</div>
+				<div class="mt-3 px-3">
+					<b>Why are some cities popular with tourists?</b>
+					<div class="my-2 fs-7">
+						核心論述（非完整答案）<br>
+						On the cultural side, cities with a distinct historical identity — ancient temples, colonial architecture, or world-class museums — give visitors something they simply can't find at home.<br>
+						On the practical side, well-connected airports, affordable accommodation, and a reputation for safety make a city easy to choose and easy to commit to.<br>
+						On the experiential side, it's often the street food, the local rhythm, and the feeling of being somewhere genuinely different that keeps people coming back — and recommending the place to others.
+					</div>
+					<b>What kinds of videos are popular in your country?</b>
+					<div class="my-2 fs-7">
+						核心論述（非完整答案）<br>
+						The entertainment aspect is hard to miss — short-form comedy clips and drama highlights dominate, delivering a quick emotional hit in under a minute.<br>
+						The informational aspect draws a different crowd — cooking tutorials, DIY guides, and personal finance breakdowns attract viewers who want to walk away with something useful.<br>
+						The lifestyle aspect might be the most telling — food vlogs and travel diaries have built loyal followings, less about learning something, more about living vicariously through someone else's day.
+					</div>
+				</div>
+				<div class="mt-3 px-3 fs-7 bp-text-sky">
+					分類法完勝這兩組：first, second, ultimately和besides, moreover, furthermore<br>
+					前者是替論點貼編號，後者是替句子搭橋樑(連貫性)————分類法開口就讓考官知道接下來這個論點的性質
 				</div>
 			</div>
 
