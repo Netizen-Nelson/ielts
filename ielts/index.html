@@ -137,7 +137,7 @@ body {
 			</div>
 			<div class="mt-3">
 				<i class="bi bi-bookmark-star"></i> 針對多個主題但相同題型的考題的相同段落，<span class="fs-3 bp-text-ocean fw-bold">橫向練習</span>，<i class="bi bi-graph-up-arrow"></i>效果加倍再加倍<br>
-				<bp-stepper data-theme="vanilla" data-auto-number="false" data-card-width="188px" data-gap="28px">
+				<bp-stepper data-theme="vanilla" data-auto-number="false" data-card-width="188px" data-gap="36px">
 					<bp-step>
 						<bp-step-title>① 固定一種大作文題型</bp-step-title>
 						<bp-step-content>
@@ -163,7 +163,7 @@ body {
 						</bp-step-content>
 					</bp-step>
 				</bp-stepper>
-				<p class="mt-3">
+				<p class="mt-3 fs-7 bp-lnh-6">
 					<i class="bi bi-chat-text"></i> 口說更快熟練的原理同上：剛起步的考生請專注在Part 1，一陣子後才進入Part 2，上手後再練Part 3<br>
 					<i class="bi bi-pci-card-sound"></i> 聽力可以稍微加快腳步：入門時練1,2，別碰3, 4；1, 2上手以後專心練習3，能跟上速度再進入4<br>
 					至於每個階段要練多久，因人而異
@@ -185,7 +185,7 @@ body {
 			<p class="bp-lnh-6">
 				<span><b>Dr. Charles Browne</b> 透過大數據在全球學術語料庫中精煉出</span>
 				<card-badge text="NAWL核心957字" icon="bi-check2-all" theme="sky" size="md" href="https://www.newgeneralservicelist.com/new-academic-word-list"></card-badge>
-				，把寶貴的備考時間精準花在刀口上，但A-Z單字清單和分類主題字彙仍是下策
+				，把寶貴的備考時間精準花在刀口上，但A-Z單字清單和分類主題字彙仍是下策（剛背就忘、用不出來）
 			</p>
 			<p class="mx-5 px-3">
 				<ui-table theme="shell">
@@ -227,7 +227,7 @@ body {
 		</div>
 		<div class="m-3 fs-2 bp-text-lavender">
 			<i class="bi bi-3-square"></i> 入門就拿雅思閱讀刷題、模仿解題技巧來作答<br>
-			<b>時間會浪費在：查生字、背了就忘、找不到關鍵字</b>
+			<b>時間會浪費在：查生字、背過但記不久、找不到關鍵字</b>
 			<div class="container fs-6 bp-text-shell">
 				<div class="row mt-3 bp-lnh-6">
 					<div class="col">
@@ -335,10 +335,6 @@ body {
 				<i class="bi bi-5-square"></i> YT影片的優勢是低門檻消費 <span class="fs-6 opacity-50">躺著看、滑過去、有種在學習的感覺</span><br>
 				entertain ＞ educate
 			</div>
-			<div class="mt-3 fs-5 bp-text-vanilla">
-				YT雅思教學影片的建議其實沒有錯，但沒有錯不等於有效。
-				<p class="fs-7 bp-text-shell">「每天練習口說錄音」、「Task 2記得寫結論段」、「到了口說Part 3更要專注、全力以赴」</p>
-			</div>
 			<bp-stepper id="yt_videos" data-color-active="pink" data-color-done="pink" data-mode="progress-show" data-layout="vertical" data-card-padding="22px" data-auto-number="false" data-arrow-size="10px" data-card-width="770px" data-gap="50px">
 				<bp-step>
 					<bp-step-title>破碎學習、頭痛醫頭</bp-step-title>
@@ -413,7 +409,7 @@ body {
 			</bp-step>
 		</bp-stepper>
 	</div>
-	<div id="chunking-results" class="mt-3 mb-7 p-2 bp-bg-fill bp-border-sky w-80 text-center">
+	<div id="chunking-results" class="mx-3 mt-3 mb-7 p-2 bp-bg-fill bp-border-sky w-80 text-center">
 		<h5 class="bp-text-ocean">先拆解、後組合</h5>
 		<card-badge text="拆解長難句" icon="bi-exclamation-octagon" theme="sky" size="md"
 				href="#chunking_reading" clickable="true"></card-badge>
@@ -581,13 +577,41 @@ body {
 <section id="lesson1">
 <dual-hr class="my-3" color-left="indigo" color-right="focus" ratio="1:4" thickness="1px"
            line-style="dashed" gap="9px"></dual-hr>
-	<div id="chunking_reading" class="m-3 p-3 bp-hatch bp-hatch-sm bp-hatch-sky bp-hatch-tight bp-lnh-6">
+	<div id="chunking_reading" class="m-3 p-3 bp-lnh-6">
 		<h5 class="bp-text-sky">逐字處理→約 38 個閱讀單位、語塊處理→約 13 個閱讀單位</h5>
-		<div class="w-80 p-3">
+		<div class="w-80 p-2 bp-bg-fill">
 			<spotlight theme="sky" ring-style="dashed" hint="false">
 				Like their peers with aging parents, adults caring for an aging spouse and regularly helping them with household or personal tasks report that this has had a more positive than negative impact on their relationship with their spouse.<br>
 			</spotlight>
-			<p class="fs-7">【按一下文字切換專注閱讀模式】</p>
+		</div>
+		<div class="w-80 p-2">
+			<h6><i class="bi bi-arrow-down-square-fill"></i></h6>
+			<!-- 說明來源（自動隱藏） -->
+			<div id="tip-c1"><strong>介系詞片語</strong><p>當副詞、修飾後面整句、表示比較</p></div>
+			<div id="tip-c2"><strong>主詞</strong><p>adults — 整句的行為主體</p></div>
+			<div id="tip-c3"><strong>主詞</strong><p>adults — 整句的行為主體</p></div>
+			<div id="tip-c4"><strong>主詞</strong><p>adults — 整句的行為主體</p></div>
+			<div id="tip-c5"><strong>名詞子句當受詞</strong><p>及物動詞report的受詞，表示的內容</p></div>
+			<layer-switch target="#info-panel"
+						  mark-style="highlight" toggle-style="pill">
+			  <ls-text>
+				<ls-mark layer="c1">Like their peers with aging parents,</ls-mark>
+				<ls-mark layer="c2">adults</ls-mark>
+				<ls-mark layer="c3">caring for an aging spouse…</ls-mark>
+				<ls-mark layer="c4">report</ls-mark>
+				<ls-mark layer="c5">that this has had a more positive than negative impact on their relationship with their spouse</ls-mark>
+			  </ls-text>
+			  <ls-layer name="c1" label="介系詞片語" source="#tip-c1" theme="ocean"></ls-layer>
+			  <ls-layer name="c2" label="整句話的主詞" source="#tip-c2" theme="yellow"></ls-layer>
+			  <ls-layer name="c3" label="現在分詞片語" source="#tip-c3" theme="vanilla"></ls-layer>
+			  <ls-layer name="c4" label="整句話的動詞" source="#tip-c4" theme="teal"></ls-layer>
+			  <ls-layer name="c5" label="名詞子句當受詞" source="#tip-c5" theme="salmon"></ls-layer>
+			</layer-switch>
+			<!-- 顯示目標（樣式自己決定，JS 只管寫 innerHTML） -->
+			<div id="info-panel">
+			  <h5 class="bp-text-ocean">介系詞片語</h5>
+			  <p>當副詞、修飾後面整句、表示比較</p>
+			</div>
 		</div>
 	</div>
 </section>
