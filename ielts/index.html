@@ -163,11 +163,68 @@ body {
 						</bp-step-content>
 					</bp-step>
 				</bp-stepper>
-				<p class="mt-3 fs-7 bp-lnh-6">
-					<i class="bi bi-chat-text"></i> 口說更快熟練的原理同上：剛起步的考生請專注在Part 1，一陣子後才進入Part 2，上手後再練Part 3<br>
-					<i class="bi bi-pci-card-sound"></i> 聽力可以稍微加快腳步：入門時練1,2，別碰3, 4；1, 2上手以後專心練習3，能跟上速度再進入4<br>
-					至於每個階段要練多久，因人而異
-				</p>
+			<div style="display:flex;gap:40px;flex-wrap:wrap;align-items:flex-start;margin-top:16px;">
+
+			  <!-- 口說進程 -->
+			  <div>
+				<div style="color:#95c9de;font-weight:600;margin-bottom:10px;">口說學習路徑</div>
+				<div style="display:flex;align-items:center;gap:12px;">
+				  <div style="text-align:center;">
+					<ui-ring size="88" center="P1" center-size="1rem" center-weight="700"
+					  center-color="#DECA4B" gap="5" ring-width="6" track-color="#3A3B39"
+					  rings='[{"from":0,"to":360,"color":"#DECA4B"}]'>
+					</ui-ring>
+					<div style="font-size:1rem;color:#DECA4B;margin-top:4px;">先全力</div>
+				  </div>
+				  <span style="color:#7A7B77;">→</span>
+				  <div style="text-align:center;">
+					<ui-ring size="88" center="P2" center-size="1rem" center-weight="700"
+					  center-color="#95c9de" gap="5" ring-width="6" track-color="#3A3B39"
+					  rings='[{"from":0,"to":210,"color":"#95c9de"}]'>
+					</ui-ring>
+					<div style="font-size:1rem;color:#95c9de;margin-top:4px;">熟後進入</div>
+				  </div>
+				  <span style="color:#7A7B77;">→</span>
+				  <div style="text-align:center;">
+					<ui-ring size="88" center="P3" center-size="1rem" center-weight="700"
+					  center-color="#C3A5E5" gap="5" ring-width="6" track-color="#3A3B39"
+					  rings='[{"from":0,"to":90,"color":"#C3A5E5"}]'>
+					</ui-ring>
+					<div style="font-size:1rem;color:#C3A5E5;margin-top:4px;">上手再練</div>
+				  </div>
+				</div>
+			  </div>
+
+			  <!-- 聽力進程 -->
+			  <div>
+				<div style="color:#0ABDC6;font-weight:600;margin-bottom:10px;">聽力學習路徑</div>
+				<div style="display:flex;align-items:center;gap:12px;">
+				  <div style="text-align:center;">
+					<ui-ring size="88" center="1,2" center-size="0.9rem" center-weight="700"
+					  center-color="#DECA4B" gap="5" ring-width="6" track-color="#3A3B39"
+					  rings='[{"from":0,"to":360,"color":"#DECA4B"}]'>
+					</ui-ring>
+					<div style="font-size:1rem;color:#DECA4B;margin-top:4px;">入門練</div>
+				  </div>
+				  <span style="color:#7A7B77;">→</span>
+				  <div style="text-align:center;">
+					<ui-ring size="88" center="3" center-size="1.2rem" center-weight="700"
+					  center-color="#0ABDC6" gap="5" ring-width="6" track-color="#3A3B39"
+					  rings='[{"from":0,"to":210,"color":"#0ABDC6"}]'>
+					</ui-ring>
+					<div style="font-size:1rem;color:#0ABDC6;margin-top:4px;">跟上後</div>
+				  </div>
+				  <span style="color:#7A7B77;">→</span>
+				  <div style="text-align:center;">
+					<ui-ring size="88" center="4" center-size="1.2rem" center-weight="700"
+					  center-color="#C3A5E5" gap="5" ring-width="6" track-color="#3A3B39"
+					  rings='[{"from":0,"to":90,"color":"#C3A5E5"}]'>
+					</ui-ring>
+					<div style="font-size:1rem;color:#C3A5E5;margin-top:4px;">能應付再進</div>
+				  </div>
+				</div>
+			  </div>
+			</div>
 			</div>
 		</div>
 		<div class="mx-3 mt-5 fs-2 bp-text-lavender">
@@ -728,6 +785,6 @@ body {
 <script src="https://cdn.jsdelivr.net/gh/netizen-nelson/web-dev/ui-reading2.js"></script>
 <script src="https://cdn.jsdelivr.net/gh/netizen-nelson/web-dev/ui-cluster.js"></script>
 <script src="https://cdn.jsdelivr.net/gh/netizen-nelson/web-dev/bp-stepper.js"></script>
-
+<script src="https://cdn.jsdelivr.net/gh/netizen-nelson/web-dev/ui-badge.js"></script>
 </body>
 </html>
