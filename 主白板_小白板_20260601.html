@@ -1,0 +1,1155 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nelson教學白板</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Microsoft JhengHei', sans-serif;
+            background: #f0f0f0;
+            overflow: hidden;
+        }
+        
+        .main-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+        }
+        
+        .main-whiteboard {
+            position: absolute;
+            top: 0;
+            left: 0;
+            background: white;
+            border: 2px solid #ddd;
+            cursor: crosshair;
+        }
+        
+        .toolbar {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .tool-group {
+            display: flex;
+            gap: 5px;
+            align-items: center;
+            padding: 0 5px;
+            border-right: 1px solid #ddd;
+        }
+        
+        .tool-group:last-child {
+            border-right: none;
+        }
+        
+        .toolbar button {
+            padding: 8px 12px;
+            border: 1px solid #ccc;
+            background: white;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        
+        .toolbar button:hover {
+            background: #f0f0f0;
+        }
+        
+        .toolbar button.active {
+            background: #007bff;
+            color: white;
+        }
+        
+        .toolbar button.eraser {
+            background: #ffc107;
+            border-color: #ffc107;
+        }
+        
+        .toolbar button.eraser.active {
+            background: #e0a800;
+            color: white;
+        }
+        
+        .toolbar button#undoBtn {
+            background: #6c757d;
+            color: white;
+            border-color: #6c757d;
+        }
+        
+        .toolbar button#undoBtn:hover {
+            background: #5a6268;
+        }
+        
+        .toolbar button#undoBtn:disabled {
+            background: #ccc;
+            color: #999;
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+        
+        .eraser-cursor {
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="rgba(255,193,7,0.5)" stroke="%23ffc107" stroke-width="2"/></svg>') 12 12, crosshair !important;
+        }
+        
+        .toolbar input, .toolbar select {
+            padding: 4px 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+        
+        .toolbar label {
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .floating-panel {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            width: 350px;
+            background: white;
+            border: 2px solid #007bff;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            z-index: 1001;
+            display: none;
+        }
+        
+        .settings-panel {
+            position: fixed;
+            top: 80px;
+            left: 20px;
+            width: 320px;
+            background: white;
+            border: 2px solid #28a745;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            z-index: 1002;
+            display: none;
+        }
+        
+        .settings-panel .panel-header {
+            background: #28a745;
+        }
+        
+        .panel-header {
+            background: #007bff;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 6px 6px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: move;
+        }
+        
+        .panel-header h3 {
+            font-size: 14px;
+            margin: 0;
+        }
+        
+        .panel-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            padding: 0;
+            width: 20px;
+            height: 20px;
+        }
+        
+        .panel-content {
+            padding: 15px;
+        }
+        
+        .mini-whiteboard {
+            border: 1px solid #ddd;
+            background: white;
+            cursor: crosshair;
+            margin-bottom: 15px;
+        }
+        
+        .panel-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .control-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .control-row label {
+            font-size: 12px;
+            min-width: 60px;
+        }
+        
+        .control-row input, .control-row select {
+            flex: 1;
+            padding: 4px 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+        
+        .transfer-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .transfer-btn:hover {
+            background: #218838;
+        }
+        
+        .clear-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        
+        .clear-btn:hover {
+            background: #c82333;
+        }
+        
+        .smart-crop-option {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 12px;
+        }
+        
+        .coordinate-guide {
+            position: absolute;
+            border: 2px dashed #007bff;
+            background: rgba(0, 123, 255, 0.1);
+            pointer-events: none;
+            display: none;
+            z-index: 999;
+        }
+        
+        .coordinate-label {
+            position: absolute;
+            background: #007bff;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 10px;
+            top: -20px;
+            left: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <svg class="main-whiteboard" id="mainCanvas" width="100%" height="100%">
+            <defs>
+                <filter id="smooth">
+                    <feGaussianBlur in="SourceGraphic" stdDeviation="0.1"/>
+                </filter>
+            </defs>
+        </svg>
+        
+        <div class="coordinate-guide" id="coordinateGuide">
+            <div class="coordinate-label" id="coordinateLabel"></div>
+        </div>
+        
+        <div class="toolbar">
+            <div class="tool-group">
+                <button id="penTool" class="active">✏️ 筆刷</button>
+                <button id="eraserTool" class="eraser">🧽 橡皮擦</button>
+                <button id="undoBtn" title="還原上一步 (Ctrl+Z)">↶ 還原</button>
+            </div>
+            
+            <div class="tool-group">
+                <label>大小:</label>
+                <input type="range" id="toolSize" min="0.5" max="50" step="0.5" value="2">
+                <span id="toolSizeValue">2px</span>
+            </div>
+            
+            <div class="tool-group">
+                <label>顏色:</label>
+                <input type="color" id="brushColor" value="#000000">
+            </div>
+            
+            <div class="tool-group">
+                <button id="toggleMiniBoard">開啟小白板</button>
+                <button id="toggleSettings">⚙️ 設定 (Alt+H)</button>
+                <button id="clearMain">清除主白板</button>
+            </div>
+            
+            <div class="tool-group">
+                <div class="smart-crop-option">
+                    <input type="checkbox" id="smartCrop">
+                    <label for="smartCrop">聰明邊界</label>
+                </div>
+                
+                <button id="exportPNG">匯出PNG</button>
+                <button id="exportJPG">匯出JPG</button>
+            </div>
+        </div>
+        
+        <div class="floating-panel" id="floatingPanel">
+            <div class="panel-header" id="panelHeader">
+                <h3>精細繪圖小白板</h3>
+                <button class="panel-close" id="panelClose">&times;</button>
+            </div>
+            <div class="panel-content">
+                <svg class="mini-whiteboard" id="miniCanvas" width="320" height="240">
+                    <defs>
+                        <filter id="smoothMini">
+                            <feGaussianBlur in="SourceGraphic" stdDeviation="0.1"/>
+                        </filter>
+                    </defs>
+                </svg>
+                
+                <div class="panel-controls">
+                    <div class="control-row">
+                        <label>縮放比例:</label>
+                        <select id="scaleRatio">
+                            <option value="1">1:1 (無縮放)</option>
+                            <option value="0.5" selected>1:2 (縮小50%)</option>
+                            <option value="0.25">1:4 (縮小75%)</option>
+                            <option value="0.1">1:10 (縮小90%)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="control-row">
+                        <label>轉移位置:</label>
+                        <input type="number" id="transferX" value="100" min="0" step="10" style="width: 80px;">
+                        <span style="margin: 0 5px;">,</span>
+                        <input type="number" id="transferY" value="100" min="0" step="10" style="width: 80px;">
+                    </div>
+                    
+                    <div class="control-row">
+                        <button class="transfer-btn" id="transferBtn">轉移到主白板</button>
+                        <button class="clear-btn" id="clearMini">清除小白板</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="settings-panel" id="settingsPanel">
+            <div class="panel-header" id="settingsHeader">
+                <h3>⚙️ 系統設定</h3>
+                <button class="panel-close" id="settingsClose">&times;</button>
+            </div>
+            <div class="panel-content">
+                <div class="panel-controls">
+                    <h4 style="margin: 0 0 10px 0; font-size: 14px; color: #28a745;">主畫布設定</h4>
+                    
+                    <div class="control-row">
+                        <label>畫布尺寸:</label>
+                        <input type="number" id="canvasWidth" value="1920" min="100" max="8000" step="100" style="width: 80px;">
+                        <span style="margin: 0 5px;">×</span>
+                        <input type="number" id="canvasHeight" value="1080" min="100" max="8000" step="100" style="width: 80px;">
+                    </div>
+                    
+                    <div class="control-row">
+                        <label>快速預設:</label>
+                        <select id="canvasPresets" style="flex: 1;">
+                            <option value="">自訂尺寸</option>
+                            <option value="1920,1080">Full HD (1920×1080)</option>
+                            <option value="3840,2160">4K (3840×2160)</option>
+                            <option value="1080,1920">手機直向 (1080×1920)</option>
+                            <option value="1200,800">簡報 (1200×800)</option>
+                            <option value="2480,3508">A4印刷 (2480×3508)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="control-row">
+                        <button class="transfer-btn" id="applyCanvasSize">套用畫布尺寸</button>
+                    </div>
+                    
+                    <hr style="margin: 15px 0; border: none; border-top: 1px solid #eee;">
+                    
+                    <h4 style="margin: 0 0 10px 0; font-size: 14px; color: #007bff;">小白板設定</h4>
+                    
+                    <div class="control-row">
+                        <label>小板尺寸:</label>
+                        <input type="number" id="miniWidth" value="320" min="100" max="800" step="20" style="width: 80px;">
+                        <span style="margin: 0 5px;">×</span>
+                        <input type="number" id="miniHeight" value="240" min="100" max="600" step="20" style="width: 80px;">
+                    </div>
+                    
+                    <div class="control-row">
+                        <label>預設比例:</label>
+                        <select id="miniPresets" style="flex: 1;">
+                            <option value="">自訂尺寸</option>
+                            <option value="320,240">4:3 橫向 (320×240)</option>
+                            <option value="240,320">3:4 直向 (240×320)</option>
+                            <option value="400,300">4:3 大橫向 (400×300)</option>
+                            <option value="300,400">3:4 大直向 (300×400)</option>
+                            <option value="320,180">16:9 橫向 (320×180)</option>
+                            <option value="180,320">9:16 直向 (180×320)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="control-row">
+                        <button class="transfer-btn" id="applyMiniSize">套用小板尺寸</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class WhiteboardSystem {
+            constructor() {
+                this.mainCanvas = document.getElementById('mainCanvas');
+                this.miniCanvas = document.getElementById('miniCanvas');
+                this.floatingPanel = document.getElementById('floatingPanel');
+                this.coordinateGuide = document.getElementById('coordinateGuide');
+                this.coordinateLabel = document.getElementById('coordinateLabel');
+                this.settingsPanel = document.getElementById('settingsPanel');
+                
+                this.currentTool = 'pen'; // 'pen' 或 'eraser'
+                this.toolSize = 2;
+                
+                this.isDrawing = false;
+                this.currentPath = null;
+                this.brushSize = 2;
+                this.brushColor = '#000000';
+                
+                // Undo系統初始化
+                this.undoStack = {
+                    'mainCanvas': [],
+                    'miniCanvas': []
+                };
+                this.maxUndoLayers = 20;
+                this.savingState = false;
+                
+                this.setupEventListeners();
+                this.setupDraggablePanel();
+                this.setupKeyboardShortcuts();
+                this.resizeMainCanvas();
+                
+                window.addEventListener('resize', () => this.resizeMainCanvas());
+                
+                // 初始化系統
+                this.setTool('pen');
+            }
+            
+            setupEventListeners() {
+                // 工具選擇
+                document.getElementById('penTool').addEventListener('click', () => {
+                    this.setTool('pen');
+                });
+                
+                document.getElementById('eraserTool').addEventListener('click', () => {
+                    this.setTool('eraser');
+                });
+                
+                // Undo按鈕
+                document.getElementById('undoBtn').addEventListener('click', () => {
+                    this.undo();
+                });
+                
+                // 工具欄控制項
+                document.getElementById('toolSize').addEventListener('input', (e) => {
+                    this.toolSize = parseFloat(e.target.value);
+                    document.getElementById('toolSizeValue').textContent = this.toolSize + 'px';
+                    this.updateCanvasCursor();
+                });
+                
+                document.getElementById('brushColor').addEventListener('change', (e) => {
+                    this.brushColor = e.target.value;
+                });
+                
+                document.getElementById('toggleMiniBoard').addEventListener('click', () => {
+                    const panel = this.floatingPanel;
+                    const isVisible = panel.style.display !== 'none';
+                    panel.style.display = isVisible ? 'none' : 'block';
+                    
+                    if (!isVisible) {
+                        // 顯示面板時更新座標指引
+                        setTimeout(() => this.updateCoordinateGuide(), 100);
+                    } else {
+                        // 隱藏面板時隱藏座標指引
+                        this.coordinateGuide.style.display = 'none';
+                    }
+                });
+                
+                document.getElementById('toggleSettings').addEventListener('click', () => {
+                    this.toggleSettingsPanel();
+                });
+                
+                document.getElementById('settingsClose').addEventListener('click', () => {
+                    this.settingsPanel.style.display = 'none';
+                });
+                
+                document.getElementById('panelClose').addEventListener('click', () => {
+                    this.floatingPanel.style.display = 'none';
+                });
+                
+                document.getElementById('clearMain').addEventListener('click', () => {
+                    this.clearCanvas(this.mainCanvas);
+                });
+                
+                document.getElementById('clearMini').addEventListener('click', () => {
+                    this.clearCanvas(this.miniCanvas);
+                });
+                
+                document.getElementById('transferBtn').addEventListener('click', () => {
+                    this.transferMiniToMain();
+                });
+                
+                document.getElementById('exportPNG').addEventListener('click', () => {
+                    this.exportCanvas('png');
+                });
+                
+                document.getElementById('exportJPG').addEventListener('click', () => {
+                    this.exportCanvas('jpg');
+                });
+                
+                // 座標指引
+                document.getElementById('transferX').addEventListener('input', () => {
+                    this.updateCoordinateGuide();
+                });
+                
+                document.getElementById('transferY').addEventListener('input', () => {
+                    this.updateCoordinateGuide();
+                });
+                
+                document.getElementById('scaleRatio').addEventListener('change', () => {
+                    this.updateCoordinateGuide();
+                });
+                
+                // 畫布尺寸控制
+                document.getElementById('applyCanvasSize').addEventListener('click', () => {
+                    this.updateCanvasSize();
+                });
+                
+                document.getElementById('canvasPresets').addEventListener('change', (e) => {
+                    if (e.target.value) {
+                        const [width, height] = e.target.value.split(',');
+                        document.getElementById('canvasWidth').value = width;
+                        document.getElementById('canvasHeight').value = height;
+                    }
+                });
+                
+                // 小白板尺寸控制
+                document.getElementById('applyMiniSize').addEventListener('click', () => {
+                    this.updateMiniCanvasSize();
+                });
+                
+                document.getElementById('miniPresets').addEventListener('change', (e) => {
+                    if (e.target.value) {
+                        const [width, height] = e.target.value.split(',');
+                        document.getElementById('miniWidth').value = width;
+                        document.getElementById('miniHeight').value = height;
+                    }
+                });
+                
+                // 繪圖事件
+                this.setupDrawingEvents(this.mainCanvas);
+                this.setupDrawingEvents(this.miniCanvas);
+            }
+            
+            setTool(tool) {
+                this.currentTool = tool;
+                
+                // 更新按鈕狀態
+                document.getElementById('penTool').classList.toggle('active', tool === 'pen');
+                document.getElementById('eraserTool').classList.toggle('active', tool === 'eraser');
+                
+                // 更新游標
+                this.updateCanvasCursor();
+                
+                // 橡皮擦模式下隱藏顏色選擇器
+                const colorInput = document.getElementById('brushColor');
+                colorInput.style.display = tool === 'eraser' ? 'none' : 'block';
+                const colorLabel = colorInput.previousElementSibling;
+                if (colorLabel && colorLabel.tagName === 'LABEL') {
+                    colorLabel.style.display = tool === 'eraser' ? 'none' : 'block';
+                }
+            }
+            
+            updateCanvasSize() {
+                const width = parseInt(document.getElementById('canvasWidth').value);
+                const height = parseInt(document.getElementById('canvasHeight').value);
+                
+                if (width < 100 || height < 100 || width > 8000 || height > 8000) {
+                    alert('畫布尺寸必須在 100-8000 像素之間');
+                    return;
+                }
+                
+                // 確認是否要清除現有內容
+                const hasContent = this.mainCanvas.querySelectorAll('path, g').length > 0;
+                if (hasContent) {
+                    if (!confirm('調整畫布大小會保留現有內容，但可能影響佈局。確定要繼續嗎？')) {
+                        return;
+                    }
+                }
+                
+                // 更新畫布尺寸
+                this.mainCanvas.setAttribute('width', width);
+                this.mainCanvas.setAttribute('height', height);
+                
+                // 如果畫布小於視窗，置中顯示
+                const container = this.mainCanvas.parentElement;
+                if (width < window.innerWidth && height < window.innerHeight) {
+                    this.mainCanvas.style.position = 'absolute';
+                    this.mainCanvas.style.left = '50%';
+                    this.mainCanvas.style.top = '50%';
+                    this.mainCanvas.style.transform = 'translate(-50%, -50%)';
+                    this.mainCanvas.style.boxShadow = '0 4px 20px rgba(0,0,0,0.1)';
+                } else {
+                    this.mainCanvas.style.position = 'absolute';
+                    this.mainCanvas.style.left = '0';
+                    this.mainCanvas.style.top = '0';
+                    this.mainCanvas.style.transform = 'none';
+                    this.mainCanvas.style.boxShadow = 'none';
+                }
+                
+                // 更新座標指引（如果正在顯示）
+                if (this.coordinateGuide.style.display !== 'none') {
+                    this.updateCoordinateGuide();
+                }
+                
+                console.log(`畫布尺寸已更新為: ${width} × ${height}`);
+            }
+            
+            updateMiniCanvasSize() {
+                const width = parseInt(document.getElementById('miniWidth').value);
+                const height = parseInt(document.getElementById('miniHeight').value);
+                
+                if (width < 100 || height < 100 || width > 800 || height > 600) {
+                    alert('小白板尺寸必須在 100-800×600 像素之間');
+                    return;
+                }
+                
+                // 確認是否要清除現有內容
+                const hasContent = this.miniCanvas.querySelectorAll('path, g').length > 0;
+                if (hasContent) {
+                    if (!confirm('調整小白板尺寸會清除現有內容。確定要繼續嗎？')) {
+                        return;
+                    }
+                }
+                
+                // 更新小白板尺寸
+                this.miniCanvas.setAttribute('width', width);
+                this.miniCanvas.setAttribute('height', height);
+                
+                // 清除內容（因為尺寸改變會影響座標系統）
+                this.clearCanvas(this.miniCanvas);
+                
+                // 更新面板寬度以適應新的小白板尺寸
+                const panel = this.floatingPanel;
+                const newPanelWidth = Math.max(350, width + 30);
+                panel.style.width = newPanelWidth + 'px';
+                
+                // 更新座標指引
+                if (this.coordinateGuide.style.display !== 'none') {
+                    this.updateCoordinateGuide();
+                }
+                
+                console.log(`小白板尺寸已更新為: ${width} × ${height}`);
+            }
+            
+            toggleSettingsPanel() {
+                const isVisible = this.settingsPanel.style.display !== 'none';
+                this.settingsPanel.style.display = isVisible ? 'none' : 'block';
+            }
+            
+            setupKeyboardShortcuts() {
+                document.addEventListener('keydown', (e) => {
+                    // Alt + H 切換設定面板
+                    if (e.altKey && e.key.toLowerCase() === 'h') {
+                        e.preventDefault();
+                        this.toggleSettingsPanel();
+                    }
+                    
+                    // Ctrl+Z (Windows/Linux) 或 Cmd+Z (Mac) 進行還原
+                    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z') {
+                        e.preventDefault();
+                        this.undo();
+                    }
+                });
+            }
+            
+            updateCanvasCursor() {
+                // 移除橡皮擦游標樣式
+                this.mainCanvas.classList.remove('eraser-cursor');
+                this.miniCanvas.classList.remove('eraser-cursor');
+                
+                if (this.currentTool === 'eraser') {
+                    this.mainCanvas.classList.add('eraser-cursor');
+                    this.miniCanvas.classList.add('eraser-cursor');
+                } else {
+                    this.mainCanvas.style.cursor = 'crosshair';
+                    this.miniCanvas.style.cursor = 'crosshair';
+                }
+            }
+            
+            setupDrawingEvents(canvas) {
+                // 滑鼠事件
+                canvas.addEventListener('mousedown', (e) => this.startDrawing(e, canvas));
+                canvas.addEventListener('mousemove', (e) => this.draw(e, canvas));
+                canvas.addEventListener('mouseup', () => this.stopDrawing());
+                canvas.addEventListener('mouseleave', () => this.stopDrawing());
+                
+                // 觸控事件 - 改進版本
+                canvas.addEventListener('touchstart', (e) => {
+                    e.preventDefault();
+                    const touch = e.touches[0];
+                    const rect = canvas.getBoundingClientRect();
+                    const mouseEvent = new MouseEvent('mousedown', {
+                        clientX: touch.clientX,
+                        clientY: touch.clientY,
+                        bubbles: true,
+                        cancelable: true
+                    });
+                    // 直接調用startDrawing而不是派發事件
+                    this.startDrawing(mouseEvent, canvas);
+                });
+                
+                canvas.addEventListener('touchmove', (e) => {
+                    e.preventDefault();
+                    const touch = e.touches[0];
+                    const mouseEvent = new MouseEvent('mousemove', {
+                        clientX: touch.clientX,
+                        clientY: touch.clientY,
+                        bubbles: true,
+                        cancelable: true
+                    });
+                    // 直接調用draw而不是派發事件
+                    this.draw(mouseEvent, canvas);
+                });
+                
+                canvas.addEventListener('touchend', (e) => {
+                    e.preventDefault();
+                    // 直接調用stopDrawing
+                    this.stopDrawing();
+                });
+                
+                // 防止觸控時的額外手勢
+                canvas.addEventListener('touchcancel', () => {
+                    this.stopDrawing();
+                });
+            }
+            
+            getCanvasCoordinates(e, canvas) {
+                const rect = canvas.getBoundingClientRect();
+                return {
+                    x: (e.clientX - rect.left) * (canvas.width.baseVal ? canvas.width.baseVal.value : canvas.clientWidth) / rect.width,
+                    y: (e.clientY - rect.top) * (canvas.height.baseVal ? canvas.height.baseVal.value : canvas.clientHeight) / rect.height
+                };
+            }
+            
+            startDrawing(e, canvas) {
+                // 繪圖前保存當前狀態（這樣Undo才能回到繪圖前）
+                this.saveState(canvas);
+                
+                this.isDrawing = true;
+                const coords = this.getCanvasCoordinates(e, canvas);
+                
+                // 調試信息
+                console.log(`開始繪圖 - 畫布: ${canvas.id}, 座標: (${coords.x}, ${coords.y}), 工具: ${this.currentTool}`);
+                
+                if (this.currentTool === 'pen') {
+                    // 筆刷模式
+                    this.currentPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                    this.currentPath.setAttribute('fill', 'none');
+                    this.currentPath.setAttribute('stroke', this.brushColor);
+                    this.currentPath.setAttribute('stroke-width', this.toolSize);
+                    this.currentPath.setAttribute('stroke-linecap', 'round');
+                    this.currentPath.setAttribute('stroke-linejoin', 'round');
+                    this.currentPath.setAttribute('filter', canvas.id === 'miniCanvas' ? 'url(#smoothMini)' : 'url(#smooth)');
+                    
+                    // 添加識別屬性，便於轉移時識別
+                    this.currentPath.setAttribute('data-created-by', 'user-drawing');
+                    this.currentPath.setAttribute('data-canvas-origin', canvas.id);
+                    
+                    this.currentPath.setAttribute('d', `M ${coords.x} ${coords.y}`);
+                    canvas.appendChild(this.currentPath);
+                    
+                    console.log(`路徑已創建並添加到 ${canvas.id}`);
+                } else if (this.currentTool === 'eraser') {
+                    // 橡皮擦模式
+                    this.eraseAtPoint(coords, canvas);
+                }
+            }
+            
+            draw(e, canvas) {
+                if (!this.isDrawing) return;
+                
+                const coords = this.getCanvasCoordinates(e, canvas);
+                
+                if (this.currentTool === 'pen' && this.currentPath) {
+                    const currentD = this.currentPath.getAttribute('d');
+                    this.currentPath.setAttribute('d', `${currentD} L ${coords.x} ${coords.y}`);
+                } else if (this.currentTool === 'eraser') {
+                    this.eraseAtPoint(coords, canvas);
+                }
+            }
+            
+            eraseAtPoint(coords, canvas) {
+                const eraseRadius = this.toolSize;
+                const allElements = canvas.querySelectorAll('path, g');
+                
+                allElements.forEach(element => {
+                    if (this.isElementInEraseArea(element, coords, eraseRadius)) {
+                        element.remove();
+                    }
+                });
+            }
+            
+            isElementInEraseArea(element, eraseCenter, eraseRadius) {
+                try {
+                    const bbox = element.getBBox();
+                    if (!bbox || bbox.width === 0 || bbox.height === 0) return false;
+                    
+                    // 計算元素中心點
+                    const elementCenterX = bbox.x + bbox.width / 2;
+                    const elementCenterY = bbox.y + bbox.height / 2;
+                    
+                    // 計算距離
+                    const distance = Math.sqrt(
+                        Math.pow(elementCenterX - eraseCenter.x, 2) + 
+                        Math.pow(elementCenterY - eraseCenter.y, 2)
+                    );
+                    
+                    // 如果距離小於橡皮擦半徑 + 元素大小的一半，則刪除
+                    const elementRadius = Math.max(bbox.width, bbox.height) / 2;
+                    return distance < (eraseRadius + elementRadius);
+                } catch (e) {
+                    return false;
+                }
+            }
+            
+            stopDrawing() {
+                this.isDrawing = false;
+                this.currentPath = null;
+            }
+            
+            clearCanvas(canvas) {
+                // 保留 defs 元素，清除其他所有內容
+                const defs = canvas.querySelector('defs');
+                canvas.innerHTML = '';
+                if (defs) {
+                    canvas.appendChild(defs);
+                }
+                
+                // 清除後保存狀態
+                this.saveState(canvas);
+            }
+            
+            transferMiniToMain() {
+                const scale = parseFloat(document.getElementById('scaleRatio').value);
+                const offsetX = parseInt(document.getElementById('transferX').value);
+                const offsetY = parseInt(document.getElementById('transferY').value);
+                
+                console.log(`開始轉移 - 縮放: ${scale}, 位移: (${offsetX}, ${offsetY})`);
+                
+                // 創建群組元素來包含轉移的內容
+                const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+                group.setAttribute('transform', `translate(${offsetX}, ${offsetY}) scale(${scale})`);
+                group.setAttribute('data-transferred-from', 'miniCanvas');
+                
+                // 複製小白板的所有路徑到群組中
+                const miniPaths = this.miniCanvas.querySelectorAll('path');
+                console.log(`找到 ${miniPaths.length} 個路徑要轉移`);
+                
+                if (miniPaths.length === 0) {
+                    alert('小白板沒有內容可以轉移！');
+                    return;
+                }
+                
+                miniPaths.forEach((path, index) => {
+                    const clonedPath = path.cloneNode(true);
+                    // 更新濾鏡引用
+                    clonedPath.setAttribute('filter', 'url(#smooth)');
+                    // 保留原始資訊
+                    clonedPath.setAttribute('data-transferred-from', 'miniCanvas');
+                    clonedPath.setAttribute('data-original-index', index);
+                    group.appendChild(clonedPath);
+                    console.log(`轉移路徑 ${index + 1}/${miniPaths.length}`);
+                });
+                
+                this.mainCanvas.appendChild(group);
+                console.log('轉移完成，群組已添加到主畫布');
+                
+                // 清除小白板
+                this.clearCanvas(this.miniCanvas);
+                
+                // 隱藏座標指引
+                this.coordinateGuide.style.display = 'none';
+                
+                alert(`成功轉移 ${miniPaths.length} 個筆跡到主白板！`);
+            }
+            
+            updateCoordinateGuide() {
+                if (this.floatingPanel.style.display === 'none') {
+                    this.coordinateGuide.style.display = 'none';
+                    return;
+                }
+                
+                const scale = parseFloat(document.getElementById('scaleRatio').value);
+                const offsetX = parseInt(document.getElementById('transferX').value) || 0;
+                const offsetY = parseInt(document.getElementById('transferY').value) || 0;
+                
+                // 獲取小白板的實際尺寸
+                const miniWidth = parseInt(this.miniCanvas.getAttribute('width'));
+                const miniHeight = parseInt(this.miniCanvas.getAttribute('height'));
+                
+                // 計算縮放後的尺寸
+                const scaledWidth = miniWidth * scale;
+                const scaledHeight = miniHeight * scale;
+                
+                // 更新指引框位置和大小
+                this.coordinateGuide.style.left = offsetX + 'px';
+                this.coordinateGuide.style.top = offsetY + 'px';
+                this.coordinateGuide.style.width = scaledWidth + 'px';
+                this.coordinateGuide.style.height = scaledHeight + 'px';
+                this.coordinateGuide.style.display = 'block';
+                
+                // 更新標籤
+                this.coordinateLabel.textContent = `${offsetX}, ${offsetY} (${Math.round(scaledWidth)}×${Math.round(scaledHeight)})`;
+            }
+            
+            calculateContentBounds(canvas) {
+                const paths = canvas.querySelectorAll('path, g');
+                if (paths.length === 0) return null;
+                
+                let minX = Infinity, minY = Infinity;
+                let maxX = -Infinity, maxY = -Infinity;
+                
+                paths.forEach(element => {
+                    const bbox = element.getBBox();
+                    if (bbox.width > 0 && bbox.height > 0) {
+                        minX = Math.min(minX, bbox.x);
+                        minY = Math.min(minY, bbox.y);
+                        maxX = Math.max(maxX, bbox.x + bbox.width);
+                        maxY = Math.max(maxY, bbox.y + bbox.height);
+                    }
+                });
+                
+                if (minX === Infinity) return null;
+                
+                // 添加一些邊距
+                const padding = 20;
+                return {
+                    x: Math.max(0, minX - padding),
+                    y: Math.max(0, minY - padding),
+                    width: maxX - minX + padding * 2,
+                    height: maxY - minY + padding * 2
+                };
+            }
+            
+            setupDraggablePanel() {
+                this.makePanelDraggable(this.floatingPanel, document.getElementById('panelHeader'));
+                this.makePanelDraggable(this.settingsPanel, document.getElementById('settingsHeader'));
+            }
+            
+            makePanelDraggable(panel, header) {
+                let isDragging = false;
+                let dragOffset = { x: 0, y: 0 };
+                
+                header.addEventListener('mousedown', (e) => {
+                    isDragging = true;
+                    const rect = panel.getBoundingClientRect();
+                    dragOffset.x = e.clientX - rect.left;
+                    dragOffset.y = e.clientY - rect.top;
+                    header.style.cursor = 'grabbing';
+                });
+                
+                document.addEventListener('mousemove', (e) => {
+                    if (isDragging) {
+                        const x = e.clientX - dragOffset.x;
+                        const y = e.clientY - dragOffset.y;
+                        
+                        // 限制在視窗範圍內
+                        const maxX = window.innerWidth - panel.offsetWidth;
+                        const maxY = window.innerHeight - panel.offsetHeight;
+                        
+                        panel.style.left = Math.max(0, Math.min(x, maxX)) + 'px';
+                        panel.style.top = Math.max(0, Math.min(y, maxY)) + 'px';
+                        panel.style.right = 'auto';
+                    }
+                });
+                
+                document.addEventListener('mouseup', () => {
+                    isDragging = false;
+                    header.style.cursor = 'move';
+                });
+            }
+            
+            resizeMainCanvas() {
+                // 如果沒有自訂尺寸，使用視窗大小
+                const customWidth = document.getElementById('canvasWidth').value;
+                const customHeight = document.getElementById('canvasHeight').value;
+                
+                if (!customWidth || !customHeight) {
+                    this.mainCanvas.setAttribute('width', window.innerWidth);
+                    this.mainCanvas.setAttribute('height', window.innerHeight);
+                    document.getElementById('canvasWidth').value = window.innerWidth;
+                    document.getElementById('canvasHeight').value = window.innerHeight;
+                }
+            }
+            
+            saveState(canvas) {
+                // 防止重複保存
+                if (this.savingState) return;
+                
+                const canvasId = canvas.id;
+                if (!this.undoStack[canvasId]) {
+                    this.undoStack[canvasId] = [];
+                }
+                
+                // 保存當前canvas的HTML內容（包含所有繪圖）
+                const state = canvas.innerHTML;
+                this.undoStack[canvasId].push(state);
+                
+                // 限制最大層數為20
+                if (this.undoStack[canvasId].length > this.maxUndoLayers) {
+                    this.undoStack[canvasId].shift();
+                }
+                
+                // 更新undo按鈕狀態
+                this.updateUndoButtonState();
+            }
+            
+            undo() {
+                // 先嘗試還原主canvas
+                if (this.undoStack['mainCanvas'] && this.undoStack['mainCanvas'].length > 0) {
+                    this.restoreState(this.mainCanvas, this.undoStack['mainCanvas']);
+                    return;
+                }
+                
+                // 如果主canvas沒有歷史記錄，嘗試還原小canvas
+                if (this.undoStack['miniCanvas'] && this.undoStack['miniCanvas'].length > 0) {
+                    this.restoreState(this.miniCanvas, this.undoStack['miniCanvas']);
+                    return;
+                }
+            }
+            
+            restoreState(canvas, stack) {
+                if (stack.length === 0) return;
+                
+                this.savingState = true;
+                const previousState = stack.pop();
+                canvas.innerHTML = previousState;
+                this.savingState = false;
+                
+                // 更新undo按鈕狀態
+                this.updateUndoButtonState();
+                
+                console.log(`${canvas.id} 已還原到上一步`);
+            }
+            
+            updateUndoButtonState() {
+                const undoBtn = document.getElementById('undoBtn');
+                const hasMainHistory = this.undoStack['mainCanvas'] && this.undoStack['mainCanvas'].length > 0;
+                const hasMiniHistory = this.undoStack['miniCanvas'] && this.undoStack['miniCanvas'].length > 0;
+                
+                undoBtn.disabled = !hasMainHistory && !hasMiniHistory;
+            }
+            
+            exportCanvas(format) {
+                const smartCrop = document.getElementById('smartCrop').checked;
+                
+                // 創建一個臨時的 canvas 元素
+                const tempCanvas = document.createElement('canvas');
+                const ctx = tempCanvas.getContext('2d');
+                
+                let canvasWidth = this.mainCanvas.width.baseVal.value;
+                let canvasHeight = this.mainCanvas.height.baseVal.value;
+                let offsetX = 0;
+                let offsetY = 0;
+                
+                // 如果啟用聰明邊界，計算內容邊界
+                if (smartCrop) {
+                    const bounds = this.calculateContentBounds(this.mainCanvas);
+                    if (bounds) {
+                        canvasWidth = bounds.width;
+                        canvasHeight = bounds.height;
+                        offsetX = bounds.x;
+                        offsetY = bounds.y;
+                    }
+                }
+                
+                // 設置 canvas 尺寸
+                tempCanvas.width = canvasWidth;
+                tempCanvas.height = canvasHeight;
+                
+                // 設置背景色（JPG需要）
+                if (format === 'jpg') {
+                    ctx.fillStyle = 'white';
+                    ctx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
+                }
+                
+                // 創建 SVG 副本用於裁切
+                const svgClone = this.mainCanvas.cloneNode(true);
+                if (smartCrop && offsetX !== 0 && offsetY !== 0) {
+                    svgClone.setAttribute('viewBox', `${offsetX} ${offsetY} ${canvasWidth} ${canvasHeight}`);
+                }
+                svgClone.setAttribute('width', canvasWidth);
+                svgClone.setAttribute('height', canvasHeight);
+                
+                // 將 SVG 轉換為圖像
+                const svgData = new XMLSerializer().serializeToString(svgClone);
+                const img = new Image();
+                const svgBlob = new Blob([svgData], {type: 'image/svg+xml;charset=utf-8'});
+                const url = URL.createObjectURL(svgBlob);
+                
+                img.onload = () => {
+                    ctx.drawImage(img, 0, 0);
+                    
+                    // 設置高品質輸出
+                    const quality = format === 'jpg' ? 0.95 : 1.0;
+                    const mimeType = format === 'jpg' ? 'image/jpeg' : 'image/png';
+                    
+                    const dataURL = tempCanvas.toDataURL(mimeType, quality);
+                    
+                    // 下載圖片
+                    const link = document.createElement('a');
+                    const suffix = smartCrop ? '_cropped' : '';
+                    link.download = `whiteboard${suffix}.${format}`;
+                    link.href = dataURL;
+                    link.click();
+                    
+                    URL.revokeObjectURL(url);
+                };
+                
+                img.src = url;
+            }
+        }
+        
+        // 初始化系統
+        document.addEventListener('DOMContentLoaded', () => {
+            new WhiteboardSystem();
+        });
+    </script>
+</body>
+</html>
