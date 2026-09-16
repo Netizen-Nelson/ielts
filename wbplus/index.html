@@ -73,14 +73,14 @@
         .toolbar-tab {
             display: flex;
             justify-content: flex-start;
-            margin-bottom: 5px;
+            margin-bottom: 3px;
         }
 
         #toolbarCollapseBtn {
             background: var(--surface);
             color: var(--ocean);
             border: 1px solid var(--ocean);
-            padding: 4px 14px;
+            padding: 3px 12px;
             border-radius: 5px;
             cursor: pointer;
             font-size: 0.85rem;
@@ -95,9 +95,8 @@
         /* Main toolbar */
         .toolbar {
             background: var(--surface);
-            padding: 8px 12px;
+            padding: 6px;
             border-radius: 8px;
-            box-shadow: 0 3px 18px rgba(0,0,0,0.76);
             display: flex;
             gap: 8px;
             align-items: center;
@@ -112,7 +111,7 @@
         .toolbar.collapsed {
             max-height: 0;
             opacity: 0;
-            padding: 0 12px;
+            padding: 0 8px;
             pointer-events: none;
         }
 
@@ -120,14 +119,14 @@
             display: flex;
             gap: 6px;
             align-items: center;
-            padding: 0 8px;
+            padding: 0 6px;
             border-right: 1px solid var(--border-dim);
         }
         .tool-group:last-child { border-right: none; }
 
         /* Toolbar buttons */
         .toolbar button {
-            padding: 6px 13px;
+            padding: 6px 15px;
             border: 1px solid var(--border);
             background: var(--surface2);
             color: var(--shell);
@@ -171,16 +170,10 @@
         }
         .size-display { color: var(--ocean); font-size: 0.9rem; min-width: 38px; }
 
-        /* ══════════════════════════════
-           ERASER CURSOR
-        ══════════════════════════════ */
         .eraser-cursor {
             cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="26" height="26"><circle cx="13" cy="13" r="11" fill="rgba(237,161,9,0.82)" stroke="%23EDA109" stroke-width="2"/></svg>') 13 13, crosshair !important;
         }
 
-        /* ══════════════════════════════
-           FLOATING PANELS (shared base)
-        ══════════════════════════════ */
         .floating-panel,
         .settings-panel,
         .bg-image-panel {
@@ -203,7 +196,6 @@
             background: var(--focus);
             color: #fff;
             padding: 10px 16px;
-            border-radius: 7px 7px 0 0;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -223,11 +215,11 @@
             cursor: pointer;
             padding: 0;
             line-height: 1;
-            opacity: 0.85;
+            opacity: 0.9;
         }
         .panel-close:hover { opacity: 1; }
 
-        .panel-content { padding: 14px 16px; }
+        .panel-content { padding: 9px; }
 
         /* ══════════════════════════════
            MINI WHITEBOARD PANEL
@@ -237,10 +229,10 @@
             background: #fff;
             cursor: crosshair;
             display: block;
-            margin-bottom: 12px;
+            margin-bottom: 9px;
         }
 
-        .panel-controls { display: flex; flex-direction: column; gap: 10px; }
+        .panel-controls { display: flex; flex-direction: column; gap: 9px; }
 
         .control-row {
             display: flex;
