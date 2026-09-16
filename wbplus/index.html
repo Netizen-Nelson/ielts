@@ -1,1 +1,1488 @@
-<>
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nelson教學白板</title>
+    <style>
+        :root {
+            --bg:      #0C0D0C;
+            --shell:   #C6C7BD;
+            --lavender:#C3A5E5;
+            --sky:     #95C9DE;
+            --warning: #E6374B;
+            --salmon:  #E5C3B3;
+            --ocean:   #1CCAE8;
+            --safe:    #299459;
+            --teal:    #0DA591;
+            --vanilla: #DBEDD8;
+            --yellow:  #E3D322;
+            --focus:   #3C7BCF;
+            --special: #B3DE73;
+            --info:    #2351DB;
+            --indigo:  #7849C9;
+            --pink:    #FF91D7;
+            --orange:  #EDA109;
+
+            /* UI surfaces */
+            --surface:    #191A19;
+            --surface2:   #242524;
+            --border:     #3a3b3a;
+            --border-dim: #2a2b2a;
+            --text-dim:   #8a8b87;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html { font-size: 18px; }
+
+        body {
+            font-family: 'Microsoft JhengHei', 'PingFang TC', sans-serif;
+            background: var(--bg);
+            overflow: hidden;
+            color: var(--shell);
+            line-height: 1.4;
+        }
+
+        .main-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        .main-whiteboard {
+            position: absolute;
+            top: 0;
+            left: 0;
+            background: #fff;
+            border: 2px solid #444;
+            cursor: crosshair;
+        }
+
+        /* ══════════════════════════════
+           TOOLBAR WRAPPER + COLLAPSE
+        ══════════════════════════════ */
+        .toolbar-wrapper {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            z-index: 1000;
+        }
+
+        /* Always-visible collapse tab */
+        .toolbar-tab {
+            display: flex;
+            justify-content: flex-start;
+            margin-bottom: 5px;
+        }
+
+        #toolbarCollapseBtn {
+            background: var(--surface);
+            color: var(--ocean);
+            border: 1px solid var(--ocean);
+            padding: 4px 14px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            letter-spacing: 0.04em;
+            transition: background 0.15s, color 0.15s;
+        }
+        #toolbarCollapseBtn:hover {
+            background: var(--ocean);
+            color: var(--bg);
+        }
+
+        /* Main toolbar */
+        .toolbar {
+            background: var(--surface);
+            padding: 8px 12px;
+            border-radius: 8px;
+            box-shadow: 0 3px 18px rgba(0,0,0,0.76);
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            flex-wrap: wrap;
+            border: 1px solid var(--border);
+            transition: max-height 0.25s ease, opacity 0.2s ease, padding 0.2s ease;
+            overflow: hidden;
+            max-height: 200px;
+            opacity: 1;
+        }
+
+        .toolbar.collapsed {
+            max-height: 0;
+            opacity: 0;
+            padding: 0 12px;
+            pointer-events: none;
+        }
+
+        .tool-group {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            padding: 0 8px;
+            border-right: 1px solid var(--border-dim);
+        }
+        .tool-group:last-child { border-right: none; }
+
+        /* Toolbar buttons */
+        .toolbar button {
+            padding: 6px 13px;
+            border: 1px solid var(--border);
+            background: var(--surface2);
+            color: var(--shell);
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            white-space: nowrap;
+            transition: background 0.12s, border-color 0.12s;
+        }
+        .toolbar button:hover { background: #333534; border-color: #555; }
+        .toolbar button.active {
+            background: var(--focus);
+            color: #fff;
+            border-color: var(--focus);
+        }
+        .toolbar button.eraser {
+            background: var(--surface2);
+            border-color: var(--orange);
+            color: var(--orange);
+        }
+        .toolbar button.eraser.active {
+            background: var(--orange);
+            color: var(--bg);
+        }
+        #undoBtn { color: var(--shell); }
+        #undoBtn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+        .toolbar label { font-size: 1rem; color: var(--shell); white-space: nowrap; }
+
+        .toolbar input[type="range"] {
+            accent-color: var(--ocean);
+            width: 90px;
+        }
+        .toolbar input[type="color"] {
+            width: 36px; height: 32px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            cursor: pointer;
+            padding: 2px;
+            background: var(--surface2);
+        }
+        .size-display { color: var(--ocean); font-size: 0.9rem; min-width: 38px; }
+
+        /* ══════════════════════════════
+           ERASER CURSOR
+        ══════════════════════════════ */
+        .eraser-cursor {
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="26" height="26"><circle cx="13" cy="13" r="11" fill="rgba(237,161,9,0.82)" stroke="%23EDA109" stroke-width="2"/></svg>') 13 13, crosshair !important;
+        }
+
+        /* ══════════════════════════════
+           FLOATING PANELS (shared base)
+        ══════════════════════════════ */
+        .floating-panel,
+        .settings-panel,
+        .bg-image-panel {
+            position: fixed;
+            background: var(--surface);
+            border: 2px solid var(--focus);
+            border-radius: 9px;
+            box-shadow: 0 6px 30px rgba(0,0,0,0.82);
+            z-index: 1001;
+            display: none;
+            color: var(--shell);
+            min-width: 280px;
+        }
+
+        .floating-panel  { top: 80px; right: 20px;  width: 370px; }
+        .settings-panel  { top: 80px; left: 20px;   width: 350px; border-color: var(--teal); }
+        .bg-image-panel  { top: 80px; right: 410px; width: 330px; border-color: var(--indigo); }
+
+        .panel-header {
+            background: var(--focus);
+            color: #fff;
+            padding: 10px 16px;
+            border-radius: 7px 7px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: move;
+            user-select: none;
+        }
+        .settings-panel  .panel-header { background: var(--teal); }
+        .bg-image-panel  .panel-header { background: var(--indigo); }
+
+        .panel-header h3 { font-size: 1rem; margin: 0; font-weight: 600; }
+
+        .panel-close {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 1.3rem;
+            cursor: pointer;
+            padding: 0;
+            line-height: 1;
+            opacity: 0.85;
+        }
+        .panel-close:hover { opacity: 1; }
+
+        .panel-content { padding: 14px 16px; }
+
+        /* ══════════════════════════════
+           MINI WHITEBOARD PANEL
+        ══════════════════════════════ */
+        .mini-whiteboard {
+            border: 1px solid var(--border);
+            background: #fff;
+            cursor: crosshair;
+            display: block;
+            margin-bottom: 12px;
+        }
+
+        .panel-controls { display: flex; flex-direction: column; gap: 10px; }
+
+        .control-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .control-row label {
+            font-size: 1rem;
+            min-width: 66px;
+            color: var(--shell);
+        }
+        .control-row input,
+        .control-row select {
+            flex: 1;
+            padding: 5px 8px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            font-size: 1rem;
+            background: var(--surface2);
+            color: var(--shell);
+        }
+        .control-row input::placeholder { color: var(--text-dim); }
+
+        /* Panel action buttons */
+        .btn-transfer {
+            background: var(--safe);
+            color: #fff;
+            border: none;
+            padding: 7px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        .btn-transfer:hover { filter: brightness(1.12); }
+
+        .btn-danger {
+            background: var(--warning);
+            color: #fff;
+            border: none;
+            padding: 7px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            white-space: nowrap;
+        }
+        .btn-danger:hover { filter: brightness(1.12); }
+
+        /* ══════════════════════════════
+           SETTINGS PANEL
+        ══════════════════════════════ */
+        .panel-section-title {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--ocean);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            margin: 6px 0 4px 0;
+        }
+        .settings-panel .panel-section-title { color: var(--teal); }
+        .bg-image-panel  .panel-section-title { color: var(--lavender); }
+
+        hr.panel-divider {
+            border: none;
+            border-top: 1px solid var(--border-dim);
+            margin: 10px 0;
+        }
+
+        /* ══════════════════════════════
+           BG IMAGE PANEL
+        ══════════════════════════════ */
+        .bg-image-preview {
+            width: 100%;
+            max-height: 110px;
+            object-fit: contain;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            background: #1e1e1e;
+            display: none;
+            margin-bottom: 8px;
+        }
+
+        .range-row { display: flex; align-items: center; gap: 8px; flex: 1; }
+        .range-row input[type="range"] { flex: 1; accent-color: var(--lavender); }
+        .range-val { color: var(--lavender); font-size: 0.9rem; min-width: 42px; text-align: right; }
+
+        .bg-list {
+            max-height: 110px;
+            overflow-y: auto;
+            margin-top: 4px;
+        }
+        .bg-list::-webkit-scrollbar { width: 5px; }
+        .bg-list::-webkit-scrollbar-track { background: var(--surface2); }
+        .bg-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+        .bg-list-empty {
+            color: var(--text-dim);
+            font-size: 0.9rem;
+            padding: 8px 0;
+            text-align: center;
+        }
+        .bg-list-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 5px 4px;
+            border-bottom: 1px solid var(--border-dim);
+            font-size: 0.9rem;
+            gap: 8px;
+        }
+        .bg-list-item:last-child { border-bottom: none; }
+        .bg-list-info { flex: 1; color: var(--shell); font-size: 0.88rem; }
+        .bg-remove-btn {
+            background: var(--warning);
+            color: #fff;
+            border: none;
+            padding: 3px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            flex-shrink: 0;
+        }
+        .bg-remove-btn:hover { filter: brightness(1.15); }
+
+        /* ══════════════════════════════
+           COORDINATE GUIDE
+        ══════════════════════════════ */
+        .coordinate-guide {
+            position: absolute;
+            border: 2px dashed var(--ocean);
+            background: rgba(28, 202, 232, 0.18);
+            pointer-events: none;
+            display: none;
+            z-index: 999;
+        }
+        .coordinate-label {
+            position: absolute;
+            background: var(--ocean);
+            color: var(--bg);
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-size: 0.78rem;
+            top: -22px;
+            left: 0;
+            white-space: nowrap;
+            font-weight: 600;
+        }
+
+        /* Smart crop row */
+        .smart-crop-option {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--shell);
+            font-size: 1rem;
+        }
+        .smart-crop-option input[type="checkbox"] {
+            accent-color: var(--ocean);
+            width: 16px; height: 16px;
+        }
+
+        /* ══════════════════════════════
+           TOAST NOTIFICATIONS
+        ══════════════════════════════ */
+        #toastContainer {
+            position: fixed;
+            bottom: 22px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column-reverse;
+            align-items: center;
+            gap: 8px;
+            pointer-events: none;
+        }
+        .toast-msg {
+            padding: 11px 26px;
+            border-radius: 7px;
+            font-size: 1rem;
+            font-weight: 500;
+            box-shadow: 0 4px 18px rgba(0,0,0,0.82);
+            animation: toastIn 0.22s ease;
+            max-width: 520px;
+            text-align: center;
+        }
+        @keyframes toastIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes toastOut {
+            from { opacity: 1; transform: translateY(0); }
+            to   { opacity: 0; transform: translateY(8px); }
+        }
+
+        /* ══════════════════════════════
+           CONFIRM MODAL
+        ══════════════════════════════ */
+        .confirm-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(12, 13, 12, 0.88);
+            z-index: 9998;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .confirm-box {
+            background: var(--surface);
+            border: 2px solid var(--focus);
+            border-radius: 10px;
+            padding: 28px 32px;
+            max-width: 420px;
+            width: 90%;
+            color: var(--shell);
+            font-size: 1.05rem;
+            line-height: 1.5;
+            box-shadow: 0 8px 40px rgba(0,0,0,0.82);
+        }
+        .confirm-box p { margin-bottom: 22px; }
+        .confirm-btns { display: flex; gap: 12px; justify-content: flex-end; }
+        .confirm-yes {
+            background: var(--focus);
+            color: #fff;
+            border: none;
+            padding: 8px 24px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+        .confirm-no {
+            background: var(--surface2);
+            color: var(--shell);
+            border: 1px solid var(--border);
+            padding: 8px 24px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        .confirm-yes:hover { filter: brightness(1.15); }
+        .confirm-no:hover { background: #333; }
+
+        /* ══════════════════════════════
+           FILE INPUT STYLE
+        ══════════════════════════════ */
+        input[type="file"] {
+            font-size: 0.88rem;
+            color: var(--shell);
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 4px 8px;
+            flex: 1;
+            cursor: pointer;
+        }
+        input[type="file"]::file-selector-button {
+            background: var(--indigo);
+            color: #fff;
+            border: none;
+            padding: 4px 12px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 0.88rem;
+            margin-right: 8px;
+        }
+
+        /* select option in dark theme */
+        select option { background: var(--surface2); color: var(--shell); }
+    </style>
+</head>
+<body>
+<div class="main-container">
+
+    <!-- Main SVG Whiteboard -->
+    <svg class="main-whiteboard" id="mainCanvas" width="100%" height="100%">
+        <defs>
+            <filter id="smooth">
+                <feGaussianBlur in="SourceGraphic" stdDeviation="0.1"/>
+            </filter>
+        </defs>
+        <!-- Background image layer – always rendered below strokes -->
+        <g id="bgLayerGroup" data-bg-layer="true"></g>
+    </svg>
+
+    <!-- Coordinate preview guide -->
+    <div class="coordinate-guide" id="coordinateGuide">
+        <div class="coordinate-label" id="coordinateLabel"></div>
+    </div>
+
+    <!-- ╔══════════════════════════════╗
+         ║  TOOLBAR  (with collapse)   ║
+         ╚══════════════════════════════╝ -->
+    <div class="toolbar-wrapper" id="toolbarWrapper">
+        <div class="toolbar-tab">
+            <button id="toolbarCollapseBtn" title="收合 / 展開工具列 (Alt+T)">▲ 收合工具列</button>
+        </div>
+
+        <div class="toolbar" id="toolbar">
+            <!-- Group 1: Tools -->
+            <div class="tool-group">
+                <button id="penTool" class="active">✏️ 筆刷</button>
+                <button id="eraserTool" class="eraser">🧽 橡皮擦</button>
+                <button id="undoBtn" title="還原上一步 (Ctrl+Z)">↶ 還原</button>
+            </div>
+
+            <!-- Group 2: Size -->
+            <div class="tool-group">
+                <label>大小:</label>
+                <input type="range" id="toolSize" min="1" max="50" step="1" value="3">
+                <span class="size-display" id="toolSizeValue">3px</span>
+            </div>
+
+            <!-- Group 3: Color -->
+            <div class="tool-group" id="colorGroup">
+                <label>顏色:</label>
+                <input type="color" id="brushColor" value="#000000">
+            </div>
+
+            <!-- Group 4: Panels -->
+            <div class="tool-group">
+                <button id="toggleMiniBoard">🗒️ 小白板</button>
+                <button id="toggleBgImage">🖼️ 底圖</button>
+                <button id="toggleSettings">⚙️ 設定</button>
+                <button id="clearMain">🗑️ 清除</button>
+            </div>
+
+            <!-- Group 5: Export -->
+            <div class="tool-group">
+                <div class="smart-crop-option">
+                    <input type="checkbox" id="smartCrop">
+                    <label for="smartCrop">聰明邊界</label>
+                </div>
+                <button id="exportPNG">↓ PNG</button>
+                <button id="exportJPG">↓ JPG</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ╔══════════════════════════════╗
+         ║  MINI WHITEBOARD PANEL      ║
+         ╚══════════════════════════════╝ -->
+    <div class="floating-panel" id="floatingPanel">
+        <div class="panel-header" id="panelHeader">
+            <h3>精細繪圖小白板</h3>
+            <button class="panel-close" id="panelClose">&times;</button>
+        </div>
+        <div class="panel-content">
+            <svg class="mini-whiteboard" id="miniCanvas" width="320" height="240">
+                <defs>
+                    <filter id="smoothMini">
+                        <feGaussianBlur in="SourceGraphic" stdDeviation="0.1"/>
+                    </filter>
+                </defs>
+            </svg>
+
+            <div class="panel-controls">
+                <div class="control-row">
+                    <label>縮放:</label>
+                    <select id="scaleRatio">
+                        <option value="1">1:1 (無縮放)</option>
+                        <option value="0.5" selected>1:2 (縮小 50%)</option>
+                        <option value="0.25">1:4 (縮小 75%)</option>
+                        <option value="0.1">1:10 (縮小 90%)</option>
+                    </select>
+                </div>
+                <div class="control-row">
+                    <label>轉移位置:</label>
+                    <input type="number" id="transferX" value="100" min="0" step="10" style="width:80px;flex:none;">
+                    <span style="color:var(--text-dim);">,</span>
+                    <input type="number" id="transferY" value="100" min="0" step="10" style="width:80px;flex:none;">
+                </div>
+                <div class="control-row">
+                    <button class="btn-transfer" id="transferBtn">轉移到主白板</button>
+                    <button class="btn-danger"   id="clearMini">清除小白板</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ╔══════════════════════════════╗
+         ║  SETTINGS PANEL             ║
+         ╚══════════════════════════════╝ -->
+    <div class="settings-panel" id="settingsPanel">
+        <div class="panel-header" id="settingsHeader">
+            <h3>⚙️ 系統設定</h3>
+            <button class="panel-close" id="settingsClose">&times;</button>
+        </div>
+        <div class="panel-content">
+            <div class="panel-controls">
+                <div class="panel-section-title">主畫布設定</div>
+
+                <div class="control-row">
+                    <label>畫布尺寸:</label>
+                    <input type="number" id="canvasWidth" value="1920" min="100" max="8000" step="100" style="width:80px;flex:none;">
+                    <span style="color:var(--text-dim);">×</span>
+                    <input type="number" id="canvasHeight" value="1080" min="100" max="8000" step="100" style="width:80px;flex:none;">
+                </div>
+                <div class="control-row">
+                    <label>快速預設:</label>
+                    <select id="canvasPresets">
+                        <option value="">自訂尺寸</option>
+                        <option value="1920,1080">Full HD (1920×1080)</option>
+                        <option value="3840,2160">4K (3840×2160)</option>
+                        <option value="1080,1920">手機直向 (1080×1920)</option>
+                        <option value="1200,800">簡報 (1200×800)</option>
+                        <option value="2480,3508">A4印刷 (2480×3508)</option>
+                    </select>
+                </div>
+                <div class="control-row">
+                    <button class="btn-transfer" id="applyCanvasSize">套用畫布尺寸</button>
+                </div>
+
+                <hr class="panel-divider">
+                <div class="panel-section-title">小白板設定</div>
+
+                <div class="control-row">
+                    <label>小板尺寸:</label>
+                    <input type="number" id="miniWidth" value="320" min="100" max="800" step="20" style="width:80px;flex:none;">
+                    <span style="color:var(--text-dim);">×</span>
+                    <input type="number" id="miniHeight" value="240" min="100" max="600" step="20" style="width:80px;flex:none;">
+                </div>
+                <div class="control-row">
+                    <label>預設比例:</label>
+                    <select id="miniPresets">
+                        <option value="">自訂尺寸</option>
+                        <option value="320,240">4:3 橫向 (320×240)</option>
+                        <option value="240,320">3:4 直向 (240×320)</option>
+                        <option value="400,300">4:3 大橫向 (400×300)</option>
+                        <option value="300,400">3:4 大直向 (300×400)</option>
+                        <option value="320,180">16:9 橫向 (320×180)</option>
+                        <option value="180,320">9:16 直向 (180×320)</option>
+                    </select>
+                </div>
+                <div class="control-row">
+                    <button class="btn-transfer" id="applyMiniSize">套用小板尺寸</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ╔══════════════════════════════╗
+         ║  BG IMAGE PANEL  (NEW)      ║
+         ╚══════════════════════════════╝ -->
+    <div class="bg-image-panel" id="bgImagePanel">
+        <div class="panel-header" id="bgImageHeader">
+            <h3>🖼️ 底圖設定</h3>
+            <button class="panel-close" id="bgImageClose">&times;</button>
+        </div>
+        <div class="panel-content">
+            <div class="panel-controls">
+
+                <!-- File picker -->
+                <div class="control-row">
+                    <label>圖片:</label>
+                    <input type="file" id="bgImageFile" accept="image/png,image/jpeg,image/gif,image/webp">
+                </div>
+
+                <!-- Preview -->
+                <img id="bgImagePreview" class="bg-image-preview" alt="預覽">
+
+                <div class="panel-section-title">匯入位置</div>
+
+                <!-- Position -->
+                <div class="control-row">
+                    <label>X 座標:</label>
+                    <input type="number" id="bgX" value="0" min="0" step="10" style="width:72px;flex:none;">
+                    <label style="min-width:auto;margin-left:6px;">Y:</label>
+                    <input type="number" id="bgY" value="0" min="0" step="10" style="width:72px;flex:none;">
+                </div>
+
+                <!-- Size (0 = auto) -->
+                <div class="control-row">
+                    <label>寬度:</label>
+                    <input type="number" id="bgWidth" value="0" min="0" step="10" style="width:72px;flex:none;" placeholder="自動">
+                    <label style="min-width:auto;margin-left:6px;">高度:</label>
+                    <input type="number" id="bgHeight" value="0" min="0" step="10" style="width:72px;flex:none;" placeholder="自動">
+                </div>
+                <div style="font-size:0.82rem;color:var(--text-dim);margin-top:-4px;">寬高填 0 則以原始尺寸匯入</div>
+
+                <!-- Opacity -->
+                <div class="control-row">
+                    <label>透明度:</label>
+                    <div class="range-row">
+                        <input type="range" id="bgOpacity" min="0" max="100" value="100" step="5">
+                        <span class="range-val" id="bgOpacityVal">100%</span>
+                    </div>
+                </div>
+
+                <!-- Action buttons -->
+                <div class="control-row">
+                    <button class="btn-transfer" id="importBgBtn">✅ 匯入底圖</button>
+                    <button class="btn-danger"   id="clearAllBgBtn">🗑️ 清除全部</button>
+                </div>
+
+                <hr class="panel-divider">
+                <div class="panel-section-title">已載入底圖</div>
+
+                <div class="bg-list" id="bgList">
+                    <div class="bg-list-empty">尚無底圖</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast container -->
+    <div id="toastContainer"></div>
+
+    <!-- Confirm modal -->
+    <div id="confirmModal" class="confirm-overlay" style="display:none;">
+        <div class="confirm-box">
+            <p id="confirmMessage"></p>
+            <div class="confirm-btns">
+                <button class="confirm-no"  id="confirmNo">取消</button>
+                <button class="confirm-yes" id="confirmYes">確定</button>
+            </div>
+        </div>
+    </div>
+</div><!-- /.main-container -->
+
+<script>
+class WhiteboardSystem {
+    constructor() {
+        this.mainCanvas  = document.getElementById('mainCanvas');
+        this.miniCanvas  = document.getElementById('miniCanvas');
+        this.floatingPanel   = document.getElementById('floatingPanel');
+        this.settingsPanel   = document.getElementById('settingsPanel');
+        this.bgImagePanel    = document.getElementById('bgImagePanel');
+        this.coordinateGuide = document.getElementById('coordinateGuide');
+        this.coordinateLabel = document.getElementById('coordinateLabel');
+        this.bgLayerGroup    = document.getElementById('bgLayerGroup');
+
+        this.currentTool = 'pen';
+        this.toolSize    = 3;
+        this.brushColor  = '#000000';
+        this.isDrawing   = false;
+        this.currentPath = null;
+        this.toolbarCollapsed = false;
+
+        this.undoStack = { mainCanvas: [], miniCanvas: [] };
+        this.maxUndoLayers = 20;
+        this.savingState = false;
+
+        this.bgImageCounter  = 0;
+        this.selectedBgImage = null; // { src, naturalWidth, naturalHeight }
+
+        this.init();
+    }
+
+    init() {
+        this.setupEventListeners();
+        this.setupDraggablePanels();
+        this.setupKeyboard();
+        this.resizeMainCanvas();
+        this.setTool('pen');
+        this.updateUndoBtn();
+        window.addEventListener('resize', () => this.resizeMainCanvas());
+    }
+
+    /* ─────────────────────────────────
+       TOAST & CONFIRM
+    ───────────────────────────────── */
+    toast(msg, type = 'info') {
+        const palette = {
+            success: { bg: '#299459', fg: '#fff' },
+            error:   { bg: '#E6374B', fg: '#fff' },
+            warning: { bg: '#EDA109', fg: '#0C0D0C' },
+            info:    { bg: '#2351DB', fg: '#fff' },
+        };
+        const { bg, fg } = palette[type] || palette.info;
+        const el = document.createElement('div');
+        el.className = 'toast-msg';
+        el.style.cssText = `background:${bg};color:${fg};`;
+        el.textContent = msg;
+        document.getElementById('toastContainer').appendChild(el);
+        setTimeout(() => {
+            el.style.animation = 'toastOut 0.2s ease forwards';
+            setTimeout(() => el.remove(), 210);
+        }, 2800);
+    }
+
+    confirm(msg) {
+        return new Promise(resolve => {
+            document.getElementById('confirmMessage').textContent = msg;
+            const modal = document.getElementById('confirmModal');
+            modal.style.display = 'flex';
+            const close = (val) => { modal.style.display = 'none'; resolve(val); };
+            document.getElementById('confirmYes').onclick = () => close(true);
+            document.getElementById('confirmNo').onclick  = () => close(false);
+        });
+    }
+
+    /* ─────────────────────────────────
+       TOOLBAR COLLAPSE
+    ───────────────────────────────── */
+    toggleToolbar() {
+        this.toolbarCollapsed = !this.toolbarCollapsed;
+        const tb  = document.getElementById('toolbar');
+        const btn = document.getElementById('toolbarCollapseBtn');
+        if (this.toolbarCollapsed) {
+            tb.classList.add('collapsed');
+            btn.textContent = '▼ 展開工具列';
+        } else {
+            tb.classList.remove('collapsed');
+            btn.textContent = '▲ 收合工具列';
+        }
+    }
+
+    /* ─────────────────────────────────
+       BG IMAGE  (底圖)
+    ───────────────────────────────── */
+    importBgImage() {
+        if (!this.selectedBgImage) {
+            this.toast('請先選擇一張圖片', 'warning');
+            return;
+        }
+        const x = parseInt(document.getElementById('bgX').value) || 0;
+        const y = parseInt(document.getElementById('bgY').value) || 0;
+        const w = parseInt(document.getElementById('bgWidth').value)  || 0;
+        const h = parseInt(document.getElementById('bgHeight').value) || 0;
+        const opacity = (parseInt(document.getElementById('bgOpacity').value) / 100).toFixed(2);
+
+        const id  = `bgImg_${++this.bgImageCounter}`;
+        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'image');
+        svg.setAttribute('id', id);
+        svg.setAttribute('href', this.selectedBgImage.src);
+        svg.setAttribute('x', x);
+        svg.setAttribute('y', y);
+        svg.setAttribute('opacity', opacity);
+        svg.setAttribute('data-bg-layer', 'true');
+        svg.setAttribute('preserveAspectRatio', 'xMinYMin meet');
+        if (w > 0) svg.setAttribute('width',  w);
+        if (h > 0) svg.setAttribute('height', h);
+
+        this.bgLayerGroup.appendChild(svg);
+        this.refreshBgList();
+
+        const wLabel = w > 0 ? `${w}px` : `${this.selectedBgImage.naturalWidth}px (原尺寸)`;
+        const hLabel = h > 0 ? `${h}px` : `${this.selectedBgImage.naturalHeight}px (原尺寸)`;
+        this.toast(`底圖已匯入到 (${x}, ${y})  ${wLabel} × ${hLabel}`, 'success');
+    }
+
+    removeBgImage(id) {
+        const el = document.getElementById(id);
+        if (el) el.remove();
+        this.refreshBgList();
+        this.toast('底圖已移除', 'info');
+    }
+
+    clearAllBgImages() {
+        if (this.bgLayerGroup) this.bgLayerGroup.innerHTML = '';
+        this.bgImageCounter = 0;
+        this.refreshBgList();
+        this.toast('所有底圖已清除', 'info');
+    }
+
+    refreshBgList() {
+        const list = document.getElementById('bgList');
+        const imgs = this.bgLayerGroup ? [...this.bgLayerGroup.querySelectorAll('image')] : [];
+        if (imgs.length === 0) {
+            list.innerHTML = '<div class="bg-list-empty">尚無底圖</div>';
+            return;
+        }
+        list.innerHTML = '';
+        imgs.forEach((img, i) => {
+            const id = img.getAttribute('id');
+            const x  = img.getAttribute('x') || 0;
+            const y  = img.getAttribute('y') || 0;
+            const w  = img.getAttribute('width')  || '自動';
+            const h  = img.getAttribute('height') || '自動';
+            const op = Math.round(parseFloat(img.getAttribute('opacity') || 1) * 100);
+            const row = document.createElement('div');
+            row.className = 'bg-list-item';
+            row.innerHTML = `
+                <span class="bg-list-info">底圖 ${i+1}&ensp;(${x},&thinsp;${y})&ensp;${w}×${h}&ensp;${op}%</span>
+                <button class="bg-remove-btn" data-id="${id}">移除</button>`;
+            list.appendChild(row);
+        });
+        list.querySelectorAll('.bg-remove-btn').forEach(btn => {
+            btn.addEventListener('click', () => this.removeBgImage(btn.dataset.id));
+        });
+    }
+
+    /* ─────────────────────────────────
+       EVENT LISTENERS
+    ───────────────────────────────── */
+    setupEventListeners() {
+        // Toolbar collapse
+        document.getElementById('toolbarCollapseBtn').addEventListener('click', () => this.toggleToolbar());
+
+        // Tools
+        document.getElementById('penTool').addEventListener('click', () => this.setTool('pen'));
+        document.getElementById('eraserTool').addEventListener('click', () => this.setTool('eraser'));
+        document.getElementById('undoBtn').addEventListener('click', () => this.undo());
+
+        document.getElementById('toolSize').addEventListener('input', e => {
+            this.toolSize = parseFloat(e.target.value);
+            document.getElementById('toolSizeValue').textContent = this.toolSize + 'px';
+            this.updateCursor();
+        });
+        document.getElementById('brushColor').addEventListener('change', e => {
+            this.brushColor = e.target.value;
+        });
+
+        // Panel toggles
+        document.getElementById('toggleMiniBoard').addEventListener('click', () => {
+            const p = this.floatingPanel;
+            const vis = p.style.display === 'block';
+            p.style.display = vis ? 'none' : 'block';
+            if (!vis) setTimeout(() => this.updateCoordinateGuide(), 80);
+            else this.coordinateGuide.style.display = 'none';
+        });
+        document.getElementById('panelClose').addEventListener('click', () => {
+            this.floatingPanel.style.display = 'none';
+            this.coordinateGuide.style.display = 'none';
+        });
+
+        document.getElementById('toggleSettings').addEventListener('click', () => this.togglePanel(this.settingsPanel));
+        document.getElementById('settingsClose').addEventListener('click', () => { this.settingsPanel.style.display = 'none'; });
+
+        // BG Image panel
+        document.getElementById('toggleBgImage').addEventListener('click', () => this.togglePanel(this.bgImagePanel));
+        document.getElementById('bgImageClose').addEventListener('click', () => { this.bgImagePanel.style.display = 'none'; });
+
+        // File selection
+        document.getElementById('bgImageFile').addEventListener('change', e => {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = ev => {
+                const preview = document.getElementById('bgImagePreview');
+                preview.src = ev.target.result;
+                preview.style.display = 'block';
+                const img = new Image();
+                img.onload = () => {
+                    this.selectedBgImage = { src: ev.target.result, naturalWidth: img.naturalWidth, naturalHeight: img.naturalHeight };
+                    // auto-fill W/H if both are 0
+                    const wEl = document.getElementById('bgWidth');
+                    const hEl = document.getElementById('bgHeight');
+                    if (!parseInt(wEl.value)) wEl.value = img.naturalWidth;
+                    if (!parseInt(hEl.value)) hEl.value = img.naturalHeight;
+                    this.toast(`已載入圖片  ${img.naturalWidth}×${img.naturalHeight} px`, 'info');
+                };
+                img.src = ev.target.result;
+            };
+            reader.readAsDataURL(file);
+        });
+
+        document.getElementById('bgOpacity').addEventListener('input', e => {
+            document.getElementById('bgOpacityVal').textContent = e.target.value + '%';
+        });
+
+        document.getElementById('importBgBtn').addEventListener('click', () => this.importBgImage());
+        document.getElementById('clearAllBgBtn').addEventListener('click', async () => {
+            if (!this.bgLayerGroup || !this.bgLayerGroup.querySelector('image')) {
+                this.toast('目前沒有底圖', 'warning');
+                return;
+            }
+            const ok = await this.confirm('確定清除所有底圖？');
+            if (ok) this.clearAllBgImages();
+        });
+
+        // Clear main canvas
+        document.getElementById('clearMain').addEventListener('click', async () => {
+            const ok = await this.confirm('確定清除主白板上的所有筆跡？底圖不受影響。');
+            if (ok) this.clearCanvas(this.mainCanvas);
+        });
+
+        document.getElementById('clearMini').addEventListener('click', async () => {
+            const ok = await this.confirm('確定清除小白板？');
+            if (ok) this.clearCanvas(this.miniCanvas);
+        });
+
+        document.getElementById('transferBtn').addEventListener('click', () => this.transferMiniToMain());
+
+        // Export
+        document.getElementById('exportPNG').addEventListener('click', () => this.exportCanvas('png'));
+        document.getElementById('exportJPG').addEventListener('click', () => this.exportCanvas('jpg'));
+
+        // Coordinate guide update
+        ['transferX','transferY','scaleRatio'].forEach(id => {
+            document.getElementById(id).addEventListener('input', () => this.updateCoordinateGuide());
+            document.getElementById(id).addEventListener('change', () => this.updateCoordinateGuide());
+        });
+
+        // Canvas size
+        document.getElementById('applyCanvasSize').addEventListener('click', () => this.applyCanvasSize());
+        document.getElementById('canvasPresets').addEventListener('change', e => {
+            if (e.target.value) {
+                const [w, h] = e.target.value.split(',');
+                document.getElementById('canvasWidth').value  = w;
+                document.getElementById('canvasHeight').value = h;
+            }
+        });
+
+        // Mini size
+        document.getElementById('applyMiniSize').addEventListener('click', () => this.applyMiniSize());
+        document.getElementById('miniPresets').addEventListener('change', e => {
+            if (e.target.value) {
+                const [w, h] = e.target.value.split(',');
+                document.getElementById('miniWidth').value  = w;
+                document.getElementById('miniHeight').value = h;
+            }
+        });
+
+        // Drawing
+        this.setupDrawing(this.mainCanvas);
+        this.setupDrawing(this.miniCanvas);
+    }
+
+    togglePanel(panel) {
+        panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
+    }
+
+    /* ─────────────────────────────────
+       TOOL & CURSOR
+    ───────────────────────────────── */
+    setTool(tool) {
+        this.currentTool = tool;
+        document.getElementById('penTool').classList.toggle('active', tool === 'pen');
+        document.getElementById('eraserTool').classList.toggle('active', tool === 'eraser');
+        this.updateCursor();
+        const cg = document.getElementById('colorGroup');
+        cg.style.display = tool === 'eraser' ? 'none' : '';
+    }
+
+    updateCursor() {
+        [this.mainCanvas, this.miniCanvas].forEach(c => {
+            c.classList.remove('eraser-cursor');
+            c.style.cursor = '';
+        });
+        if (this.currentTool === 'eraser') {
+            [this.mainCanvas, this.miniCanvas].forEach(c => c.classList.add('eraser-cursor'));
+        } else {
+            [this.mainCanvas, this.miniCanvas].forEach(c => c.style.cursor = 'crosshair');
+        }
+    }
+
+    /* ─────────────────────────────────
+       KEYBOARD SHORTCUTS
+    ───────────────────────────────── */
+    setupKeyboard() {
+        document.addEventListener('keydown', e => {
+            if (e.altKey && e.key.toLowerCase() === 't') {
+                e.preventDefault();
+                this.toggleToolbar();
+            }
+            if (e.altKey && e.key.toLowerCase() === 'h') {
+                e.preventDefault();
+                this.togglePanel(this.settingsPanel);
+            }
+            if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z') {
+                e.preventDefault();
+                this.undo();
+            }
+        });
+    }
+
+    /* ─────────────────────────────────
+       DRAWING
+    ───────────────────────────────── */
+    setupDrawing(canvas) {
+        canvas.addEventListener('mousedown', e => this.startDraw(e, canvas));
+        canvas.addEventListener('mousemove', e => this.draw(e, canvas));
+        canvas.addEventListener('mouseup',   ()  => this.stopDraw());
+        canvas.addEventListener('mouseleave',()  => this.stopDraw());
+
+        canvas.addEventListener('touchstart', e => {
+            e.preventDefault();
+            const t = e.touches[0];
+            this.startDraw(new MouseEvent('mousedown', { clientX: t.clientX, clientY: t.clientY }), canvas);
+        }, { passive: false });
+        canvas.addEventListener('touchmove', e => {
+            e.preventDefault();
+            const t = e.touches[0];
+            this.draw(new MouseEvent('mousemove', { clientX: t.clientX, clientY: t.clientY }), canvas);
+        }, { passive: false });
+        canvas.addEventListener('touchend',    e => { e.preventDefault(); this.stopDraw(); }, { passive: false });
+        canvas.addEventListener('touchcancel', () => this.stopDraw());
+    }
+
+    coords(e, canvas) {
+        const r = canvas.getBoundingClientRect();
+        const sw = canvas.width.baseVal  ? canvas.width.baseVal.value  : canvas.clientWidth;
+        const sh = canvas.height.baseVal ? canvas.height.baseVal.value : canvas.clientHeight;
+        return {
+            x: (e.clientX - r.left) * sw / r.width,
+            y: (e.clientY - r.top)  * sh / r.height,
+        };
+    }
+
+    startDraw(e, canvas) {
+        this.saveState(canvas);
+        this.isDrawing = true;
+        const { x, y } = this.coords(e, canvas);
+        if (this.currentTool === 'pen') {
+            this.currentPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            this.currentPath.setAttribute('fill', 'none');
+            this.currentPath.setAttribute('stroke', this.brushColor);
+            this.currentPath.setAttribute('stroke-width', this.toolSize);
+            this.currentPath.setAttribute('stroke-linecap', 'round');
+            this.currentPath.setAttribute('stroke-linejoin', 'round');
+            this.currentPath.setAttribute('filter', canvas.id === 'miniCanvas' ? 'url(#smoothMini)' : 'url(#smooth)');
+            this.currentPath.setAttribute('data-user', '1');
+            this.currentPath.setAttribute('d', `M ${x} ${y}`);
+            canvas.appendChild(this.currentPath);
+        } else if (this.currentTool === 'eraser') {
+            this.erase({ x, y }, canvas);
+        }
+    }
+
+    draw(e, canvas) {
+        if (!this.isDrawing) return;
+        const { x, y } = this.coords(e, canvas);
+        if (this.currentTool === 'pen' && this.currentPath) {
+            this.currentPath.setAttribute('d', this.currentPath.getAttribute('d') + ` L ${x} ${y}`);
+        } else if (this.currentTool === 'eraser') {
+            this.erase({ x, y }, canvas);
+        }
+    }
+
+    stopDraw() { this.isDrawing = false; this.currentPath = null; }
+
+    erase({ x, y }, canvas) {
+        const r = this.toolSize;
+        // Only erase user strokes, not bg images
+        canvas.querySelectorAll('path, g[data-transferred-from]').forEach(el => {
+            if (el.closest('[data-bg-layer]')) return;
+            try {
+                const bb = el.getBBox();
+                if (!bb || (bb.width === 0 && bb.height === 0)) return;
+                const cx = bb.x + bb.width / 2;
+                const cy = bb.y + bb.height / 2;
+                const d  = Math.hypot(cx - x, cy - y);
+                const er = Math.max(bb.width, bb.height) / 2;
+                if (d < r + er) el.remove();
+            } catch { /* skip */ }
+        });
+    }
+
+    /* ─────────────────────────────────
+       CLEAR / TRANSFER
+    ───────────────────────────────── */
+    clearCanvas(canvas) {
+        const defs    = canvas.querySelector('defs');
+        const bgGroup = (canvas === this.mainCanvas) ? canvas.querySelector('#bgLayerGroup') : null;
+
+        canvas.innerHTML = '';
+        if (defs)    canvas.appendChild(defs);
+        if (bgGroup) canvas.appendChild(bgGroup);
+
+        if (canvas === this.mainCanvas) {
+            this.bgLayerGroup = canvas.querySelector('#bgLayerGroup');
+        }
+        this.saveState(canvas);
+    }
+
+    transferMiniToMain() {
+        const scale   = parseFloat(document.getElementById('scaleRatio').value);
+        const offsetX = parseInt(document.getElementById('transferX').value) || 0;
+        const offsetY = parseInt(document.getElementById('transferY').value) || 0;
+
+        const paths = this.miniCanvas.querySelectorAll('path');
+        if (!paths.length) { this.toast('小白板沒有內容可以轉移', 'warning'); return; }
+
+        const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+        g.setAttribute('transform', `translate(${offsetX},${offsetY}) scale(${scale})`);
+        g.setAttribute('data-transferred-from', 'miniCanvas');
+
+        paths.forEach(p => {
+            const c = p.cloneNode(true);
+            c.setAttribute('filter', 'url(#smooth)');
+            g.appendChild(c);
+        });
+
+        this.mainCanvas.appendChild(g);
+        this.clearCanvas(this.miniCanvas);
+        this.coordinateGuide.style.display = 'none';
+        this.toast(`已轉移 ${paths.length} 個筆跡到主白板`, 'success');
+    }
+
+    /* ─────────────────────────────────
+       COORDINATE GUIDE
+    ───────────────────────────────── */
+    updateCoordinateGuide() {
+        if (this.floatingPanel.style.display !== 'block') {
+            this.coordinateGuide.style.display = 'none';
+            return;
+        }
+        const scale   = parseFloat(document.getElementById('scaleRatio').value);
+        const offsetX = parseInt(document.getElementById('transferX').value) || 0;
+        const offsetY = parseInt(document.getElementById('transferY').value) || 0;
+
+        const rect  = this.mainCanvas.getBoundingClientRect();
+        const svgW  = this.mainCanvas.width.baseVal.value  || rect.width;
+        const svgH  = this.mainCanvas.height.baseVal.value || rect.height;
+        const scaleX = rect.width  / svgW;
+        const scaleY = rect.height / svgH;
+
+        const miniW = parseInt(this.miniCanvas.getAttribute('width'));
+        const miniH = parseInt(this.miniCanvas.getAttribute('height'));
+
+        const gW = miniW * scale * scaleX;
+        const gH = miniH * scale * scaleY;
+
+        this.coordinateGuide.style.left   = (rect.left + offsetX * scaleX) + 'px';
+        this.coordinateGuide.style.top    = (rect.top  + offsetY * scaleY) + 'px';
+        this.coordinateGuide.style.width  = gW + 'px';
+        this.coordinateGuide.style.height = gH + 'px';
+        this.coordinateGuide.style.display = 'block';
+        this.coordinateLabel.textContent = `(${offsetX},${offsetY})  ${Math.round(gW)}×${Math.round(gH)}`;
+    }
+
+    /* ─────────────────────────────────
+       CANVAS SIZE
+    ───────────────────────────────── */
+    resizeMainCanvas() {
+        if (!document.getElementById('canvasWidth').value) {
+            this.mainCanvas.setAttribute('width',  window.innerWidth);
+            this.mainCanvas.setAttribute('height', window.innerHeight);
+            document.getElementById('canvasWidth').value  = window.innerWidth;
+            document.getElementById('canvasHeight').value = window.innerHeight;
+        }
+    }
+
+    applyCanvasSize() {
+        const w = parseInt(document.getElementById('canvasWidth').value);
+        const h = parseInt(document.getElementById('canvasHeight').value);
+        if (w < 100 || h < 100 || w > 8000 || h > 8000) {
+            this.toast('畫布尺寸必須在 100–8000 像素之間', 'warning'); return;
+        }
+        this.mainCanvas.setAttribute('width',  w);
+        this.mainCanvas.setAttribute('height', h);
+        if (w < window.innerWidth && h < window.innerHeight) {
+            Object.assign(this.mainCanvas.style, { position:'absolute', left:'50%', top:'50%', transform:'translate(-50%,-50%)', boxShadow:'0 4px 24px rgba(0,0,0,0.76)' });
+        } else {
+            Object.assign(this.mainCanvas.style, { left:'0', top:'0', transform:'none', boxShadow:'none' });
+        }
+        this.updateCoordinateGuide();
+        this.toast(`畫布已設定為 ${w} × ${h}`, 'success');
+    }
+
+    async applyMiniSize() {
+        const w = parseInt(document.getElementById('miniWidth').value);
+        const h = parseInt(document.getElementById('miniHeight').value);
+        if (w < 100 || h < 100 || w > 800 || h > 600) {
+            this.toast('小白板尺寸必須在 100–800×600 之間', 'warning'); return;
+        }
+        const hasContent = this.miniCanvas.querySelectorAll('path').length > 0;
+        if (hasContent) {
+            const ok = await this.confirm('調整尺寸會清除小白板現有內容，確定繼續嗎？');
+            if (!ok) return;
+        }
+        this.miniCanvas.setAttribute('width',  w);
+        this.miniCanvas.setAttribute('height', h);
+        this.clearCanvas(this.miniCanvas);
+        this.floatingPanel.style.width = Math.max(360, w + 34) + 'px';
+        this.updateCoordinateGuide();
+        this.toast(`小白板已設定為 ${w} × ${h}`, 'success');
+    }
+
+    /* ─────────────────────────────────
+       UNDO
+    ───────────────────────────────── */
+    saveState(canvas) {
+        if (this.savingState) return;
+        const id = canvas.id;
+        this.undoStack[id] = this.undoStack[id] || [];
+        this.undoStack[id].push(canvas.innerHTML);
+        if (this.undoStack[id].length > this.maxUndoLayers) this.undoStack[id].shift();
+        this.updateUndoBtn();
+    }
+
+    undo() {
+        for (const id of ['mainCanvas', 'miniCanvas']) {
+            if (this.undoStack[id]?.length) {
+                const canvas = document.getElementById(id);
+                this.restoreState(canvas, this.undoStack[id]);
+                return;
+            }
+        }
+    }
+
+    restoreState(canvas, stack) {
+        if (!stack.length) return;
+        this.savingState = true;
+        canvas.innerHTML = stack.pop();
+        this.savingState = false;
+        // Re-anchor bgLayerGroup reference after innerHTML replacement
+        if (canvas === this.mainCanvas) {
+            this.bgLayerGroup = canvas.querySelector('#bgLayerGroup');
+            if (!this.bgLayerGroup) {
+                // Recreate if missing (edge case)
+                this.bgLayerGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+                this.bgLayerGroup.setAttribute('id', 'bgLayerGroup');
+                this.bgLayerGroup.setAttribute('data-bg-layer', 'true');
+                const defs = canvas.querySelector('defs');
+                if (defs) defs.insertAdjacentElement('afterend', this.bgLayerGroup);
+                else canvas.prepend(this.bgLayerGroup);
+            }
+            this.refreshBgList();
+        }
+        this.updateUndoBtn();
+    }
+
+    updateUndoBtn() {
+        const has = Object.values(this.undoStack).some(s => s?.length > 0);
+        document.getElementById('undoBtn').disabled = !has;
+    }
+
+    /* ─────────────────────────────────
+       DRAGGABLE PANELS
+    ───────────────────────────────── */
+    setupDraggablePanels() {
+        [
+            [this.floatingPanel,  document.getElementById('panelHeader')],
+            [this.settingsPanel,  document.getElementById('settingsHeader')],
+            [this.bgImagePanel,   document.getElementById('bgImageHeader')],
+        ].forEach(([panel, header]) => this.makeDraggable(panel, header));
+    }
+
+    makeDraggable(panel, header) {
+        let dragging = false, ox = 0, oy = 0;
+        header.addEventListener('mousedown', e => {
+            dragging = true;
+            const r = panel.getBoundingClientRect();
+            ox = e.clientX - r.left;
+            oy = e.clientY - r.top;
+            header.style.cursor = 'grabbing';
+        });
+        document.addEventListener('mousemove', e => {
+            if (!dragging) return;
+            const x = Math.max(0, Math.min(e.clientX - ox, window.innerWidth  - panel.offsetWidth));
+            const y = Math.max(0, Math.min(e.clientY - oy, window.innerHeight - panel.offsetHeight));
+            panel.style.left = x + 'px';
+            panel.style.top  = y + 'px';
+            panel.style.right = 'auto';
+        });
+        document.addEventListener('mouseup', () => { dragging = false; header.style.cursor = 'move'; });
+    }
+
+    /* ─────────────────────────────────
+       EXPORT  (handles bg images)
+    ───────────────────────────────── */
+    async exportCanvas(format) {
+        const smartCrop = document.getElementById('smartCrop').checked;
+        const tempCanvas = document.createElement('canvas');
+        const ctx = tempCanvas.getContext('2d');
+
+        let cw = this.mainCanvas.width.baseVal.value;
+        let ch = this.mainCanvas.height.baseVal.value;
+        let ox = 0, oy = 0;
+
+        if (smartCrop) {
+            const b = this.calculateBounds();
+            if (b) { cw = b.width; ch = b.height; ox = b.x; oy = b.y; }
+        }
+
+        tempCanvas.width  = cw;
+        tempCanvas.height = ch;
+
+        // White background for JPG
+        if (format === 'jpg') {
+            ctx.fillStyle = '#fff';
+            ctx.fillRect(0, 0, cw, ch);
+        }
+
+        // 1. Draw bg images directly onto canvas (avoids SVG serialisation issues with embedded data URIs)
+        const bgImages = this.bgLayerGroup ? [...this.bgLayerGroup.querySelectorAll('image')] : [];
+        for (const imgEl of bgImages) {
+            const src    = imgEl.getAttribute('href') || imgEl.getAttribute('xlink:href');
+            const ix     = parseFloat(imgEl.getAttribute('x') || 0) - ox;
+            const iy     = parseFloat(imgEl.getAttribute('y') || 0) - oy;
+            const iw     = imgEl.getAttribute('width');
+            const ih     = imgEl.getAttribute('height');
+            const iopac  = parseFloat(imgEl.getAttribute('opacity') || 1);
+            await new Promise(res => {
+                const img = new Image();
+                img.onload = () => {
+                    ctx.save();
+                    ctx.globalAlpha = iopac;
+                    if (iw && ih) ctx.drawImage(img, ix, iy, parseFloat(iw), parseFloat(ih));
+                    else          ctx.drawImage(img, ix, iy);
+                    ctx.restore();
+                    res();
+                };
+                img.onerror = res;
+                img.src = src;
+            });
+        }
+
+        // 2. Draw SVG strokes (clone WITHOUT bg images to avoid duplication)
+        const clone = this.mainCanvas.cloneNode(true);
+        const cloneBg = clone.querySelector('#bgLayerGroup');
+        if (cloneBg) cloneBg.innerHTML = '';
+        if (smartCrop && (ox || oy)) {
+            clone.setAttribute('viewBox', `${ox} ${oy} ${cw} ${ch}`);
+        }
+        clone.setAttribute('width',  cw);
+        clone.setAttribute('height', ch);
+
+        const svgBlob = new Blob([new XMLSerializer().serializeToString(clone)], { type: 'image/svg+xml;charset=utf-8' });
+        const url = URL.createObjectURL(svgBlob);
+        await new Promise(res => {
+            const img = new Image();
+            img.onload = () => { ctx.drawImage(img, 0, 0); URL.revokeObjectURL(url); res(); };
+            img.onerror = res;
+            img.src = url;
+        });
+
+        const q = format === 'jpg' ? 0.95 : 1.0;
+        const mime = format === 'jpg' ? 'image/jpeg' : 'image/png';
+        const link = document.createElement('a');
+        link.download = `whiteboard${smartCrop ? '_cropped' : ''}.${format}`;
+        link.href = tempCanvas.toDataURL(mime, q);
+        link.click();
+        this.toast(`已匯出 ${format.toUpperCase()} 圖片`, 'success');
+    }
+
+    calculateBounds() {
+        const els = this.mainCanvas.querySelectorAll('path, g[data-transferred-from]');
+        if (!els.length) return null;
+        let minX=Infinity, minY=Infinity, maxX=-Infinity, maxY=-Infinity;
+        els.forEach(el => {
+            try {
+                const b = el.getBBox();
+                if (b.width > 0 && b.height > 0) {
+                    minX = Math.min(minX, b.x);
+                    minY = Math.min(minY, b.y);
+                    maxX = Math.max(maxX, b.x + b.width);
+                    maxY = Math.max(maxY, b.y + b.height);
+                }
+            } catch {}
+        });
+        if (minX === Infinity) return null;
+        const p = 20;
+        return { x: Math.max(0,minX-p), y: Math.max(0,minY-p), width: maxX-minX+p*2, height: maxY-minY+p*2 };
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => { new WhiteboardSystem(); });
+</script>
+</body>
+</html>
