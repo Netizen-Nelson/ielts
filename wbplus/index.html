@@ -504,6 +504,43 @@
 
         /* select option in dark theme */
         select option { background: var(--surface2); color: var(--shell); }
+
+        /* ══════════════════════════════
+           BG ASPECT RATIO LOCK BUTTON
+        ══════════════════════════════ */
+        .bg-lock-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 30px;
+            height: 30px;
+            border-radius: 6px;
+            border: 2px solid var(--border);
+            background: var(--surface2);
+            cursor: pointer;
+            flex-shrink: 0;
+            padding: 0;
+            transition: background 0.15s, border-color 0.15s, color 0.15s;
+            color: var(--text-dim);
+            position: relative;
+        }
+        .bg-lock-btn:hover {
+            border-color: var(--lavender);
+            color: var(--lavender);
+        }
+        .bg-lock-btn.locked {
+            border-color: var(--lavender);
+            background: rgba(195, 165, 229, 0.18);
+            color: var(--lavender);
+        }
+        .bg-lock-btn.locked:hover {
+            background: rgba(195, 165, 229, 0.30);
+        }
+        /* 解鎖狀態：鎖頭弧線向右開 */
+        .bg-lock-btn:not(.locked) #lockShackle {
+            d: path("M5 9V6.5C5 3.46 7.24 1 10 1s5 2.46 5 5.5V7");
+            transform: translateX(3px);
+        }
     </style>
 </head>
 <body>
@@ -709,11 +746,22 @@
                 <!-- Size (0 = auto) -->
                 <div class="control-row">
                     <label>寬度:</label>
-                    <input type="number" id="bgWidth" value="0" min="0" step="10" style="width:72px;flex:none;" placeholder="自動">
-                    <label style="min-width:auto;margin-left:6px;">高度:</label>
-                    <input type="number" id="bgHeight" value="0" min="0" step="10" style="width:72px;flex:none;" placeholder="自動">
+                    <input type="number" id="bgWidth" value="1920" min="0" step="10" style="width:72px;flex:none;" placeholder="自動">
+                    <button id="bgLockRatio" class="bg-lock-btn locked" title="鎖定長寬比（點擊切換）">
+                        <svg id="bgLockIcon" viewBox="0 0 20 22" fill="none" xmlns="http://www.w3.org/2000/svg" width="16" height="18">
+                            <!-- 鎖頭上半 -->
+                            <path id="lockShackle" d="M5 9V6.5C5 3.46 7.24 1 10 1s5 2.46 5 5.5V9" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            <!-- 鎖身 -->
+                            <rect x="2" y="9" width="16" height="12" rx="2" fill="currentColor" opacity="0.9"/>
+                            <!-- 鑰匙孔 -->
+                            <circle cx="10" cy="15" r="2" fill="var(--bg)"/>
+                            <line x1="10" y1="17" x2="10" y2="19" stroke="var(--bg)" stroke-width="1.5" stroke-linecap="round"/>
+                        </svg>
+                    </button>
+                    <label style="min-width:auto;">高度:</label>
+                    <input type="number" id="bgHeight" value="1080" min="0" step="10" style="width:72px;flex:none;" placeholder="自動">
                 </div>
-                <div style="font-size:0.82rem;color:var(--text-dim);margin-top:-4px;">寬高填 0 則以原始尺寸匯入</div>
+                <div style="font-size:0.82rem;color:var(--text-dim);margin-top:-4px;">預設 1920×1080；寬高填 0 則以原始尺寸匯入</div>
 
                 <!-- Opacity -->
                 <div class="control-row">
@@ -780,6 +828,8 @@ class WhiteboardSystem {
 
         this.bgImageCounter  = 0;
         this.selectedBgImage = null; // { src, naturalWidth, naturalHeight }
+        this.bgAspectLocked  = true;   // 預設鎖定長寬比
+        this.bgNaturalRatio  = null;   // 原始圖片的 width/height 比值
 
         this.init();
     }
@@ -840,6 +890,23 @@ class WhiteboardSystem {
         } else {
             tb.classList.remove('collapsed');
             btn.textContent = '▲ 收合工具列';
+        }
+    }
+
+    /* ─────────────────────────────────
+       BG LOCK ICON UPDATE
+    ───────────────────────────────── */
+    _updateLockIcon() {
+        const shackle = document.getElementById('lockShackle');
+        if (!shackle) return;
+        if (this.bgAspectLocked) {
+            // 鎖上：正常弧線
+            shackle.setAttribute('d', 'M5 9V6.5C5 3.46 7.24 1 10 1s5 2.46 5 5.5V9');
+            shackle.style.transform = '';
+        } else {
+            // 解鎖：弧線右移並稍微縮短，視覺上像鎖頭開了
+            shackle.setAttribute('d', 'M5 9V6.5C5 3.46 7.24 1 10 1s5 2.46 5 5.5V7');
+            shackle.style.transform = 'translateX(3px)';
         }
     }
 
@@ -971,11 +1038,21 @@ class WhiteboardSystem {
                 const img = new Image();
                 img.onload = () => {
                     this.selectedBgImage = { src: ev.target.result, naturalWidth: img.naturalWidth, naturalHeight: img.naturalHeight };
-                    // auto-fill W/H if both are 0
+                    // 儲存原始長寬比
+                    this.bgNaturalRatio = img.naturalWidth / img.naturalHeight;
+                    // 預設填入 1920×1080（只在兩者皆為 0 時才用原圖尺寸作 fallback）
                     const wEl = document.getElementById('bgWidth');
                     const hEl = document.getElementById('bgHeight');
-                    if (!parseInt(wEl.value)) wEl.value = img.naturalWidth;
-                    if (!parseInt(hEl.value)) hEl.value = img.naturalHeight;
+                    const wVal = parseInt(wEl.value) || 0;
+                    const hVal = parseInt(hEl.value) || 0;
+                    if (wVal === 0 && hVal === 0) {
+                        wEl.value = 1920;
+                        hEl.value = 1080;
+                    } else if (wVal > 0 && hVal === 0 && this.bgAspectLocked) {
+                        hEl.value = Math.round(wVal / this.bgNaturalRatio);
+                    } else if (hVal > 0 && wVal === 0 && this.bgAspectLocked) {
+                        wEl.value = Math.round(hVal * this.bgNaturalRatio);
+                    }
                     this.toast(`已載入圖片  ${img.naturalWidth}×${img.naturalHeight} px`, 'info');
                 };
                 img.src = ev.target.result;
@@ -985,6 +1062,47 @@ class WhiteboardSystem {
 
         document.getElementById('bgOpacity').addEventListener('input', e => {
             document.getElementById('bgOpacityVal').textContent = e.target.value + '%';
+        });
+
+        // 鎖定長寬比按鈕切換
+        document.getElementById('bgLockRatio').addEventListener('click', () => {
+            this.bgAspectLocked = !this.bgAspectLocked;
+            const btn = document.getElementById('bgLockRatio');
+            if (this.bgAspectLocked) {
+                btn.classList.add('locked');
+                btn.title = '鎖定長寬比（點擊切換）';
+                // 鎖上時，以目前寬度重新計算高度（若有圖片比例）
+                if (this.bgNaturalRatio) {
+                    const wVal = parseInt(document.getElementById('bgWidth').value) || 0;
+                    if (wVal > 0) {
+                        document.getElementById('bgHeight').value = Math.round(wVal / this.bgNaturalRatio);
+                    }
+                }
+                this.toast('長寬比已鎖定', 'info');
+            } else {
+                btn.classList.remove('locked');
+                btn.title = '解除鎖定長寬比（點擊切換）';
+                this.toast('長寬比已解除鎖定', 'info');
+            }
+            this._updateLockIcon();
+        });
+
+        // 寬度變動 → 自動計算高度
+        document.getElementById('bgWidth').addEventListener('input', () => {
+            if (!this.bgAspectLocked || !this.bgNaturalRatio) return;
+            const wVal = parseInt(document.getElementById('bgWidth').value) || 0;
+            if (wVal > 0) {
+                document.getElementById('bgHeight').value = Math.round(wVal / this.bgNaturalRatio);
+            }
+        });
+
+        // 高度變動 → 自動計算寬度
+        document.getElementById('bgHeight').addEventListener('input', () => {
+            if (!this.bgAspectLocked || !this.bgNaturalRatio) return;
+            const hVal = parseInt(document.getElementById('bgHeight').value) || 0;
+            if (hVal > 0) {
+                document.getElementById('bgWidth').value = Math.round(hVal * this.bgNaturalRatio);
+            }
         });
 
         document.getElementById('importBgBtn').addEventListener('click', () => this.importBgImage());
