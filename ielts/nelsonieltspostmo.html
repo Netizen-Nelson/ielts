@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nelson IELTS</title>
+  <style>
+    :root {
+      --bg:#0C0D0C;--shell:#C6C7BD;--lavender:#C3A5E5;--sky:#82C8E5;
+      --salmon:#E5C3B3;--ocean:#1CCAE8;--safe:#27AE60;--teal:#0DA591;
+      --vanilla:#DBEDD8;--yellow:#E3D322;--focus:#D4FFFC;--indigo:#7849C9;
+      --special:#B3DE73;--orange:#EDA109;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    body{background:var(--bg);color:var(--shell);font-family:'Microsoft JhengHei','PingFang TC','Segoe UI',Arial,sans-serif;font-size:1.125rem;line-height:1.5;min-height:100vh}
+    .site-header{padding:44px 64px 36px;background:linear-gradient(135deg,rgba(195,165,229,0.12),rgba(28,202,232,0.08));border-bottom:1px solid rgba(195,165,229,0.22)}
+    .site-header h1{font-size:2rem;color:var(--lavender);letter-spacing:.01em;margin-bottom:8px}
+    .site-header>p{color:rgba(198,199,189,0.82);font-size:1rem}
+    .how-to{margin-top:22px;display:flex;gap:20px;flex-wrap:wrap;align-items:center}
+    .how-step{display:flex;align-items:center;gap:9px;font-size:0.9rem;color:rgba(198,199,189,0.82)}
+    .step-n{width:22px;height:22px;border-radius:50%;background:rgba(195,165,229,0.20);color:var(--lavender);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.78rem;flex-shrink:0}
+    .clue-focus{color:var(--focus);font-weight:700}
+    .clue-yellow{color:var(--yellow);font-weight:700}
+    .stats-bar{display:flex;align-items:center;gap:32px;padding:16px 64px;background:rgba(198,199,189,0.04);border-bottom:1px solid rgba(198,199,189,0.09);flex-wrap:wrap}
+    .stat{display:flex;align-items:center;gap:8px;font-size:0.9rem}
+    .slbl{color:rgba(198,199,189,0.80)}
+    .sval{color:var(--ocean);font-weight:700;font-size:1rem}
+    .prog-wrap{flex:1;min-width:200px;display:flex;align-items:center;gap:12px}
+    .prog-track{flex:1;height:5px;background:rgba(198,199,189,0.15);border-radius:3px;overflow:hidden}
+    .prog-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--teal),var(--ocean));transition:width .35s ease}
+    .prog-pct{color:var(--teal);font-size:0.85rem;font-weight:700;min-width:38px}
+    .tab-nav{display:flex;overflow-x:auto;scrollbar-width:none;padding:0 64px;border-bottom:2px solid rgba(198,199,189,0.10)}
+    .tab-nav::-webkit-scrollbar{display:none}
+    .tab-btn{padding:13px 18px;border:none;border-bottom:3px solid transparent;background:none;color:rgba(198,199,189,0.80);font-size:0.9rem;font-family:inherit;cursor:pointer;white-space:nowrap;position:relative;bottom:-2px;transition:color .2s}
+    .tab-btn:hover{color:var(--shell)}
+    .tab-btn.active{font-weight:700}
+    .tab-btn[data-t="0"].active{border-bottom-color:var(--lavender);color:var(--lavender)}
+    .tab-btn[data-t="1"].active{border-bottom-color:var(--sky);color:var(--sky)}
+    .tab-btn[data-t="2"].active{border-bottom-color:var(--salmon);color:var(--salmon)}
+    .tab-btn[data-t="3"].active{border-bottom-color:var(--teal);color:var(--teal)}
+    .tab-btn[data-t="4"].active{border-bottom-color:var(--ocean);color:var(--ocean)}
+    .tab-btn[data-t="5"].active{border-bottom-color:var(--special);color:var(--special)}
+    .tab-btn[data-t="6"].active{border-bottom-color:var(--orange);color:var(--orange)}
+    .tab-btn[data-t="4"]{display:none}
+    .tb-bdg{display:inline-block;margin-left:6px;padding:1px 7px;border-radius:12px;font-size:0.72rem;background:rgba(198,199,189,0.12)}
+    .panel{display:none;padding:40px 64px 64px}
+    .panel.active{display:block}
+    #p4{display:none!important}
+    .intro-box{padding:20px 24px;border-radius:10px;border-left:4px solid;margin-bottom:28px}
+    .intro-box h2{font-size:1.2rem;margin-bottom:8px}
+    .intro-desc{color:rgba(198,199,189,0.82);font-size:1rem;margin-bottom:12px;line-height:1.5}
+    .intro-pat{display:inline-block;padding:4px 16px;border-radius:16px;font-family:'Courier New',monospace;font-size:0.85rem;background:rgba(198,199,189,0.10);color:var(--vanilla);letter-spacing:.03em}
+    .ib0{border-color:var(--lavender);background:rgba(195,165,229,0.07)}.ih0{color:var(--lavender)}
+    .ib1{border-color:var(--sky);background:rgba(130,200,229,0.07)}.ih1{color:var(--sky)}
+    .ib2{border-color:var(--salmon);background:rgba(229,195,179,0.07)}.ih2{color:var(--salmon)}
+    .ib3{border-color:var(--teal);background:rgba(13,165,145,0.07)}.ih3{color:var(--teal)}
+    .ib4{border-color:var(--ocean);background:rgba(28,202,232,0.07)}.ih4{color:var(--ocean)}
+    .ib5{border-color:var(--special);background:rgba(179,222,115,0.07)}.ih5{color:var(--special)}
+    .ib6{border-color:var(--orange);background:rgba(237,161,9,0.07)}.ih6{color:var(--orange)}
+    .p-acts{display:flex;gap:10px;margin-bottom:26px;flex-wrap:wrap}
+    .pact{padding:7px 18px;border-radius:6px;border:1px solid;background:none;cursor:pointer;font-family:inherit;font-size:0.9rem;transition:background .18s}
+    .pact-exp{color:var(--lavender);border-color:rgba(195,165,229,0.32)}
+    .pact-exp:hover{background:rgba(195,165,229,0.12)}
+    .pact-col{color:rgba(198,199,189,0.80);border-color:rgba(198,199,189,0.22)}
+    .pact-col:hover{background:rgba(198,199,189,0.08)}
+    .cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(480px,1fr));gap:18px}
+    .card{background:rgba(198,199,189,0.06);border:1px solid rgba(198,199,189,0.13);border-radius:12px;padding:22px 24px;transition:border-color .2s,box-shadow .2s}
+    .card:hover{box-shadow:0 4px 22px rgba(0,0,0,0.45)}
+    .card.revealed{border-color:rgba(28,202,232,0.28)}
+    .card-id{font-size:0.8rem;color:rgba(198,199,189,0.80);text-transform:uppercase;letter-spacing:.07em;margin-bottom:12px}
+    .cn-phr{font-size:1.2rem;color:var(--vanilla);font-weight:500;margin-bottom:18px;line-height:1.45}
+    .rev-btn{display:inline-flex;align-items:center;gap:8px;padding:7px 18px;border-radius:6px;border:1px solid rgba(28,202,232,0.30);background:rgba(28,202,232,0.10);color:var(--ocean);cursor:pointer;font-family:inherit;font-size:0.9rem;transition:background .18s}
+    .rev-btn:hover{background:rgba(28,202,232,0.22)}
+    .ricon{display:inline-block;transition:transform .2s;font-size:0.75rem}
+    .card.revealed .ricon{transform:rotate(90deg)}
+    .card-ans{display:none;margin-top:18px;padding-top:18px;border-top:1px solid rgba(198,199,189,0.10);animation:fadeUp .22s ease}
+    .card.revealed .card-ans{display:block}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
+    .en-line{margin-bottom:14px;line-height:1.5;font-size:1.05rem}
+    .en-head{color:var(--focus);font-weight:600}
+    .en-mod{color:var(--yellow);font-weight:700}
+    .ielts-row{display:flex;align-items:flex-start;gap:10px}
+    .badge{display:inline-block;padding:3px 11px;border-radius:4px;font-size:0.78rem;font-weight:700;letter-spacing:.04em;white-space:nowrap;flex-shrink:0;margin-top:1px}
+    .bp1{background:rgba(39,174,96,0.18);color:var(--safe);border:1px solid rgba(39,174,96,0.32)}
+    .bp2{background:rgba(120,73,201,0.18);color:#B08BE5;border:1px solid rgba(120,73,201,0.32)}
+    .ielts-q{color:rgba(198,199,189,0.82);font-size:0.9rem;font-style:italic;line-height:1.45}
+    .adv-tag{display:inline-block;margin-left:8px;padding:1px 8px;border-radius:4px;font-size:0.72rem;font-weight:700;background:rgba(237,161,9,0.18);color:var(--orange);border:1px solid rgba(237,161,9,0.32);vertical-align:middle}
+    .type-legend{display:flex;gap:20px;flex-wrap:wrap;padding:16px 64px;border-top:1px solid rgba(198,199,189,0.09);background:rgba(198,199,189,0.03)}
+    .legend-item{display:flex;align-items:center;gap:8px;font-size:0.85rem;color:rgba(198,199,189,0.80)}
+    .leg-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+    @media(max-width:900px){
+      .site-header{padding:28px 20px 24px}
+      .stats-bar{padding:14px 20px}
+      .tab-nav{padding:0 20px}
+      .panel{padding:28px 20px 48px}
+      .cards-grid{grid-template-columns:1fr}
+      .type-legend{padding:14px 20px}
+    }
+</style>
+</head>
+<body>
+
+<div class="stats-bar" style="display:none;">
+  <div class="stat">
+    <span class="slbl">已翻譯</span>
+    <span class="sval" id="cnt">0</span>
+    <span class="slbl" id="totalLbl">/ 0</span>
+  </div>
+  <div class="prog-wrap">
+    <span class="slbl">整體進度</span>
+    <div class="prog-track"><div class="prog-fill" id="pFill"></div></div>
+    <span class="prog-pct" id="pPct">0%</span>
+  </div>
+</div>
+
+<nav class="tab-nav" id="tabNav"></nav>
+<div id="panels"></div>
+<div class="type-legend" id="legend"></div>
+
+<script>
+const TYPES = [{"name": "介詞片語", "en": "Prepositional Phrases", "pattern": "Noun  +  介詞（of / about / for / in / with / at）  +  (Noun Phrase)", "intro": "最常見的後位修飾結構。中文習慣把修飾語放在名詞「前面」，英文則用介詞片語接在名詞「後面」。本類型也收錄「年齡人口描述」子模式（under 35、in their late thirties 等），以及 at the heart of 這類高畫面感語塊。", "hidden": false, "cards": [{"cn": "學習第二語言的好處", "head": "the benefits", "mod": "of learning a second language", "p": 1, "q": "What do you think are the main advantages of learning a foreign language?"}, {"cn": "科技對年輕人的影響", "head": "the impact", "mod": "of technology on young people", "p": 2, "q": "Describe a change you have noticed in the world around you."}, {"cn": "對環境問題的關注", "head": "concerns", "mod": "about environmental issues", "p": 1, "q": "Are you personally concerned about environmental problems?"}, {"cn": "在大城市生活的挑戰", "head": "the challenges", "mod": "of living in a big city", "p": 1, "q": "Do you prefer living in a city or the countryside? Why?"}, {"cn": "在課堂上使用手機的規定", "head": "the rules", "mod": "about using mobile phones in class", "p": 1, "q": "Do you think students should be allowed to use phones at school?"}, {"cn": "對傳統文化的尊重", "head": "respect", "mod": "for traditional culture", "p": 2, "q": "Describe a traditional celebration or festival in your country."}, {"cn": "在高壓環境中維持心理健康的重要性", "head": "the importance", "mod": "of maintaining mental health in a high-pressure environment", "p": 2, "q": "Describe a challenge you have successfully overcome."}, {"cn": "規律運動對身體的益處", "head": "the health benefits", "mod": "of regular exercise", "p": 1, "q": "How often do you exercise, and what kind of exercise do you prefer?"}, {"cn": "年輕人對職涯選擇的困惑", "head": "the confusion", "mod": "among young people about career choices", "p": 2, "q": "Describe a difficult decision you had to make about your future."}, {"cn": "遠距工作帶來的滿足感", "head": "the satisfaction", "mod": "of working remotely", "p": 1, "q": "Do you prefer working from home or in an office?"}, {"cn": "父母在子女教育中扮演的角色", "head": "the role", "mod": "of parents in their children's education", "p": 1, "q": "How involved should parents be in their children's learning?"}, {"cn": "全球化對在地文化的衝擊", "head": "the impact", "mod": "of globalisation on local cultures", "p": 2, "q": "Describe a cultural tradition that you think is at risk of disappearing."}, {"cn": "高齡化社會對醫療體系的壓力", "head": "the pressure", "mod": "on healthcare systems from an ageing society", "p": 2, "q": "Describe a social problem that you think needs urgent attention."}, {"cn": "在異鄉生活的孤獨感", "head": "the loneliness", "mod": "of living in a foreign country", "p": 2, "q": "Describe a time when you felt lonely or homesick."}, {"cn": "網路上資訊過剩的問題", "head": "the problem", "mod": "of information overload on the internet", "p": 1, "q": "Do you think people spend too much time reading information online?"}, {"cn": "現代人對健康飲食的重視", "head": "the emphasis", "mod": "on healthy eating among modern people", "p": 1, "q": "Do you pay more attention to what you eat than you used to?"}, {"cn": "三十五歲以下的成年人", "head": "adults", "mod": "under 35", "p": 1, "q": "What do you think are the main pressures facing people your age?"}, {"cn": "三十五到四十歲之間的職業女性", "head": "professional women", "mod": "between 35 and 40", "p": 2, "q": "Describe a person who has managed career and family responsibilities well."}, {"cn": "三十歲後半的上班族", "head": "office workers", "mod": "in their late thirties", "p": 2, "q": "Describe a time in your life when you felt particularly under pressure."}, {"cn": "六十歲以上的長者", "head": "residents", "mod": "aged 60 and above", "p": 2, "q": "Describe an elderly person who has had a positive impact on you."}, {"cn": "超過退休年齡仍繼續工作的人", "head": "people", "mod": "beyond retirement age who continue to work", "p": 1, "q": "Do you think the retirement age should be raised in your country?"}, {"cn": "位居台灣飲食文化核心的夜市傳統", "head": "the night market tradition", "mod": "at the heart of Taiwanese food culture", "p": 2, "q": "Describe a cultural tradition that is important in your country."}]}, {"name": "現在分詞片語", "en": "Present Participial Phrases", "pattern": "Noun  +  V-ing  +  (phrase)", "intro": "以動詞的現在分詞（V-ing）開頭，放在名詞後面，表示「主動進行的動作或狀態」。本類型新增 stemming from，可用來描述問題或現象的根源，在口說中展示分析能力相當有效。", "hidden": false, "cards": [{"cn": "住在偏遠地區的人", "head": "people", "mod": "living in remote areas", "p": 1, "q": "Do you think rural life is better or worse than city life?"}, {"cn": "花大量時間在社交媒體上的年輕人", "head": "young people", "mod": "spending a lot of time on social media", "p": 1, "q": "How much time do you spend on social media each day?"}, {"cn": "正在快速改變我們溝通方式的科技", "head": "technology", "mod": "rapidly changing the way we communicate", "p": 2, "q": "Describe a piece of technology that has changed your daily life."}, {"cn": "在國外工作的台灣人", "head": "Taiwanese people", "mod": "working abroad", "p": 2, "q": "Describe a person who has had a positive influence on your career."}, {"cn": "每天步行上班的通勤族", "head": "commuters", "mod": "walking to work every day", "p": 1, "q": "How do you usually get to work or school?"}, {"cn": "在公園晨跑的老年人", "head": "elderly people", "mod": "jogging in the park in the morning", "p": 1, "q": "Do older people in your country tend to keep active?"}, {"cn": "坐在我旁邊的陌生人", "head": "the stranger", "mod": "sitting next to me", "p": 2, "q": "Describe a person you met unexpectedly and found interesting."}, {"cn": "在難民營照顧兒童的志工", "head": "volunteers", "mod": "caring for children in refugee camps", "p": 2, "q": "Describe a time when you or someone you know helped others in need."}, {"cn": "深夜在辦公室加班的員工", "head": "employees", "mod": "working overtime at the office late at night", "p": 1, "q": "Do you think people in your country work too many hours?"}, {"cn": "試圖說服孩子吃蔬菜的父母", "head": "parents", "mod": "trying to convince their children to eat vegetables", "p": 1, "q": "How do children develop healthy eating habits in your country?"}, {"cn": "為氣候變遷感到憂慮的科學家", "head": "scientists", "mod": "expressing deep concern about climate change", "p": 2, "q": "Describe an environmental issue that worries you personally."}, {"cn": "正在嘗試各種新興趣的青少年", "head": "teenagers", "mod": "exploring a variety of new hobbies", "p": 1, "q": "What hobbies are popular among young people in your country?"}, {"cn": "不斷挑戰自身極限的馬拉松選手", "head": "marathon runners", "mod": "pushing themselves to their physical limits", "p": 2, "q": "Describe a sportsperson or athlete you admire."}, {"cn": "在古城街道上漫步的遊客", "head": "tourists", "mod": "strolling through the streets of the old city", "p": 2, "q": "Describe a city or town you visited that left a strong impression on you."}, {"cn": "在廚房裡跟著媽媽學做菜的孩子", "head": "a child", "mod": "learning to cook alongside their mother in the kitchen", "p": 2, "q": "Describe a skill you learned from a family member."}, {"cn": "在咖啡廳角落獨自閱讀的女子", "head": "a woman", "mod": "reading alone in the corner of a café", "p": 2, "q": "Describe a person you observed in a public place who caught your attention."}, {"cn": "根源於貧富不均的社會問題", "head": "social problems", "mod": "stemming from wealth inequality", "p": 2, "q": "Describe a social issue in your country that you think needs urgent attention."}, {"cn": "由長期過勞引發的心理健康困境", "head": "mental health struggles", "mod": "stemming from long-term overwork", "p": 1, "q": "Do you think people today are under more pressure than previous generations?"}, {"cn": "源自文化差異的溝通隔閡", "head": "communication barriers", "mod": "stemming from cultural differences", "p": 2, "q": "Describe an experience you had in a different cultural environment."}]}, {"name": "過去分詞片語", "en": "Past Participial Phrases", "pattern": "Noun  +  V-ed / Past Participle  +  (phrase)", "intro": "以動詞的過去分詞開頭，放在名詞後面，表示「被動或已完成的動作」。描述事物的來源、製造方式或受到的影響時，這個結構格外實用。", "hidden": false, "cards": [{"cn": "在海外製造的產品", "head": "products", "mod": "manufactured overseas", "p": 1, "q": "Do you prefer buying locally made goods or imported products?"}, {"cn": "由政府資助的公共教育計畫", "head": "public education programmes", "mod": "funded by the government", "p": 1, "q": "Do you think governments should pay for university education?"}, {"cn": "受家人影響而選擇的職業", "head": "a career", "mod": "chosen under the influence of family members", "p": 2, "q": "Describe a job you would like to have in the future."}, {"cn": "被廣大年輕族群使用的應用程式", "head": "apps", "mod": "widely used by younger generations", "p": 2, "q": "Describe an app you find particularly useful in your daily life."}, {"cn": "在童年時期學到的珍貴技能", "head": "valuable skills", "mod": "learned during childhood", "p": 2, "q": "Describe an important skill that you have."}, {"cn": "由本地藝術家創作的街頭壁畫", "head": "street murals", "mod": "created by local artists", "p": 2, "q": "Describe a piece of art or a creative work that impressed you."}, {"cn": "在颱風中受損的基礎設施", "head": "infrastructure", "mod": "severely damaged during the typhoon", "p": 2, "q": "Describe a time when bad weather seriously affected your plans."}, {"cn": "長期被媒體忽視的社會問題", "head": "social issues", "mod": "long ignored by the media", "p": 2, "q": "Describe an important problem in your country that needs more attention."}, {"cn": "由父母親手縫製的衣物", "head": "clothes", "mod": "hand-sewn by my parents", "p": 2, "q": "Describe an object that has special sentimental value to you."}, {"cn": "被選進國家代表隊的年輕球員", "head": "a young player", "mod": "selected for the national team", "p": 2, "q": "Describe an achievement that you are proud of."}, {"cn": "歷經百年歷史而被保存下來的建築", "head": "a building", "mod": "preserved for over a century as a historical landmark", "p": 1, "q": "Do you think old buildings should be preserved or demolished?"}, {"cn": "由社區居民共同打造的公共空間", "head": "a public space", "mod": "built by local community members", "p": 2, "q": "Describe a place in your local area that you enjoy visiting."}, {"cn": "被翻譯成三十多種語言的小說", "head": "a novel", "mod": "translated into more than thirty languages", "p": 2, "q": "Describe a book that made a strong impression on you."}, {"cn": "因預算削減而關閉的圖書館", "head": "a library", "mod": "closed down due to budget cuts", "p": 2, "q": "Describe a facility in your area that you think should be improved."}, {"cn": "由雙親細心陪伴長大的孩子", "head": "a child", "mod": "raised with the constant support of both parents", "p": 1, "q": "How important do you think parental involvement is in raising children?"}, {"cn": "受到國際媒體廣泛報導的賽事", "head": "a competition", "mod": "widely covered by international media", "p": 2, "q": "Describe a memorable sports event you have watched."}]}, {"name": "不定詞片語", "en": "Infinitive Phrases", "pattern": "Noun  +  to + V  +  (phrase)", "intro": "以「to + 原形動詞」開頭，接在名詞後面，常表示用途、目的或某種能力。在討論解決方案或最佳方法時，這個結構既簡潔又具說服力。", "hidden": false, "cards": [{"cn": "學習新語言的最佳方式", "head": "the best way", "mod": "to learn a new language", "p": 1, "q": "What do you think is the most effective way to learn a foreign language?"}, {"cn": "改善工作與生活平衡的機會", "head": "the opportunity", "mod": "to improve work-life balance", "p": 2, "q": "Describe a change you would like to make to your lifestyle."}, {"cn": "在職場取得成功的能力", "head": "the ability", "mod": "to succeed in the workplace", "p": 2, "q": "Describe an important skill that is needed for a successful career."}, {"cn": "在比賽中脫穎而出的渴望", "head": "the desire", "mod": "to stand out in a competition", "p": 2, "q": "Describe a competition you have taken part in."}, {"cn": "養成良好習慣的努力", "head": "the effort", "mod": "to develop good habits", "p": 1, "q": "Do you try to maintain any healthy habits in your daily life?"}, {"cn": "讓孩子親近大自然的方式", "head": "ways", "mod": "to expose children to the natural world", "p": 2, "q": "Describe a place in nature that you enjoy visiting."}, {"cn": "與遠距家人保持聯繫的方法", "head": "ways", "mod": "to keep in touch with family members who live far away", "p": 1, "q": "How do you stay in contact with family members?"}, {"cn": "解決交通擁塞問題的計畫", "head": "a plan", "mod": "to tackle the problem of traffic congestion", "p": 2, "q": "Describe a problem in your city or town that you would like to see solved."}, {"cn": "在壓力下保持冷靜的能力", "head": "the ability", "mod": "to remain calm under pressure", "p": 2, "q": "Describe an important quality that a person needs in your job."}, {"cn": "減少塑膠廢棄物的決心", "head": "the determination", "mod": "to reduce plastic waste", "p": 2, "q": "Describe something you do to help the environment."}, {"cn": "找到熱情與工作之間平衡的挑戰", "head": "the challenge", "mod": "to find a balance between passion and work", "p": 2, "q": "Describe a time when you had to make a difficult choice about your career."}, {"cn": "照顧年邁父母的責任感", "head": "the sense of responsibility", "mod": "to care for ageing parents", "p": 1, "q": "Do you think adult children should live near or with their elderly parents?"}, {"cn": "走訪全球各地博物館的夢想", "head": "the dream", "mod": "to visit museums all around the world", "p": 2, "q": "Describe a place you have always wanted to visit."}, {"cn": "打破外語學習瓶頸的決心", "head": "the determination", "mod": "to break through the barriers of learning a foreign language", "p": 2, "q": "Describe a personal challenge you have successfully overcome."}, {"cn": "對社區做出更多貢獻的渴望", "head": "the desire", "mod": "to contribute more to the local community", "p": 2, "q": "Describe a time when you helped someone or did something for the community."}, {"cn": "將技術才能轉化為職業的夢想", "head": "the dream", "mod": "to turn a technical talent into a full-time career", "p": 2, "q": "Describe a hobby or interest that you hope to pursue professionally."}]}, {"name": "關係子句", "en": "Relative Clauses", "pattern": "Noun  +  who / which / that / where / when  +  Clause", "intro": "關係子句是後位修飾中最重要的一環。", "hidden": true, "cards": [{"cn": "我成長的城市", "head": "the city", "mod": "where I grew up", "p": 2, "q": "Describe a place that holds a special meaning for you."}, {"cn": "改變了我人生觀的那本書", "head": "the book", "mod": "that completely changed my outlook on life", "p": 2, "q": "Describe a book that has had a significant impact on you."}, {"cn": "激勵我努力學習的老師", "head": "the teacher", "mod": "who inspired me to work hard", "p": 2, "q": "Describe a person who has had a positive influence on your life."}, {"cn": "科技改變人際溝通的方式", "head": "the way", "mod": "in which technology has changed interpersonal communication", "p": 1, "q": "How has technology changed the way people communicate with each other?"}, {"cn": "至今讓我印象最深的一次旅行", "head": "the trip", "mod": "that left the deepest impression on me", "p": 2, "q": "Describe a journey that you will never forget."}, {"cn": "讓我感到驕傲的那項成就", "head": "the achievement", "mod": "that made me feel most proud of myself", "p": 2, "q": "Describe something you have accomplished that you are proud of."}, {"cn": "鄰居向我推薦的那家餐廳", "head": "the restaurant", "mod": "that my neighbour recommended to me", "p": 2, "q": "Describe a restaurant or cafe that you enjoy going to."}, {"cn": "我的家人每年都會回去探訪的小村莊", "head": "the small village", "mod": "that my family returns to visit every year", "p": 2, "q": "Describe a place you visit regularly with your family."}]}, {"name": "形容詞片語", "en": "Adjective Phrases", "pattern": "Noun  +  Adjective  +  (介詞補語)", "intro": "直接用形容詞（或形容詞＋介詞補語）放在名詞後面。常見搭配如 rich in、free from、famous for、capable of、familiar with、prone to、enthusiastic about 等。標有「進階」的語塊字彙較正式，但說出來 GRA 加分明顯。", "hidden": false, "cards": [{"cn": "富含維生素C的食物", "head": "food", "mod": "rich in vitamin C", "p": 1, "q": "Do you pay attention to what you eat? Why?"}, {"cn": "對歷史感興趣的學生", "head": "students", "mod": "interested in history", "p": 1, "q": "What was your favourite subject at school?"}, {"cn": "免於壓力的生活方式", "head": "a lifestyle", "mod": "free from stress", "p": 2, "q": "Describe a change you would like to make to your daily routine."}, {"cn": "渴望學習新知的人", "head": "people", "mod": "eager to learn new things", "p": 1, "q": "Do you think it is important to keep learning throughout your life?"}, {"cn": "以美食文化著稱的城市", "head": "a city", "mod": "famous for its food culture", "p": 2, "q": "Describe a city you have visited that made a strong impression on you."}, {"cn": "在日常生活中相當實用的技能", "head": "a skill", "mod": "useful in everyday life", "p": 2, "q": "Describe an important skill that you have learned."}, {"cn": "對周遭世界充滿好奇心的孩子", "head": "children", "mod": "curious about the world around them", "p": 1, "q": "Do you think curiosity is an important quality in children?"}, {"cn": "天然資源相當豐富的國家", "head": "a country", "mod": "rich in natural resources", "p": 1, "q": "Do you think your country's natural resources are well managed?"}, {"cn": "人人皆可獲得的學習機會", "head": "learning opportunities", "mod": "available to everyone", "p": 2, "q": "Describe an opportunity that you wish you had taken advantage of."}, {"cn": "非常適合靜心放鬆的地方", "head": "a place", "mod": "perfect for peace and relaxation", "p": 2, "q": "Describe a place where you like to go when you need to unwind."}, {"cn": "充分意識到自身行為後果的人", "head": "someone", "mod": "fully aware of the consequences of their actions", "p": 2, "q": "Describe a decision you made that required careful thought."}, {"cn": "對幼童完全安全的玩具", "head": "a toy", "mod": "completely safe for young children", "p": 1, "q": "Do you think manufacturers should be held responsible for product safety?"}, {"cn": "台灣獨有的飲食文化體驗", "head": "a food culture experience", "mod": "unique to Taiwan", "p": 2, "q": "Describe a custom or tradition that is special to your culture."}, {"cn": "適合內向者發揮所長的工作", "head": "a job", "mod": "perfectly suitable for introverts", "p": 2, "q": "Describe a job that you think would suit your personality well."}, {"cn": "與當代年輕人息息相關的議題", "head": "a topic", "mod": "highly relevant to young people today", "p": 1, "q": "What topics do young people in your country tend to be most concerned about?"}, {"cn": "有能力帶領整個團隊的人", "head": "a person", "mod": "capable of leading an entire team", "p": 2, "q": "Describe a leader or manager whom you admire."}, {"cn": "熟悉當地習俗與傳統的導遊", "head": "a tour guide", "mod": "familiar with local customs and traditions", "p": 2, "q": "Describe a helpful person you met while travelling."}, {"cn": "對最新科技趨勢相當熟悉的年輕工程師", "head": "a young engineer", "mod": "familiar with the latest technology trends", "p": 2, "q": "Describe a person whose career or skills you admire."}, {"cn": "容易感到焦慮的現代人", "head": "modern people", "mod": "prone to anxiety", "p": 1, "q": "Do you think modern life makes people more anxious than before?", "adv": true}, {"cn": "容易衝動消費的消費者", "head": "consumers", "mod": "prone to impulse buying", "p": 1, "q": "Do you think advertising influences people to buy things they do not need?", "adv": true}, {"cn": "對培育年輕人才充滿熱忱的教練", "head": "a coach", "mod": "enthusiastic about developing young talent", "p": 2, "q": "Describe a person who has had a significant positive impact on your development."}, {"cn": "對嘗試各種料理風格充滿熱情的廚師", "head": "a chef", "mod": "enthusiastic about experimenting with different cooking styles", "p": 2, "q": "Describe a person who has an impressive skill or talent."}]}, {"name": "形容詞化過去分詞", "en": "Adjectival Past Participial Chunks", "pattern": "Noun  +  located / known / filled / linked / devoted ...  +  (介詞補語)", "intro": "過去分詞高度「形容詞化」後形成的語塊，是描述地點、特質、用途與關聯性的利器。按語義分七組：位置、著稱、充滿、設計目的、相連相關、致力投入、其他高頻型。建議以「組」為單位記憶。", "hidden": false, "cards": [{"cn": "位於市中心的公園", "head": "parks", "mod": "located in the heart of the city", "p": 2, "q": "Describe a place in your city that you enjoy visiting."}, {"cn": "俯瞰海灣的飯店", "head": "a hotel", "mod": "situated overlooking the bay", "p": 2, "q": "Describe a hotel or accommodation that impressed you."}, {"cn": "隱身山丘之間的小村落", "head": "a small village", "mod": "nestled among the hills", "p": 2, "q": "Describe a quiet or peaceful place you have visited."}, {"cn": "矗立在懸崖頂端的廟宇", "head": "a temple", "mod": "perched on the edge of a cliff", "p": 2, "q": "Describe a place with cultural or historical significance that you have visited."}, {"cn": "以夜市文化聞名的城市", "head": "a city", "mod": "known for its vibrant night market culture", "p": 2, "q": "Describe a city you have visited that made a strong impression on you."}, {"cn": "被廣泛認可為頂尖研究機構的大學", "head": "a university", "mod": "recognized as a leading research institution", "p": 1, "q": "What do you think makes a good university?"}, {"cn": "被視為台灣最具代表性發明之一的珍珠奶茶", "head": "bubble tea", "mod": "regarded as one of Taiwan's most iconic inventions", "p": 2, "q": "Describe something from your culture that you are particularly proud of."}, {"cn": "以傳統藍染工藝著稱的工坊", "head": "a workshop", "mod": "celebrated for its traditional indigo dyeing craft", "p": 2, "q": "Describe a traditional craft or art form that you find interesting."}, {"cn": "充滿古董奇珍的跳蚤市場", "head": "a flea market", "mod": "filled with antiques and curiosities", "p": 2, "q": "Describe a place you enjoy visiting in your free time."}, {"cn": "週末擠滿觀光客的老街", "head": "an old street", "mod": "packed with tourists at the weekend", "p": 1, "q": "Do you think tourism has a positive or negative effect on local communities?"}, {"cn": "四周環繞稻田的農舍", "head": "a farmhouse", "mod": "surrounded by rice paddies", "p": 2, "q": "Describe a place in the countryside that you have visited."}, {"cn": "覆蓋著青苔的石板古道", "head": "stone pathways", "mod": "covered with moss", "p": 2, "q": "Describe a historical place that left a lasting impression on you."}, {"cn": "專為高齡者設計的健身設施", "head": "fitness facilities", "mod": "designed for elderly users", "p": 1, "q": "Do you think cities do enough to meet the needs of elderly people?"}, {"cn": "為初學者量身打造的語言課程", "head": "a language course", "mod": "tailored for complete beginners", "p": 1, "q": "What do you think is the most effective way to learn a foreign language?"}, {"cn": "為快速通勤而建設的捷運系統", "head": "a metro system", "mod": "built for fast urban commuting", "p": 2, "q": "Describe a change to public transport in your city that you would like to see."}, {"cn": "專為減少青少年失業而推出的計畫", "head": "a programme", "mod": "aimed at reducing youth unemployment", "p": 2, "q": "Describe a social problem that you think the government should do more to address."}, {"cn": "與全球頂尖大學建立合作的研究中心", "head": "a research centre", "mod": "connected to leading universities worldwide", "p": 2, "q": "Describe an organisation or institution that you admire."}, {"cn": "被認為與久坐生活方式密切相關的健康問題", "head": "health problems", "mod": "linked to a sedentary lifestyle", "p": 1, "q": "Do you think people today are less physically active than they used to be?"}, {"cn": "常與高壓工作環境連結在一起的身心疾病", "head": "illnesses", "mod": "often associated with a high-pressure work environment", "p": 2, "q": "Describe a health-related change you have made or would like to make to your lifestyle."}, {"cn": "畢生致力於環境保護的科學家", "head": "a scientist", "mod": "devoted to environmental conservation", "p": 2, "q": "Describe a person you admire who works to make the world a better place."}, {"cn": "全心投入社區服務的志工組織", "head": "a volunteer organisation", "mod": "dedicated to community service", "p": 2, "q": "Describe a volunteer activity you have participated in or would like to try."}, {"cn": "致力於永續發展的企業", "head": "a company", "mod": "committed to sustainable development", "p": 1, "q": "Do you think businesses have a responsibility to be environmentally friendly?"}, {"cn": "配備最新醫療設備的診所", "head": "a clinic", "mod": "equipped with state-of-the-art medical equipment", "p": 2, "q": "Describe a healthcare facility or service that you think is particularly impressive."}, {"cn": "面臨沉重學業壓力的學生", "head": "students", "mod": "faced with enormous academic pressure", "p": 1, "q": "Do you think students today are under too much pressure to perform academically?"}, {"cn": "對孩子過度使用螢幕感到憂慮的父母", "head": "parents", "mod": "worried about their children's excessive screen time", "p": 1, "q": "Do you think parents should limit the amount of time children spend on screens?"}]}];
+
+const DOT_COLORS = [
+  'var(--lavender)','var(--sky)','var(--salmon)',
+  'var(--teal)','var(--ocean)','var(--special)','var(--orange)'
+];
+const TOTAL = TYPES.filter(t => !t.hidden).reduce((s,t) => s + t.cards.length, 0);
+
+function buildUI() {
+  const tabNav = document.getElementById('tabNav');
+  const panels = document.getElementById('panels');
+  const legend = document.getElementById('legend');
+  document.getElementById('totalLbl').textContent = '/ ' + TOTAL;
+
+  TYPES.forEach((type, ti) => {
+    const btn = document.createElement('button');
+    btn.className = 'tab-btn';
+    btn.dataset.t = ti;
+    if (type.hidden) btn.style.display = 'none';
+    btn.innerHTML = `${type.name}<span class="tb-bdg">${type.cards.length}</span>`;
+    btn.onclick = () => switchTab(ti);
+    tabNav.appendChild(btn);
+
+    const sec = document.createElement('section');
+    sec.className = 'panel';
+    sec.id = `p${ti}`;
+    if (type.hidden) sec.style.display = 'none';
+    sec.innerHTML = `
+      <div class="intro-box ib${ti}">
+        <h2 class="ih${ti}">Type ${ti+1}&ensp;${type.name}
+          <span style="font-size:.84em;font-weight:400;color:rgba(198,199,189,0.82)">— ${type.en}</span>
+        </h2>
+        <p class="intro-desc">${type.intro}</p>
+        <code class="intro-pat">${type.pattern}</code>
+      </div>
+      <div class="p-acts">
+        <button class="pact pact-exp" data-pi="${ti}">▼ 全部展開</button>
+        <button class="pact pact-col" data-pi="${ti}">▲ 全部收合</button>
+      </div>
+      <div class="cards-grid" id="g${ti}"></div>
+    `;
+    panels.appendChild(sec);
+
+    const grid = document.getElementById(`g${ti}`);
+    type.cards.forEach((c, ci) => {
+      const d = document.createElement('div');
+      d.className = 'card';
+      d.dataset.pi = ti;
+      d.dataset.hidden = type.hidden ? 'true' : 'false';
+      const advTag = c.adv ? '<span class="adv-tag">進階</span>' : '';
+      d.innerHTML = `
+        <div class="card-id">${type.name} &middot; ${String(ci+1).padStart(2,'0')}${advTag}</div>
+        <div class="cn-phr">${c.cn}</div>
+        <button class="rev-btn"><span class="ricon">▶</span><span class="rlbl">查看英文</span></button>
+        <div class="card-ans">
+          <div class="en-line">
+            <span class="en-head">${c.head}&thinsp;</span><span class="en-mod">${c.mod}</span>
+          </div>
+          <div class="ielts-row">
+            <span class="badge bp${c.p}">Part ${c.p}</span>
+            <span class="ielts-q">"${c.q}"</span>
+          </div>
+        </div>
+      `;
+      d.querySelector('.rev-btn').onclick = () => {
+        const on = d.classList.toggle('revealed');
+        d.querySelector('.rlbl').textContent = on ? '收合' : '查看英文';
+        updateStats();
+      };
+      grid.appendChild(d);
+    });
+
+    if (!type.hidden) {
+      const li = document.createElement('div');
+      li.className = 'legend-item';
+      li.innerHTML = `<span class="leg-dot" style="background:${DOT_COLORS[ti]}"></span>Type ${ti+1} ${type.name}`;
+      legend.appendChild(li);
+    }
+  });
+
+  legend.insertAdjacentHTML('beforeend', `
+    <div class="legend-item" style="margin-left:auto;">
+      <span class="badge bp1">Part 1</span><span style="margin-left:6px;">一般問答</span>
+    </div>
+    <div class="legend-item">
+      <span class="badge bp2">Part 2</span><span style="margin-left:6px;">個人描述</span>
+    </div>
+  `);
+
+  const firstVisible = TYPES.findIndex(t => !t.hidden);
+  if (firstVisible >= 0) switchTab(firstVisible);
+}
+
+document.addEventListener('click', e => {
+  const btn = e.target.closest('.pact');
+  if (!btn) return;
+  const pi = btn.dataset.pi;
+  const isExp = btn.classList.contains('pact-exp');
+  document.querySelectorAll(`.card[data-pi="${pi}"]`).forEach(c => {
+    c.classList.toggle('revealed', isExp);
+    c.querySelector('.rlbl').textContent = isExp ? '收合' : '查看英文';
+  });
+  updateStats();
+});
+
+function switchTab(ti) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  const btn = document.querySelector(`.tab-btn[data-t="${ti}"]`);
+  const panel = document.getElementById(`p${ti}`);
+  if (btn) btn.classList.add('active');
+  if (panel && !TYPES[ti].hidden) panel.classList.add('active');
+}
+
+function updateStats() {
+  const done = [...document.querySelectorAll('.card.revealed')]
+    .filter(c => c.dataset.hidden !== 'true').length;
+  document.getElementById('cnt').textContent = done;
+  const pct = Math.round(done / TOTAL * 100);
+  document.getElementById('pFill').style.width = pct + '%';
+  document.getElementById('pPct').textContent = pct + '%';
+}
+
+buildUI();
+
+</script>
+</body>
+</html>
