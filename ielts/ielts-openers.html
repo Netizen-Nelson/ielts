@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>雅思口說Sentence Openers</title>
+  <style>
+    :root {
+      --bg:#0C0D0C;--shell:#C6C7BD;--lavender:#C3A5E5;--sky:#82C8E5;
+      --salmon:#E5C3B3;--ocean:#1CCAE8;--safe:#27AE60;--teal:#0DA591;
+      --vanilla:#DBEDD8;--yellow:#E3D322;--focus:#D4FFFC;
+      --special:#B3DE73;--orange:#EDA109;--indigo:#7849C9;
+      --pink:#FF91D7;--warning:#E6374B;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    body{background:var(--bg);color:var(--shell);font-family:'Microsoft JhengHei','PingFang TC','Segoe UI',Arial,sans-serif;font-size:1.125rem;line-height:1.5;min-height:100vh}
+
+    .header{padding:44px 64px 36px;background:linear-gradient(135deg,rgba(195,165,229,0.12),rgba(28,202,232,0.08));border-bottom:1px solid rgba(195,165,229,0.22)}
+    .header h1{font-size:1.8rem;color:var(--lavender);margin-bottom:10px}
+    .header p{color:rgba(198,199,189,0.82);font-size:1rem;max-width:700px;line-height:1.5}
+    .clue-y{color:var(--yellow);font-weight:700}
+    .clue-f{color:var(--focus);font-weight:700}
+
+    .stats-bar{display:flex;align-items:center;gap:32px;padding:14px 64px;background:rgba(198,199,189,0.04);border-bottom:1px solid rgba(198,199,189,0.09);flex-wrap:wrap}
+    .stat{display:flex;align-items:center;gap:8px;font-size:0.9rem}
+    .slbl{color:rgba(198,199,189,0.80)}
+    .sval{color:var(--ocean);font-weight:700}
+    .prog-wrap{flex:1;min-width:180px;display:flex;align-items:center;gap:12px}
+    .prog-track{flex:1;height:5px;background:rgba(198,199,189,0.15);border-radius:3px;overflow:hidden}
+    .prog-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--teal),var(--ocean));transition:width .35s ease}
+    .prog-pct{color:var(--teal);font-size:0.85rem;font-weight:700;min-width:36px}
+
+    .legend{display:flex;gap:10px;flex-wrap:wrap;padding:14px 64px;border-bottom:1px solid rgba(198,199,189,0.09)}
+    .leg-item{display:flex;align-items:center;gap:6px;font-size:0.82rem;color:rgba(198,199,189,0.78)}
+    .leg-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(520px,1fr));gap:20px;padding:40px 64px 64px}
+
+    .card{background:rgba(198,199,189,0.06);border:1px solid rgba(198,199,189,0.13);border-radius:12px;padding:24px;transition:border-color .2s,box-shadow .2s}
+    .card:hover{box-shadow:0 4px 22px rgba(0,0,0,0.45)}
+    .card.revealed{border-color:rgba(28,202,232,0.22)}
+
+    .card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:14px}
+    .type-badge{display:inline-block;padding:3px 12px;border-radius:20px;font-size:0.78rem;font-weight:700;white-space:nowrap;flex-shrink:0}
+    .part-badge{display:inline-block;padding:3px 10px;border-radius:4px;font-size:0.78rem;font-weight:700;white-space:nowrap;flex-shrink:0}
+    .bp1{background:rgba(39,174,96,0.18);color:var(--safe);border:1px solid rgba(39,174,96,0.32)}
+    .bp2{background:rgba(120,73,201,0.18);color:#B08BE5;border:1px solid rgba(120,73,201,0.32)}
+    .bp3{background:rgba(28,202,232,0.18);color:var(--ocean);border:1px solid rgba(28,202,232,0.32)}
+
+    .question{font-size:0.95rem;color:var(--vanilla);font-style:italic;margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid rgba(198,199,189,0.10)}
+
+    .label{font-size:0.76rem;letter-spacing:.08em;text-transform:uppercase;color:rgba(198,199,189,0.50);margin-bottom:7px}
+
+    .plain-block{margin-bottom:16px}
+    .plain-cn{color:rgba(198,199,189,0.65);font-size:1rem;margin-bottom:3px}
+    .plain-en{color:rgba(198,199,189,0.45);font-size:0.9rem;font-style:italic}
+
+    .rev-btn{display:inline-flex;align-items:center;gap:8px;padding:7px 18px;border-radius:6px;border:1px solid rgba(28,202,232,0.30);background:rgba(28,202,232,0.10);color:var(--ocean);cursor:pointer;font-family:inherit;font-size:0.9rem;transition:background .18s}
+    .rev-btn:hover{background:rgba(28,202,232,0.22)}
+    .ricon{display:inline-block;transition:transform .2s;font-size:0.75rem}
+    .card.revealed .ricon{transform:rotate(90deg)}
+
+    .opener-block{display:none;margin-top:18px;padding-top:16px;border-top:1px solid rgba(198,199,189,0.10);animation:fadeUp .22s ease}
+    .card.revealed .opener-block{display:block}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
+
+    .full-cn{color:var(--vanilla);font-size:1rem;margin-bottom:12px;line-height:1.55}
+    .en-sentence{font-size:1.05rem;line-height:1.6;margin-bottom:10px}
+    .en-opener{color:var(--yellow);font-weight:700}
+    .en-main{color:var(--focus)}
+    .pattern-note{display:inline-block;padding:3px 14px;border-radius:14px;font-family:'Courier New',monospace;font-size:0.8rem;background:rgba(198,199,189,0.08);color:rgba(198,199,189,0.65);letter-spacing:.03em}
+
+    @media(max-width:900px){
+      .header{padding:28px 20px 24px}
+      .stats-bar{padding:12px 20px}
+      .legend{padding:12px 20px}
+      .grid{padding:24px 20px 48px;grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <h1>一句直白簡短的回答，加上引子之後，GRA 立刻不同</h1>
+</div>
+
+<div class="stats-bar" style="display: none;">
+  <div class="stat"><span class="slbl">已練習</span><span class="sval" id="cnt">0</span><span class="slbl" id="tot">/ 0</span></div>
+  <div class="prog-wrap">
+    <span class="slbl">進度</span>
+    <div class="prog-track"><div class="prog-fill" id="pFill"></div></div>
+    <span class="prog-pct" id="pPct">0%</span>
+  </div>
+</div>
+
+<div class="legend" id="legend"></div>
+<div class="grid" id="grid"></div>
+
+	<div>偽裝成考生高分心得文的廣告，判斷方式：一定會提到哪位家教或補習班</div>
+    <div style="text-align:center;padding:12px">
+      <a href="https://www.youtube.com/@NelsonIELTS" target="_blank" rel="noopener"
+         style="display:inline-flex;align-items:center;gap:10px;
+                padding:13px 28px;border-radius:9px;text-decoration:none;
+                background:#FF0000;color:#fff;
+                font-family:'Segoe UI',system-ui,sans-serif;
+                font-size:1rem;font-weight:700;
+                transition:opacity .20s"
+         onmouseover="this.style.opacity='.9'"
+         onmouseout="this.style.opacity='1'">
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="white">
+          <path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.6 12 3.6 12 3.6s-7.5 0-9.4.5A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8zM9.7 15.5V8.5l6.3 3.5-6.3 3.5z"/>
+        </svg>
+        前往 Nelson IELTS 頻道
+      </a>
+    </div>
+	
+<script>
+const CARDS = [{"type": "身份型", "pattern": "As a ... ,", "part": 1, "q": "Do you exercise regularly?", "plain_cn": "我沒時間去健身房。", "plain_en": "I don't have time for the gym.", "opener": "As a store manager with a hectic schedule,", "main_en": "I rarely find time for a proper workout.", "full_cn": "身為時程排得很滿的店長，我很少能好好去健身。", "color": "#C3A5E5", "bg": "rgba(195,165,229,0.15)"}, {"type": "對比型", "pattern": "Unlike ... ,", "part": 1, "q": "Do you prefer spending time alone or with others?", "plain_cn": "我比較喜歡獨處。", "plain_en": "I prefer being alone.", "opener": "Unlike most of my friends who are quite outgoing,", "main_en": "I genuinely need time alone to recharge.", "full_cn": "和我大多數個性外向的朋友不同，我真的需要獨處才能恢復精力。", "color": "#82C8E5", "bg": "rgba(130,200,229,0.15)"}, {"type": "背景型", "pattern": "For someone who ... ,", "part": 3, "q": "Do you think people read less nowadays?", "plain_cn": "對，大家都太忙了。", "plain_en": "Yes, people are just too busy.", "opener": "For someone who grew up surrounded by books,", "main_en": "watching reading become something people squeeze in between notifications is hard to accept.", "full_cn": "對一個從小被書包圍長大的人來說，看著閱讀變成人們擠出來的消遣，實在很難接受。", "color": "#0DA591", "bg": "rgba(13,165,145,0.15)"}, {"type": "讓步型", "pattern": "Even though ... ,", "part": 3, "q": "Is social media good or bad for young people?", "plain_cn": "我覺得社群媒體有好有壞。", "plain_en": "I think social media has both good and bad sides.", "opener": "Even though I use social media every day myself,", "main_en": "I find it hard to ignore the effect it has on younger people's attention spans.", "full_cn": "就算我自己每天都在用社群媒體，我還是很難忽視它對年輕人注意力的影響。", "color": "#E5C3B3", "bg": "rgba(229,195,179,0.15)"}, {"type": "經驗型", "pattern": "Coming from ... ,", "part": 3, "q": "Is it important to learn a foreign language?", "plain_cn": "對，學外語對工作有幫助。", "plain_en": "Yes, learning a foreign language is helpful for work.", "opener": "Coming from a background working at a foreign company,", "main_en": "I'd say language skills often determine the outcome at the interview stage.", "full_cn": "有在外商公司工作的經驗，我會說語言能力在面試階段往往就決定了輸贏。", "color": "#EDA109", "bg": "rgba(237,161,9,0.15)"}, {"type": "取代型", "pattern": "Instead of ... ,", "part": 1, "q": "How do you usually spend your free time?", "plain_cn": "我在家看電視。", "plain_en": "I watch TV at home.", "opener": "Instead of spending hours in front of the TV like I used to,", "main_en": "I've started taking evening walks around my neighbourhood.", "full_cn": "不像以前那樣在電視前面待好幾個小時，我現在開始在晚上到附近散步了。", "color": "#B3DE73", "bg": "rgba(179,222,115,0.15)"}, {"type": "延伸型", "pattern": "Apart from ... ,", "part": 1, "q": "What do you do to stay healthy?", "plain_cn": "我盡量吃得健康。", "plain_en": "I try to eat well.", "opener": "Apart from watching what I eat,", "main_en": "I've made it a habit to take the stairs instead of the lift whenever I can.", "full_cn": "除了注意飲食之外，我也養成了能走樓梯就不搭電梯的習慣。", "color": "#1CCAE8", "bg": "rgba(28,202,232,0.15)"}, {"type": "比較型", "pattern": "Compared with ... ,", "part": 3, "q": "Do you think city life is better than life in the countryside?", "plain_cn": "城市生活比較方便。", "plain_en": "City life is more convenient.", "opener": "Compared with the town I grew up in,", "main_en": "living in Taipei means everything I need is within reach, but personal space becomes a luxury.", "full_cn": "和我從小長大的小鎮相比，住在台北什麼都很近，但個人空間卻變成了一種奢侈。", "color": "#27AE60", "bg": "rgba(39,174,96,0.15)"}, {"type": "前提型", "pattern": "Given ... ,", "part": 3, "q": "Should the government invest more in public transport?", "plain_cn": "對，需要更多投資。", "plain_en": "Yes, more investment is needed.", "opener": "Given how many people rely on the MRT and buses every day,", "main_en": "it makes more sense to keep improving the system than to encourage more people to drive.", "full_cn": "考量到每天有多少人依賴捷運和公車，持續改善大眾運輸系統比鼓勵更多人開車更有道理。", "color": "#7849C9", "bg": "rgba(120,73,201,0.15)"}, {"type": "疊加型", "pattern": "On top of ... ,", "part": 3, "q": "Do you think students today are under too much pressure?", "plain_cn": "對，他們功課太多了。", "plain_en": "Yes, they have too much work.", "opener": "On top of the academic pressure they already face,", "main_en": "most students are now expected to build up their CV with extracurricular activities and part-time work at the same time.", "full_cn": "在已經承受的學業壓力之外，多數學生現在還被期待同時靠課外活動和打工充實履歷。", "color": "#FF91D7", "bg": "rgba(255,145,215,0.15)"}, {"type": "因果型", "pattern": "As a result of ... ,", "part": 3, "q": "How has technology changed the way people communicate?", "plain_cn": "大家現在更常用手機。", "plain_en": "People use their phones more now.", "opener": "As a result of having instant messaging available around the clock,", "main_en": "face-to-face conversations have become shorter and less frequent, even between people who live under the same roof.", "full_cn": "因為隨時都能使用即時通訊，面對面的對話變得更短、更少，就算是住在同一個屋簷下的人也不例外。", "color": "#E6374B", "bg": "rgba(230,55,75,0.15)"}, {"type": "記憶型", "pattern": "If my memory serves,", "part": 2, "q": "Describe a trip you took that was memorable.", "plain_cn": "我幾年前去了日本。", "plain_en": "I went to Japan a few years ago.", "opener": "If my memory serves,", "main_en": "it was the summer before my final year at university when I took that trip to Kyoto with two friends I've known since high school.", "full_cn": "如果我沒記錯，那是大學最後一年的前一個暑假，我和兩個從高中就認識的朋友一起去了京都。", "color": "#C3A5E5", "bg": "rgba(195,165,229,0.12)"}, {"type": "話題框定型", "pattern": "When it comes to ... ,", "part": 1, "q": "What kind of music do you enjoy?", "plain_cn": "我喜歡很多種音樂。", "plain_en": "I like many types of music.", "opener": "When it comes to music I actually listen to on repeat,", "main_en": "it tends to be lo-fi or instrumental tracks that help me concentrate when I'm working.", "full_cn": "說到我真正會一直循環播放的音樂，通常是能幫助我在工作時專注的 lo-fi 或純音樂。", "color": "#82C8E5", "bg": "rgba(130,200,229,0.12)"}, {"type": "依據型", "pattern": "Based on ... ,", "part": 3, "q": "Do you think online learning is as effective as classroom learning?", "plain_cn": "我覺得要看個人。", "plain_en": "I think it depends on the person.", "opener": "Based on my own experience of taking several online courses,", "main_en": "the format works well for self-motivated learners but falls apart without a fixed schedule and some form of accountability.", "full_cn": "根據我自己修過幾門線上課程的經驗，這個模式對自律的學習者很有效，但少了固定時程和問責機制就很容易失效。", "color": "#0DA591", "bg": "rgba(13,165,145,0.12)"}, {"type": "口語切換型", "pattern": "Speaking of ... ,", "part": 1, "q": "Do you enjoy cooking?", "plain_cn": "我有時候喜歡做菜。", "plain_en": "I like cooking sometimes.", "opener": "Speaking of things I picked up during the pandemic,", "main_en": "cooking is probably the one habit that actually stuck.", "full_cn": "說到疫情期間養成的那些習慣，煮飯大概是唯一真正留下來的一個。", "color": "#1CCAE8", "bg": "rgba(28,202,232,0.12)"}, {"type": "範圍型", "pattern": "In terms of ... ,", "part": 1, "q": "What are the advantages of living in a big city?", "plain_cn": "城市的工作機會比較多。", "plain_en": "Cities have more job opportunities.", "opener": "In terms of career development,", "main_en": "living in a major city puts you in the same room as opportunities that simply don't exist elsewhere.", "full_cn": "就職涯發展而言，住在大城市讓你能接觸到那些在其他地方根本不存在的機會。", "color": "#B3DE73", "bg": "rgba(179,222,115,0.12)"}, {"type": "補充型", "pattern": "In addition to ... ,", "part": 1, "q": "What do you do to improve your English?", "plain_cn": "我看英文影集。", "plain_en": "I watch English TV shows.", "opener": "In addition to watching English content with subtitles,", "main_en": "I've made it a rule to keep a small notebook where I write down any expression that catches my attention.", "full_cn": "除了看附字幕的英文內容之外，我也定了一個規矩，把任何讓我眼睛一亮的表達記在一本小筆記本裡。", "color": "#27AE60", "bg": "rgba(39,174,96,0.12)"}, {"type": "正面因果型", "pattern": "Thanks to ... ,", "part": 1, "q": "Has technology made your life easier?", "plain_cn": "對，科技很有幫助。", "plain_en": "Yes, technology is very helpful.", "opener": "Thanks to apps that track everything from my sleep to my spending,", "main_en": "I have a much clearer picture of my daily habits than I ever did before.", "full_cn": "多虧了能追蹤睡眠到消費的各種 app，我對自己日常習慣的了解遠比以前清楚多了。", "color": "#EDA109", "bg": "rgba(237,161,9,0.12)"}];
+const TOTAL = CARDS.length;
+
+function buildUI() {
+  document.getElementById('tot').textContent = '/ ' + TOTAL;
+  const legend = document.getElementById('legend');
+  const grid   = document.getElementById('grid');
+
+  CARDS.forEach((c, i) => {
+    // Legend (unique types only)
+    if (!legend.querySelector(`[data-type="${c.type}"]`)) {
+      legend.insertAdjacentHTML('beforeend',
+        `<div class="leg-item" data-type="${c.type}">
+          <span class="leg-dot" style="background:${c.color}"></span>${c.type}
+        </div>`);
+    }
+
+    const partCls = c.part === 1 ? 'bp1' : c.part === 2 ? 'bp2' : 'bp3';
+    const d = document.createElement('div');
+    d.className = 'card';
+    d.innerHTML = `
+      <div class="card-top">
+        <span class="type-badge" style="background:${c.bg};color:${c.color};border:1px solid ${c.color}55">${c.type}</span>
+        <span class="part-badge ${partCls}">Part ${c.part}</span>
+      </div>
+      <div class="question">"${c.q}"</div>
+      <div class="plain-block">
+        <div class="label">直白版</div>
+        <div class="plain-cn">${c.plain_cn}</div>
+        <div class="plain-en">${c.plain_en}</div>
+      </div>
+      <button class="rev-btn"><span class="ricon">▶</span><span class="rlbl">加上引子</span></button>
+      <div class="opener-block">
+        <div class="label">加引子版</div>
+        <div class="full-cn">${c.full_cn}</div>
+        <div class="en-sentence">
+          <span class="en-opener">${c.opener}</span>
+          <span class="en-main"> ${c.main_en}</span>
+        </div>
+        <code class="pattern-note">${c.pattern}</code>
+      </div>
+    `;
+    d.querySelector('.rev-btn').onclick = () => {
+      const on = d.classList.toggle('revealed');
+      d.querySelector('.rlbl').textContent = on ? '收合' : '加上引子';
+      updateStats();
+    };
+    grid.appendChild(d);
+  });
+}
+
+function updateStats() {
+  const done = document.querySelectorAll('.card.revealed').length;
+  document.getElementById('cnt').textContent = done;
+  const pct = Math.round(done / TOTAL * 100);
+  document.getElementById('pFill').style.width = pct + '%';
+  document.getElementById('pPct').textContent = pct + '%';
+}
+
+buildUI();
+</script>
+</body>
+</html>
