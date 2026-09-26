@@ -1,0 +1,1248 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>雅思寫作必備動詞：詞彙表不收、哪題都用得上的 30 個動詞</title>
+<style>
+  :root {
+    --bg: #0C0D0C;
+    --shell: #C6C7BD;
+    --sky: #82C8E5;
+    --yellow: #E3D322;
+    --lavender: #C3A5E5;
+    --salmon: #E5C3B3;
+    --teal: #0DA591;
+    --vanilla: #DBEDD8;
+    --ocean: #1CCAE8;
+    --special: #B3DE73;
+    --warning: #E6374B;
+    --safe: #27AE60;
+    --orange: #EDA109;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--shell);
+    font-family: 'Inter', 'Times New Roman', serif;
+    font-size: 1.1rem;
+    line-height: 1.4;
+    padding: 30px;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  header {
+    border-bottom: 2px solid rgba(130, 200, 229, 0.9);
+    padding-bottom: 18px;
+    margin-bottom: 30px;
+  }
+
+  header h1 {
+    color: var(--sky);
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 12px;
+    line-height: 1.25;
+  }
+
+  header p {
+    color: var(--shell);
+    font-size: 1.1rem;
+    max-width: 900px;
+  }
+
+  .summary-note {
+    background: rgba(130, 200, 229, 0.09);
+    border-left: 4px solid rgba(130, 200, 229, 0.9);
+    padding: 16px;
+    margin-bottom: 36px;
+    border-radius: 0 6px 6px 0;
+    font-size: 1.1rem;
+  }
+
+  /* TOC */
+  .toc {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 52px;
+  }
+
+  .toc a {
+    color: var(--sky);
+    text-decoration: none;
+    background: rgba(130, 200, 229, 0.1);
+    border: 1px solid rgba(130, 200, 229, 0.5);
+    border-radius: 20px;
+    padding: 6px 16px;
+    font-size: 0.98rem;
+    transition: background 0.2s;
+  }
+
+  .toc a:hover {
+    background: rgba(130, 200, 229, 0.3);
+  }
+
+  /* Category section */
+  .category {
+    margin-bottom: 36px;
+  }
+
+  .category-title {
+    color: var(--sky);
+    font-size: 1.38rem;
+    font-weight: 700;
+    border-bottom: 1px solid rgba(130, 200, 229, 0.65);
+    padding-bottom: 8px;
+    margin-bottom: 32px;
+    letter-spacing: 0.03em;
+  }
+
+  /* Verb card */
+  .verb-card {
+    background: rgba(198, 199, 189, 0.05);
+    border: 1px solid rgba(198, 199, 189, 0.3);
+    border-radius: 10px;
+    padding: 18px;
+    margin-bottom: 28px;
+  }
+
+  .verb-header {
+    display: flex;
+    align-items: baseline;
+    gap: 180px;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+  }
+
+  .verb-name {
+    color: var(--yellow);
+    font-size: 1.6rem;
+    font-weight: 700;
+    font-family: 'Courier New', monospace;
+    letter-spacing: 0.04em;
+  }
+
+  .verb-zh {
+    color: var(--shell);
+    font-size: 1.1rem;
+    opacity: 0.9;
+  }
+
+  .verb-desc {
+    color: var(--shell);
+    font-size: 1.03rem;
+    margin-bottom: 18px;
+    line-height: 1.4;
+    opacity: 0.9;
+  }
+
+  /* Examples table */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 1.04rem;
+  }
+
+  thead th {
+    color: var(--sky);
+    font-size: 0.96rem;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    padding: 8px 14px;
+    border-bottom: 1px solid rgba(130, 200, 229, 0.4);
+    text-align: left;
+    font-weight: 600;
+  }
+
+  thead th:first-child { width: 96px; }
+
+  tbody tr {
+    border-bottom: 1px solid rgba(198, 199, 189, 0.09);
+  }
+
+  tbody tr:last-child { border-bottom: none; }
+
+  td {
+    padding: 12px 14px;
+    vertical-align: top;
+    color: var(--shell);
+    line-height: 1.5;
+  }
+
+  td:first-child {
+    color: rgba(130, 200, 229, 0.9);
+    font-size: 0.96rem;
+    font-weight: 600;
+    white-space: nowrap;
+    padding-top: 14px;
+  }
+
+  .en-line { margin-bottom: 5px; }
+
+  .zh-line {
+    color: rgba(198, 199, 189, 0.72);
+    font-size: 0.97rem;
+  }
+
+  .kw {
+    color: var(--yellow);
+    font-weight: 700;
+  }
+
+  /* Compare note */
+  .compare-note {
+    margin-top: 18px;
+    padding: 13px 18px;
+    background: rgba(227, 211, 34, 0.07);
+    border-left: 3px solid rgba(227, 211, 34, 0.82);
+    border-radius: 0 6px 6px 0;
+    font-size: 0.99rem;
+    color: var(--shell);
+    line-height: 1.5;
+  }
+
+  .compare-note strong { color: var(--yellow); }
+
+  /* Summary table */
+  .summary-section {
+    margin-top: 64px;
+  }
+
+  .summary-section h2 {
+    color: var(--sky);
+    font-size: 1.48rem;
+    margin-bottom: 24px;
+    border-bottom: 2px solid rgba(130, 200, 229, 0.35);
+    padding-bottom: 10px;
+  }
+
+  .summary-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 1.04rem;
+  }
+
+  .summary-table thead th {
+    background: rgba(130, 200, 229, 0.1);
+    color: var(--sky);
+    padding: 12px 18px;
+    text-align: left;
+    font-size: 0.95rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .summary-table tbody tr:nth-child(odd) {
+    background: rgba(198, 199, 189, 0.03);
+  }
+
+  .summary-table tbody tr:hover {
+    background: rgba(130, 200, 229, 0.07);
+  }
+
+  .summary-table td {
+    padding: 11px 18px;
+    border-bottom: 1px solid rgba(198, 199, 189, 0.09);
+    vertical-align: middle;
+  }
+
+  .summary-table td:first-child {
+    color: var(--yellow);
+    font-family: 'Courier New', monospace;
+    font-weight: 700;
+    font-size: 1.08rem;
+    white-space: nowrap;
+  }
+
+  .tag {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 4px;
+    font-size: 0.86rem;
+    font-weight: 600;
+    background: rgba(13, 165, 145, 0.18);
+    color: var(--teal);
+    white-space: nowrap;
+  }
+
+  footer {
+    margin-top: 72px;
+    padding-top: 24px;
+    border-top: 1px solid rgba(198, 199, 189, 0.18);
+    color: rgba(198, 199, 189, 0.5);
+    font-size: 0.95rem;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>雅思寫作必備動詞：詞彙表不收、哪題都用得上的 30 個動詞</h1>
+  <p>這 23 個動詞不屬於任何單一主題，卻是 Task 2 高分答案中頻繁出現的「跨題黏著劑」，每一個都能直接取代 have、cause、make，讓句子從及格分進入高分區。</p>
+</header>
+
+<div class="summary-note">
+  💡 這些動詞描述的是「事物之間如何連結」，話題換了，動詞不換。
+</div>
+
+<nav class="toc">
+  <a href="#cat1">見證變化</a>
+  <a href="#cat2">威脅與挑戰</a>
+  <a href="#cat3">促成與推動</a>
+  <a href="#cat4">削弱與縮減</a>
+  <a href="#cat5">助長與滲透</a>
+  <a href="#cat6">基礎與根源</a>
+  <a href="#cat7">減輕與緩解</a>
+  <a href="#cat8">培育、倡導與執行</a>
+  <a href="#cat9">恢復與評估</a>
+  <a href="#cat10">分布與主導</a>
+  <a href="#cat11">立場、敦促與反駁</a>
+  <a href="#summary">總整理</a>
+</nav>
+
+
+<!-- CATEGORY 1 -->
+<section class="category" id="cat1">
+  <h2 class="category-title">🔵 描述某時期或地點見證了什麼</h2>
+
+  <div class="verb-card">
+    <div class="verb-header">
+      <span class="verb-name">witness</span>
+      <span class="verb-zh">見證某變化發生</span>
+    </div>
+    <p class="verb-desc">以時間或地點為主語，見證某變化發生，是拉開句型層次的關鍵動詞。</p>
+    <table>
+      <thead><tr><th>話題</th><th>例句</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>科技</td>
+          <td>
+            <div class="en-line">The past two decades have <span class="kw">witnessed</span> an unprecedented acceleration in technological development.</div>
+            <div class="zh-line">過去二十年<span class="kw">見證了</span>科技發展前所未有的加速。</div>
+          </td>
+        </tr>
+        <tr>
+          <td>社會</td>
+          <td>
+            <div class="en-line">Recent years have <span class="kw">witnessed</span> a growing awareness of mental health issues among younger generations.</div>
+            <div class="zh-line">近年來<span class="kw">見證了</span>年輕世代對心理健康議題日益增長的關注。</div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+
+<!-- CATEGORY 2 -->
+<section class="category" id="cat2">
+  <h2 class="category-title">🟠 描述某事物帶來威脅、挑戰或加劇問題</h2>
+
+  <div class="verb-card">
+    <div class="verb-header">
+      <span class="verb-name">pose</span>
+      <span class="verb-zh">構成、帶來威脅或風險</span>
+    </div>
+    <p class="verb-desc">構成、帶來挑戰、威脅或風險，Task 2 問題分析段必備。</p>
+    <table>
+      <thead><tr><th>話題</th><th>例句</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>環境</td>
+          <td>
+            <div class="en-line">Climate change <span class="kw">poses</span> an existential threat to low-lying coastal communities.</div>
+            <div class="zh-line">氣候變遷對低窪沿海社區<span class="kw">構成了</span>生存層面的威脅。</div>
+          </td>
+        </tr>
+        <tr>
+          <td>科技</td>
+          <td>
+            <div class="en-line">Artificial intelligence <span class="kw">poses</span> serious ethical questions that governments are ill-equipped to answer.</div>
+            <div class="zh-line">人工智慧<span class="kw">帶來了</span>嚴峻的倫理問題，而各國政府對此尚未做好應對準備。</div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="verb-card">
+    <div class="verb-header">
+      <span class="verb-name">exacerbate</span>
+      <span class="verb-zh">加劇、使惡化</span>
+    </div>
+    <p class="verb-desc">比 worsen 更書面，限定於負面語境，是負面論證段的首選。</p>
+    <table>
+      <thead><tr><th>話題</th><th>例句</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>環境</td>
+          <td>
+            <div class="en-line">Rapid urbanisation <span class="kw">exacerbates</span> air pollution in cities that already struggle with poor air quality.</div>
+            <div class="zh-line">快速都市化<span class="kw">加劇了</span>原本空氣品質就不佳的城市的污染問題。</div>
+          </td>
+        </tr>
+        <tr>
+          <td>社會</td>
+          <td>
+            <div class="en-line">The digital divide <span class="kw">exacerbates</span> existing inequalities between high- and low-income households.</div>
+            <div class="zh-line">數位落差<span class="kw">加深了</span>高收入與低收入家庭之間既有的不平等。</div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="verb-card">
+    <div class="verb-header">
+      <span class="verb-name">intensify</span>
+      <span class="verb-zh">加劇、升溫、程度加深</span>
+    </div>
+    <p class="verb-desc">強調某趨勢的程度正在上升，正負面皆可用，比 exacerbate 更靈活。</p>
+    <table>
+      <thead><tr><th>話題</th><th>例句</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>環境</td>
+          <td>
+            <div class="en-line">Climate change is expected to <span class="kw">intensify</span> the frequency and severity of extreme weather events.</div>
+            <div class="zh-line">氣候變遷預計將<span class="kw">加劇</span>極端天氣事件的頻率與嚴重程度。</div>
+          </td>
+        </tr>
+        <tr>
+          <td>社會</td>
+          <td>
+            <div class="en-line">Globalisation has <span class="kw">intensified</span> competition for skilled workers across all major industries.</div>
+            <div class="zh-line">全球化<span class="kw">加深了</span>各大產業對技術型人才的競爭。</div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="compare-note">
+      <strong>exacerbate vs. intensify：</strong>exacerbate 是「把壞事變得更壞」，intensify 是中性的「程度加深」，正負面皆可用。
+    </div>
+  </div>
+</section>
+
+
+<!-- CATEGORY 3 -->
+<section class="category" id="cat3">
+  <h2 class="category-title">🟡 描述是什麼促成、推動或使某事更便利</h2>
+
+  <div class="verb-card">
+    <div class="verb-header">
+      <span class="verb-name">prompt</span>
+      <span class="verb-zh">促使、引發某行動或反應</span>
+    </div>
+    <p class="verb-desc">強調外部刺激造成的結果，比 cause 更有針對性，常搭配行動或政策改變。</p>
+    <table>
+      <thead><tr><th>話題</th><th>例句</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>政府政策</td>
+          <td>
+            <div class="en-line">Rising unemployment rates <span class="kw">prompted</span> the government to introduce a series of economic reforms.</div>
+            <div class="zh-line">失業率上升<span class="kw">促使</span>政府推出一系列經濟改革措施。</div>
+          </td>
+        </tr>
+        <tr>
+          <td>科技</td>
+          <td>
+            <div class="en-line">The rapid spread of misinformation has <span class="kw">prompted</span> calls for stricter regulation of social media.</div>
+            <div class="zh-line">錯誤資訊的迅速擴散<span class="kw">引發了</span>各界對加強社群媒體監管的呼聲。</div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="verb-card">
+    <div class="verb-header">
+      <span class="verb-name">drive</span>
+      <span class="verb-zh">驅動、推動</span>
+    </div>
+    <p class="verb-desc">強調持續的動力來源，比 cause 層次更高，暗示背後有結構性力量在運作。</p>
+    <table>
+      <thead><tr><th>話題</th><th>例句</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>經濟</td>
+          <td>
+            <div class="en-line">Consumer demand continues to <span class="kw">drive</span> innovation in the technology sector.</div>
+            <div class="zh-line">消費者需求持續<span class="kw">驅動</span>科技產業的創新發展。</div>
+          </td>
+        </tr>
+        <tr>
+          <td>環境</td>
+          <td>
+            <div class="en-line">Corporate greed, rather than individual behaviour, is what truly <span class="kw">drives</span> environmental destruction.</div>
+            <div class="zh-line">真正<span class="kw">驅動</span>環境破壞的是企業的貪婪，而非個人行為。</div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="verb-card">
+    <div class="verb-header">
+      <span class="verb-name">facilitate</span>
+      <span class="verb-zh">促進、使更便利</span>
+    </div>
+    <p class="verb-desc">強調移除障礙、使某事得以順利發生，語氣正面，常用於政策或科技帶來的便利。</p>
+    <table>
+      <thead><tr><th>話題</th><th>例句</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>教育</td>
+          <td>
+            <div class="en-line">Digital platforms <span class="kw">facilitate</span> access to quality education for students in remote areas.</div>
+            <div class="zh-line">數位平台<span class="kw">使</span>偏遠地區的學生更便利地<span class="kw">取得</span>優質教育資源。</div>
+          </td>
+        </tr>
+        <tr>
+          <td>經濟</td>
+          <td>
+            <div class="en-line">Efficient public transport systems <span class="kw">facilitate</span> economic activity by reducing commute times and costs.</div>
+            <div class="zh-line">高效的大眾交通系統透過縮短通勤時間與成本，<span class="kw">促進了</span>經濟活動的發展。</div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+
+<!-- CATEGORY 4 -->
+<section class="category" id="cat4">
+  <h2 class="category-title">🔴 描述逐漸削弱、縮減或動搖某事物</h2>
+
+  <div class="verb-card">
+    <div class="verb-header">
+      <span class="verb-name">erode</span>
+      <span class="verb-zh">逐漸侵蝕、緩慢削弱</span>
+    </div>
+    <p class="verb-desc">強調緩慢但持續的破壞過程，如海浪侵蝕礁石，不可逆，不帶主動意圖。</p>
+    <table>
+      <thead><tr><th>話題</th><th>例句</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>社會</td>
+          <td>
+            <div class="en-line">Prolonged exposure to social media <span class="kw">erodes</span> an individual's ability to sustain deep, focused thinking.</div>
+            <div class="zh-line">長期接觸社群媒體<span class="kw">逐漸削弱</span>個人維持深度專注思考的能力。</div>
+          </td>
+        </tr>
+        <tr>
+          <td>政治</td>
+          <td>
+            <div class="en-line">Repeated government scandals <span class="kw">erode</span> public trust in democratic institutions.</div>
+            <div class="zh-line">政府醜聞一再發生，<span class="kw">侵蝕了</span>民眾對民主機構的信任。</div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="verb-card">
+    <div class="verb-header">
+      <span class="verb-name">undermine</span>
+      <span class="verb-zh">從根基削弱、針對性動搖</span>
+    </div>
+    <p class="verb-desc">破壞的是某事物賴以成立的基礎，比 erode 更有針對性、更主動，常暗示某行為者在背後發揮作用。</p>
+    <table>
+      <thead><tr><th>話題</th><th>例句</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>政治</td>
+          <td>
+            <div class="en-line">Widespread corruption <span class="kw">undermines</span> the foundations of democratic governance.</div>
+            <div class="zh-line">普遍的腐敗現象<span class="kw">從根基動搖了</span>民主治理的基礎。</div>
+          </td>
+        </tr>
+        <tr>
+          <td>教育</td>
+          <td>
+            <div class="en-line">Excessive parental intervention <span class="kw">undermines</span> a child's ability to develop independent judgment.</div>
+            <div class="zh-line">過度的家長干預<span class="kw">削弱了</span>孩子發展獨立判斷力的能力。</div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="verb-card">
+    <div class="verb-header">
+      <span class="verb-name">curtail</span>
+      <span class="verb-zh">明確削減、縮限規模</span>
+    </div>
+    <p class="verb-desc">強調有意識地限縮某事物的規模或範圍，常用於政策批評或資源分配討論。</p>
+    <table>
+      <thead><tr><th>話題</th><th>例句</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>政府政策</td>
+          <td>
+            <div class="en-line">Austerity measures have significantly <span class="kw">curtailed</span> funding for public health services.</div>
+            <div class="zh-line">緊縮政策大幅<span class="kw">削減了</span>公共衛生服務的經費。</div>
+          </td>
+        </tr>
+        <tr>
+          <td>環境</td>
+          <td>
+            <div class="en-line">Governments must take bold steps to <span class="kw">curtail</span> carbon emissions before irreversible damage occurs.</div>
+            <div class="zh-line">各國政府必須採取大膽措施，在不可逆的破壞發生之前<span class="kw">縮減</span>碳排放量。</div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="compare-note">
+      <strong>erode vs. undermine vs. curtail：</strong>erode 是「緩慢自然侵蝕」，undermine 是「針對性挖空地基」，curtail 是「明確砍掉一部分規模」。
+    </div>
+  </div>
+</section>
+
+
+<!-- CATEGORY 5 -->
+<section class="category" id="cat5">
+  <h2 class="category-title">🟣 描述助長、強化或全面滲透某現象</h2>
+
+  <div class="verb-card">
+    <div class="verb-header">
+      <span class="verb-name">perpetuate</span>
+      <span class="verb-zh">助長、使惡性循環延續</span>
+    </div>
+    <p class="verb-desc">尤其用於批判某政策或現象持續強化惡性循環，是論證「問題為何難以根除」的利器。</p>
+    <table>
+      <thead><tr><th>話題</th><th>例句</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>社會</td>
+          <td>
+            <div class="en-line">A lack of access to quality education <span class="kw">perpetuates</span> the cycle of poverty across generations.</div>
+            <div class="zh-line">缺乏優質教育資源<span class="kw">助長了</span>貧窮在世代之間不斷循環的問題。</div>
+          </td>
+        </tr>
+        <tr>
+          <td>媒體</td>
+          <td>
+            <div class="en-line">Mainstream media coverage often <span class="kw">perpetuates</span> harmful stereotypes rather than challenging them.</div>
+            <div class="zh-line">主流媒體的報導方式往往<span class="kw">強化了</span>有害的刻板印象，而非加以挑戰。</div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="verb-card">
+    <div class="verb-header">
+      <span class="verb-name">reinforce</span>
+      <span class="verb-zh">強化、鞏固</span>
+    </div>
+    <p class="verb-desc">正負面皆可用，靈活度極高，是這 23 個動詞中語氣最中性且可全面適用的。</p>
+    <table>
+      <thead><tr><th>話題</th><th>例句</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>教育</td>
+          <td>
+            <div class="en-line">Collaborative projects <span class="kw">reinforce</span> the interpersonal skills that academic study alone cannot develop.</div>
+            <div class="zh-line">合作型專案<span class="kw">鞏固了</span>單靠學術學習無法培養的人際技能。</div>
+          </td>
+        </tr>
+        <tr>
+          <td>科技</td>
+          <td>
+            <div class="en-line">Algorithm-driven content feeds <span class="kw">reinforce</span> existing beliefs rather than exposing users to diverse perspectives.</div>
+            <div class="zh-line">演算法驅動的內容推送<span class="kw">強化了</span>使用者既有的觀點，而非讓他們接觸多元視角。</div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="verb-card">
+    <div class="verb-header">
+      <span class="verb-name">highlight</span>
+      <span class="verb-zh">突顯、揭示</span>
+    </div>
+    <p class="verb-desc">比 show 或 point out 更書面，強調主動將某問題或事實帶到論述焦點。</p>
+    <table>
+      <thead><tr><th>話題</th><th>例句</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>社會</td>
+          <td>
+            <div class="en-line">The pandemic <span class="kw">highlighted</span> the deep inequalities embedded in many healthcare systems.</div>
+            <div class="zh-line">疫情<span class="kw">突顯了</span>許多醫療體系中根深蒂固的不平等問題。</div>
+          </td>
+        </tr>
+        <tr>
+          <td>教育</td>
+          <td>
+            <div class="en-line">Recent research <span class="kw">highlights</span> the growing gap between academic performance and real-world skill readiness.</div>
+            <div class="zh-line">近期研究<span class="kw">揭示了</span>學業表現與實際職場能力準備之間日益擴大的落差。</div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="verb-card">
+    <div class="verb-header">
+      <span class="verb-name">pervade</span>
+      <span class="verb-zh">瀰漫、全面滲透</span>
+    </div>
+    <p class="verb-desc">強調某現象或影響無所不在、已滲透至各個層面，語氣比 spread 更強烈，常用於文化或社會批評。</p>
+    <table>
+      <thead><tr><th>話題</th><th>例句</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>社會</td>
+          <td>
+            <div class="en-line">A culture of overwork <span class="kw">pervades</span> many East Asian societies, leading to widespread burnout among professionals.</div>
+            <div class="zh-line">過勞文化<span class="kw">瀰漫於</span>許多東亞社會，導致專業人士普遍陷入職業倦怠。</div>
+          </td>
+        </tr>
+        <tr>
+          <td>科技</td>
+          <td>
+            <div class="en-line">The influence of technology now <span class="kw">pervades</span> every aspect of daily life, from communication to commerce.</div>
+            <div class="zh-line">科技的影響如今<span class="kw">滲透了</span>日常生活的每個層面，從溝通到商業活動無一例外。</div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+
+<!-- CATEGORY 6 -->
+<section class="category" id="cat6">
+  <h2 class="category-title">⚪ 描述某事物以什麼為基礎、源自何處</h2>
+
+  <div class="verb-card">
+    <div class="verb-header">
+      <span class="verb-name">underpin</span>
+      <span class="verb-zh">支撐、奠定基礎</span>
+    </div>
+    <p class="verb-desc">用於論述某觀點背後的根本邏輯，核心論點段的首選，暗示「少了這個，整件事就不成立」。</p>
+    <table>
+      <thead><tr><th>話題</th><th>例句</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>教育</td>
+          <td>
+            <div class="en-line">A strong foundation in critical thinking <span class="kw">underpins</span> success across all academic disciplines.</div>
+            <div class="zh-line">紮實的批判性思維基礎<span class="kw">支撐著</span>各學術領域的成功表現。</div>
+          </td>
+        </tr>
+        <tr>
+          <td>經濟</td>
+          <td>
+            <div class="en-line">Stable governance <span class="kw">underpins</span> long-term economic growth and attracts sustained foreign investment.</div>
+            <div class="zh-line">穩定的治理<span class="kw">奠定了</span>長期經濟增長的基礎，並吸引持續的外國投資。</div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="verb-card">
+    <div class="verb-header">
+      <span class="verb-name">stem from</span>
+      <span class="verb-zh">源於、根因在於</span>
+    </div>
+    <p class="verb-desc">用來追溯根本原因，論證深度立刻提升，能清楚區分「表面問題」與「根本原因」。</p>
+    <table>
+      <thead><tr><th>話題</th><th>例句</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>社會</td>
+          <td>
+            <div class="en-line">Many social inequalities <span class="kw">stem from</span> systemic flaws rather than individual failings.</div>
+            <div class="zh-line">許多社會不平等<span class="kw">根源於</span>制度性缺陷，而非個人的失敗。</div>
+          </td>
+        </tr>
+        <tr>
+          <td>科技</td>
+          <td>
+            <div class="en-line">Public resistance to new technology often <span class="kw">stems from</span> a lack of transparent communication from developers and policymakers.</div>
+            <div class="zh-line">民眾對新科技的抵制往往<span class="kw">源於</span>開發者與政策制定者在透明溝通上的缺失。</div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+
+<!-- CATEGORY 7 -->
+<section class="category" id="cat7">
+  <h2 class="category-title">🟢 描述減輕、緩解某問題或其影響</h2>
+
+  <div class="verb-card">
+    <div class="verb-header">
+      <span class="verb-name">mitigate</span>
+      <span class="verb-zh">減輕、緩解（負面影響）</span>
+    </div>
+    <p class="verb-desc">強調透過主動措施降低負面影響的程度，多用於政策、環境或風險管理的討論，語氣較正式。</p>
+    <table>
+      <thead><tr><th>話題</th><th>例句</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>環境</td>
+          <td>
+            <div class="en-line">Planting urban green spaces can <span class="kw">mitigate</span> the heat island effect that plagues densely built cities.</div>
+            <div class="zh-line">種植城市綠地能夠<span class="kw">緩解</span>困擾高密度建城區域的熱島效應。</div>
+          </td>
+        </tr>
+        <tr>
+          <td>政策</td>
+          <td>
+            <div class="en-line">Early intervention programmes have proven effective in <span class="kw">mitigating</span> the long-term social costs of youth unemployment.</div>
+            <div class="zh-line">早期介入計畫已被證實能有效<span class="kw">減輕</span>青年失業所帶來的長期社會代價。</div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="verb-card">
+    <div class="verb-header">
+      <span class="verb-name">alleviate</span>
+      <span class="verb-zh">減輕、紓解（痛苦或壓力）</span>
+    </div>
+    <p class="verb-desc">比 mitigate 更偏向人道關懷語境，受詞通常是人的痛苦、負擔或生活壓力，語氣更具同理性。</p>
+    <table>
+      <thead><tr><th>話題</th><th>例句</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>健康</td>
+          <td>
+            <div class="en-line">Increased government spending on mental health services could <span class="kw">alleviate</span> the burden placed on overextended hospital systems.</div>
+            <div class="zh-line">增加政府對心理健康服務的投入，有助於<span class="kw">紓解</span>過度負荷的醫院系統所承受的壓力。</div>
+          </td>
+        </tr>
+        <tr>
+          <td>社會</td>
+          <td>
+            <div class="en-line">Flexible working arrangements have been shown to <span class="kw">alleviate</span> the work-life imbalance experienced by working parents.</div>
+            <div class="zh-line">彈性工作制度已被證明能<span class="kw">減輕</span>職業父母所經歷的工作與生活失衡問題。</div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="compare-note">
+      <strong>mitigate vs. alleviate：</strong>mitigate 偏向系統性、政策性地降低風險，alleviate 偏向人道關懷語境，紓解的是人的痛苦或生活壓力。
+    </div>
+  </div>
+</section>
+
+
+<!-- CATEGORY 8 -->
+<section class="category" id="cat8">
+  <h2 class="category-title">🔷 描述培育、倡導或落實某事物</h2>
+
+  <div class="verb-card">
+    <div class="verb-header">
+      <span class="verb-name">foster</span>
+      <span class="verb-zh">培養、促進（正面發展）</span>
+    </div>
+    <p class="verb-desc">強調透過環境或條件的營造，讓某正面事物得以生長與發展，語氣溫和積極。</p>
+    <table>
+      <thead><tr><th>話題</th><th>例句</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>教育</td>
+          <td>
+            <div class="en-line">A supportive classroom environment <span class="kw">fosters</span> creativity and encourages students to take intellectual risks.</div>
+            <div class="zh-line">支持性的課堂環境<span class="kw">培養了</span>創造力，並鼓勵學生在知識探索上勇於嘗試。</div>
+          </td>
+        </tr>
+        <tr>
+          <td>社會</td>
+          <td>
+            <div class="en-line">Cultural exchange programmes <span class="kw">foster</span> mutual understanding between nations, reducing the likelihood of international conflict.</div>
+            <div class="zh-line">文化交流計畫<span class="kw">促進了</span>國家之間的相互理解，降低了國際衝突發生的可能性。</div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="verb-card">
+    <div class="verb-header">
+      <span class="verb-name">advocate</span>
+      <span class="verb-zh">倡導、主張</span>
+    </div>
+    <p class="verb-desc">公開表態支持某立場或政策，比 support 更有行動感，常搭配 for 或直接接動詞。</p>
+    <table>
+      <thead><tr><th>話題</th><th>例句</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>教育</td>
+          <td>
+            <div class="en-line">Many educators <span class="kw">advocate</span> a shift away from rote memorisation towards inquiry-based learning.</div>
+            <div class="zh-line">許多教育工作者<span class="kw">倡導</span>從死記硬背轉向以探究為核心的學習模式。</div>
+          </td>
+        </tr>
+        <tr>
+          <td>健康</td>
+          <td>
+            <div class="en-line">Health organisations increasingly <span class="kw">advocate</span> for stricter regulations on the marketing of ultra-processed foods to children.</div>
+            <div class="zh-line">衛生機構日益<span class="kw">主張</span>對超加工食品向兒童行銷的行為實施更嚴格的監管。</div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="verb-card">
+    <div class="verb-header">
+      <span class="verb-name">implement</span>
+      <span class="verb-zh">實施、執行</span>
+    </div>
+    <p class="verb-desc">將計畫或政策付諸實踐，比 carry out 更正式，是討論「政府或機構具體行動」的標準用詞。</p>
+    <table>
+      <thead><tr><th>話題</th><th>例句</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>政府政策</td>
+          <td>
+            <div class="en-line">Several countries have successfully <span class="kw">implemented</span> carbon pricing schemes to discourage excessive fossil fuel consumption.</div>
+            <div class="zh-line">多個國家已成功<span class="kw">實施</span>碳定價機制，以抑制化石燃料的過度消耗。</div>
+          </td>
+        </tr>
+        <tr>
+          <td>教育</td>
+          <td>
+            <div class="en-line">Schools that have <span class="kw">implemented</span> social-emotional learning programmes report measurable improvements in student wellbeing and academic engagement.</div>
+            <div class="zh-line"><span class="kw">實施了</span>社會情緒學習計畫的學校，在學生身心健康與學業投入度上均記錄到可量化的改善。</div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+
+<!-- CATEGORY 9 -->
+<section class="category" id="cat9">
+  <h2 class="category-title">🟤 描述恢復失去的狀態或評估行動是否合理</h2>
+
+  <div class="verb-card">
+    <div class="verb-header">
+      <span class="verb-name">restore</span>
+      <span class="verb-zh">恢復、重建失去的狀態</span>
+    </div>
+    <p class="verb-desc">強調找回失去的狀態或信任，常搭配抽象名詞，論證「政策有沒有效」時尤其好用。</p>
+    <table>
+      <thead><tr><th>話題</th><th>例句</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>政治</td>
+          <td>
+            <div class="en-line">Transparent governance is essential to <span class="kw">restore</span> public trust in national institutions following a period of widespread corruption.</div>
+            <div class="zh-line">透明的治理對於在普遍腐敗之後<span class="kw">重建</span>民眾對國家機構的信任至關重要。</div>
+          </td>
+        </tr>
+        <tr>
+          <td>環境</td>
+          <td>
+            <div class="en-line">Reforestation programmes aim to <span class="kw">restore</span> the biodiversity that decades of deforestation have destroyed.</div>
+            <div class="zh-line">植樹造林計畫旨在<span class="kw">恢復</span>數十年濫伐所摧毀的生物多樣性。</div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="verb-card">
+    <div class="verb-header">
+      <span class="verb-name">warrant</span>
+      <span class="verb-zh">值得、有正當理由</span>
+    </div>
+    <p class="verb-desc">用來評估某政策或行動是否合理，Task 2 結論段與立場段尤其好用，能使論點聽起來更有邏輯依據。</p>
+    <table>
+      <thead><tr><th>話題</th><th>例句</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>政府政策</td>
+          <td>
+            <div class="en-line">The scale of the environmental crisis <span class="kw">warrants</span> immediate and decisive government intervention at both national and international levels.</div>
+            <div class="zh-line">環境危機的嚴重程度<span class="kw">有充分理由要求</span>政府在國家與國際層面立即採取果斷行動。</div>
+          </td>
+        </tr>
+        <tr>
+          <td>科技</td>
+          <td>
+            <div class="en-line">Not every technological advancement <span class="kw">warrants</span> uncritical public adoption, particularly when long-term safety data remains inconclusive.</div>
+            <div class="zh-line">並非每一項科技進步都<span class="kw">值得</span>民眾不加思辨地接受，尤其是在長期安全數據仍不明確的情況下。</div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+
+<!-- CATEGORY 10 -->
+<section class="category" id="cat10">
+  <h2 class="category-title">🟤 描述某現象的分布、主導或對現實的反映</h2>
+
+  <div class="verb-card">
+    <div class="verb-header">
+      <span class="verb-name">reflect</span>
+      <span class="verb-zh">反映、體現</span>
+    </div>
+    <p class="verb-desc">用來說明某現象是更深層問題的表徵，比 show 或 indicate 更具分析深度，常用於指出表面現象背後的根本意涵。</p>
+    <table>
+      <thead><tr><th>話題</th><th>例句</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>社會</td>
+          <td>
+            <div class="en-line">The growing prevalence of anxiety disorders among young people <span class="kw">reflects</span> deeper structural issues within contemporary educational systems.</div>
+            <div class="zh-line">年輕人中焦慮症日益普遍的現象，<span class="kw">反映了</span>當代教育體系中更深層的結構性問題。</div>
+          </td>
+        </tr>
+        <tr>
+          <td>政治</td>
+          <td>
+            <div class="en-line">Voter turnout figures often <span class="kw">reflect</span> the level of public confidence in a country's political institutions.</div>
+            <div class="zh-line">投票率數據往往<span class="kw">體現了</span>民眾對一個國家政治機構的信任程度。</div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="verb-card">
+    <div class="verb-header">
+      <span class="verb-name">vary</span>
+      <span class="verb-zh">因情況而異、有所不同</span>
+    </div>
+    <p class="verb-desc">強調某現象並非絕對，會因條件不同而產生差異，是 Task 2 論述中加入細緻度（nuance）的必備動詞。</p>
+    <table>
+      <thead><tr><th>話題</th><th>例句</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>教育</td>
+          <td>
+            <div class="en-line">The effectiveness of bilingual education programmes <span class="kw">varies</span> considerably depending on the age at which instruction begins.</div>
+            <div class="zh-line">雙語教育計畫的成效，因教學開始的年齡不同而<span class="kw">有相當大的差異</span>。</div>
+          </td>
+        </tr>
+        <tr>
+          <td>社會</td>
+          <td>
+            <div class="en-line">Public attitudes towards immigration <span class="kw">vary</span> significantly across generations, with younger demographics generally holding more open views.</div>
+            <div class="zh-line">民眾對移民的態度因世代不同而<span class="kw">有顯著差異</span>，年輕族群通常持有更開放的看法。</div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="verb-card">
+    <div class="verb-header">
+      <span class="verb-name">dominate</span>
+      <span class="verb-zh">主導、支配</span>
+    </div>
+    <p class="verb-desc">強調某事物在某領域佔據壓倒性地位，可正面或負面使用，常用於批判壟斷、不平等或單一敘事的存在。</p>
+    <table>
+      <thead><tr><th>話題</th><th>例句</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>經濟</td>
+          <td>
+            <div class="en-line">A small number of technology corporations <span class="kw">dominate</span> the global digital economy, raising serious concerns about monopolistic practices.</div>
+            <div class="zh-line">少數幾家科技企業<span class="kw">主導了</span>全球數位經濟，引發了對壟斷行為的嚴重關切。</div>
+          </td>
+        </tr>
+        <tr>
+          <td>媒體</td>
+          <td>
+            <div class="en-line">Sensationalist narratives tend to <span class="kw">dominate</span> mainstream news coverage, often at the expense of nuanced, in-depth reporting.</div>
+            <div class="zh-line">煽情敘事往往<span class="kw">主導了</span>主流新聞報導，常以犧牲細膩深入的報導為代價。</div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+
+<!-- CATEGORY 11 -->
+<section class="category" id="cat11">
+  <h2 class="category-title">🔶 描述觀點的表達、敦促行動或提出反駁</h2>
+
+  <div class="verb-card">
+    <div class="verb-header">
+      <span class="verb-name">subscribe to</span>
+      <span class="verb-zh">贊同、支持某觀點</span>
+    </div>
+    <p class="verb-desc">表示認同或接受某一理論、觀點或信念，比 agree with 或 support 更書面，帶有「自願認可」的語感，尤其適合討論不同學派或立場。</p>
+    <table>
+      <thead><tr><th>話題</th><th>例句</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>政策</td>
+          <td>
+            <div class="en-line">Many economists <span class="kw">subscribe to</span> the view that free trade ultimately benefits all participating nations, though critics challenge this assumption.</div>
+            <div class="zh-line">許多經濟學家<span class="kw">贊同</span>自由貿易最終對所有參與國都有利的觀點，儘管批評者對此提出質疑。</div>
+          </td>
+        </tr>
+        <tr>
+          <td>教育</td>
+          <td>
+            <div class="en-line">Not all educators <span class="kw">subscribe to</span> the belief that standardised testing is an accurate measure of a student's true intellectual potential.</div>
+            <div class="zh-line">並非所有教育工作者都<span class="kw">支持</span>標準化考試能準確衡量學生真實智識潛力的看法。</div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="verb-card">
+    <div class="verb-header">
+      <span class="verb-name">urge</span>
+      <span class="verb-zh">敦促、強烈建議</span>
+    </div>
+    <p class="verb-desc">比 suggest 或 recommend 更強烈，帶有迫切感，常用於結論段或建議段，暗示若不採取行動將有負面後果。</p>
+    <table>
+      <thead><tr><th>話題</th><th>例句</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>環境</td>
+          <td>
+            <div class="en-line">Environmental scientists <span class="kw">urge</span> governments to accelerate the transition to renewable energy before climate tipping points are reached.</div>
+            <div class="zh-line">環境科學家<span class="kw">敦促</span>各國政府在氣候臨界點到來之前加速向可再生能源的轉型。</div>
+          </td>
+        </tr>
+        <tr>
+          <td>健康</td>
+          <td>
+            <div class="en-line">Healthcare professionals <span class="kw">urge</span> policymakers to address the root causes of obesity rather than focusing solely on individual lifestyle choices.</div>
+            <div class="zh-line">醫療專業人士<span class="kw">強烈建議</span>政策制定者從根本原因著手解決肥胖問題，而非僅聚焦於個人生活方式的選擇。</div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="verb-card">
+    <div class="verb-header">
+      <span class="verb-name">controvert</span>
+      <span class="verb-zh">反駁、與…相悖</span>
+    </div>
+    <p class="verb-desc">正式書面動詞，表示某論據或發現與既有觀點相矛盾，比 contradict 更學術，是反駁論點段最有力的動詞之一。</p>
+    <table>
+      <thead><tr><th>話題</th><th>例句</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>教育</td>
+          <td>
+            <div class="en-line">Recent longitudinal studies <span class="kw">controvert</span> the widely held assumption that academic pressure in early childhood leads to better long-term outcomes.</div>
+            <div class="zh-line">近期縱向研究<span class="kw">反駁了</span>幼兒期學業壓力能帶來更好長期結果這一普遍假設。</div>
+          </td>
+        </tr>
+        <tr>
+          <td>社會</td>
+          <td>
+            <div class="en-line">Survey data <span class="kw">controverts</span> the popular narrative that younger generations are less willing to work hard than their predecessors.</div>
+            <div class="zh-line">調查數據<span class="kw">與</span>年輕世代比前人更不願努力工作的流行說法<span class="kw">相悖</span>。</div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="verb-card">
+    <div class="verb-header">
+      <span class="verb-name">volunteer</span>
+      <span class="verb-zh">主動提供、自願揭露</span>
+    </div>
+    <p class="verb-desc">在學術寫作語境中，指主動提供資訊或表態，而非被要求，常用於批評企業或個人在透明度上的不作為，語氣含有隱性批判。</p>
+    <table>
+      <thead><tr><th>話題</th><th>例句</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>企業</td>
+          <td>
+            <div class="en-line">Few corporations <span class="kw">volunteer</span> detailed disclosures of their full carbon footprint without regulatory pressure to do so.</div>
+            <div class="zh-line">在缺乏監管壓力的情況下，很少有企業會<span class="kw">主動揭露</span>其碳排放的完整詳情。</div>
+          </td>
+        </tr>
+        <tr>
+          <td>社會</td>
+          <td>
+            <div class="en-line">Individuals rarely <span class="kw">volunteer</span> information that could implicate them in socially undesirable behaviour, which complicates the accuracy of self-reported survey data.</div>
+            <div class="zh-line">個人很少<span class="kw">主動提供</span>可能使自己與不受社會認可的行為掛鉤的資訊，這使自陳式調查數據的準確性大打折扣。</div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="compare-note">
+      <strong>subscribe to vs. urge vs. controvert：</strong>subscribe to 是「認同某觀點」，urge 是「敦促某人採取行動」，controvert 是「以證據反駁某假設」，三者分別對應立場、建議、反駁三種論述功能。
+    </div>
+  </div>
+</section>
+
+
+<!-- SUMMARY TABLE -->
+<section class="summary-section" id="summary">
+  <h2>📌 總整理 — 30 個跨題萬用動詞</h2>
+  <table class="summary-table">
+    <thead>
+      <tr>
+        <th>動詞</th>
+        <th>中文核心意思</th>
+        <th>Task 2 最常用位置</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>witness</td><td>見證某變化發生</td><td><span class="tag">背景段 · 舉例段</span></td></tr>
+      <tr><td>pose</td><td>構成威脅或挑戰</td><td><span class="tag">問題分析段</span></td></tr>
+      <tr><td>exacerbate</td><td>加劇、使惡化（限負面）</td><td><span class="tag">負面論證段</span></td></tr>
+      <tr><td>intensify</td><td>程度加深（正負面皆可）</td><td><span class="tag">趨勢描述段</span></td></tr>
+      <tr><td>prompt</td><td>促使、引發某反應</td><td><span class="tag">因果論證段</span></td></tr>
+      <tr><td>drive</td><td>驅動某趨勢或行為</td><td><span class="tag">原因分析段</span></td></tr>
+      <tr><td>facilitate</td><td>促進、使更便利</td><td><span class="tag">正面論證段 · 解決方案段</span></td></tr>
+      <tr><td>erode</td><td>逐漸侵蝕、緩慢削弱</td><td><span class="tag">長期影響論述段</span></td></tr>
+      <tr><td>undermine</td><td>從根基針對性削弱</td><td><span class="tag">批判論證段</span></td></tr>
+      <tr><td>curtail</td><td>明確削減、縮限規模</td><td><span class="tag">政策批評段</span></td></tr>
+      <tr><td>perpetuate</td><td>助長、使惡性循環延續</td><td><span class="tag">批判論證段</span></td></tr>
+      <tr><td>reinforce</td><td>強化、鞏固（正負面皆可）</td><td><span class="tag">正反兩面論述段</span></td></tr>
+      <tr><td>highlight</td><td>突顯、揭示</td><td><span class="tag">舉例段 · 問題分析段</span></td></tr>
+      <tr><td>pervade</td><td>全面瀰漫、深度滲透</td><td><span class="tag">社會現象描述段</span></td></tr>
+      <tr><td>underpin</td><td>奠定基礎、支撐</td><td><span class="tag">核心論點段</span></td></tr>
+      <tr><td>stem from</td><td>源於、根因在於</td><td><span class="tag">原因分析段</span></td></tr>
+      <tr><td>mitigate</td><td>緩解負面影響（政策性）</td><td><span class="tag">解決方案段</span></td></tr>
+      <tr><td>alleviate</td><td>減輕痛苦或壓力（人道性）</td><td><span class="tag">解決方案段 · 結論段</span></td></tr>
+      <tr><td>foster</td><td>培養、促進正面發展</td><td><span class="tag">正面論證段 · 建議段</span></td></tr>
+      <tr><td>advocate</td><td>倡導、公開主張</td><td><span class="tag">立場段 · 建議段</span></td></tr>
+      <tr><td>implement</td><td>實施、執行計畫或政策</td><td><span class="tag">解決方案段 · 建議段</span></td></tr>
+      <tr><td>restore</td><td>恢復、重建失去的狀態</td><td><span class="tag">解決方案段 · 結論段</span></td></tr>
+      <tr><td>warrant</td><td>值得、有正當理由</td><td><span class="tag">結論段 · 立場段</span></td></tr>
+      <tr><td>reflect</td><td>反映、體現深層問題</td><td><span class="tag">分析段 · 結論段</span></td></tr>
+      <tr><td>vary</td><td>因情況而異、有所不同</td><td><span class="tag">細緻化論述段</span></td></tr>
+      <tr><td>dominate</td><td>主導、支配某領域</td><td><span class="tag">現象描述段 · 批判段</span></td></tr>
+      <tr><td>subscribe to</td><td>贊同、支持某觀點</td><td><span class="tag">立場段 · 討論不同觀點段</span></td></tr>
+      <tr><td>urge</td><td>敦促、強烈建議</td><td><span class="tag">建議段 · 結論段</span></td></tr>
+      <tr><td>controvert</td><td>反駁、與…相悖</td><td><span class="tag">反駁論點段</span></td></tr>
+      <tr><td>volunteer</td><td>主動提供、自願揭露</td><td><span class="tag">批評透明度缺失段</span></td></tr>
+    </tbody>
+  </table>
+</section>
+
+<footer>
+  雅思寫作跨題萬用動詞整理 · 30 verbs · Task 2 高分語庫
+</footer>
+
+</body>
+</html>
